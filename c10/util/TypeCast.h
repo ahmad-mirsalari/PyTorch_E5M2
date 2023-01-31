@@ -2,7 +2,7 @@
 #include <c10/macros/Macros.h>
 #include <c10/util/BFloat16.h>
 #include <c10/util/Half.h>
-
+#include <c10/util/Float8.h>
 #include <type_traits>
 
 C10_CLANG_DIAGNOSTIC_PUSH()
@@ -102,6 +102,48 @@ template <typename To, typename From>
 C10_HOST_DEVICE To convert(From f) {
   return static_cast_with_inter_type<To, From>::apply(f);
 }
+
+
+//Ahmad
+template <>
+struct static_cast_with_inter_type<c10::complex<c10::Float8>, c10::BFloat16> {
+  C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline c10::complex<
+      c10::Float8>
+  apply(c10::BFloat16 src) {
+    return static_cast<c10::complex<c10::Float8>>(c10::complex<float>{src});
+  }
+};
+
+template <>
+struct static_cast_with_inter_type<c10::complex<c10::Float8>, c10::Half> {
+  C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline c10::complex<
+      c10::Float8>
+  apply(c10::Half src) {
+    return static_cast<c10::complex<c10::Float8>>(c10::complex<float>{src});
+  }
+};
+
+template <>
+struct static_cast_with_inter_type<c10::complex<c10::Float8>, c10::Float8> {
+  C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline c10::complex<
+      c10::Float8>
+  apply(c10::Float8 src) {
+    return static_cast<c10::complex<c10::Float8>>(c10::complex<float>{src});
+  }
+};
+
+template <>
+struct static_cast_with_inter_type<
+    c10::complex<c10::Float8>,
+    c10::complex<double>> {
+  C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline c10::complex<
+      c10::Float8>
+  apply(c10::complex<double> src) {
+    return static_cast<c10::complex<c10::Float8>>(
+        static_cast<c10::complex<float>>(src));
+  }
+};
+//Ahmad*
 
 // Define separately to avoid being inlined and prevent code-size bloat
 C10_API void report_overflow(const char* name);

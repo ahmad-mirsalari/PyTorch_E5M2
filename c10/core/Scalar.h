@@ -16,6 +16,7 @@
 #include <c10/util/Half.h>
 #include <c10/util/TypeCast.h>
 #include <c10/util/intrusive_ptr.h>
+#include <c10/util/Float8.h>
 
 C10_CLANG_DIAGNOSTIC_PUSH()
 #if C10_CLANG_HAS_WARNING("-Wimplicit-int-float-conversion")
@@ -50,8 +51,12 @@ class C10_API Scalar {
 #define DEFINE_IMPLICIT_CTOR(type, name) \
   Scalar(type vv) : Scalar(vv, true) {}
 
-  AT_FORALL_SCALAR_TYPES_AND3(Half, BFloat16, ComplexHalf, DEFINE_IMPLICIT_CTOR)
+  //Ahmad
+  // AT_FORALL_SCALAR_TYPES_AND3(Half, BFloat16, ComplexHalf, DEFINE_IMPLICIT_CTOR)
+  AT_FORALL_SCALAR_TYPES_AND4(Half, BFloat16, ComplexHalf, Float8, DEFINE_IMPLICIT_CTOR)
+   //Ahmad*
   AT_FORALL_COMPLEX_TYPES(DEFINE_IMPLICIT_CTOR)
+ 
 
 #undef DEFINE_IMPLICIT_CTOR
 

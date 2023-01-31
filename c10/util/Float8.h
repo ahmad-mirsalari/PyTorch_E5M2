@@ -32,7 +32,7 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
-
+#include <c10/util/Half.h>
 #ifdef __CUDACC__
 #include <cuda_fp8.h>
 #endif
@@ -60,37 +60,39 @@ namespace c10 {
 
 namespace detail {
 
-C10_DEVICE_HOST_FUNCTION inline float fp32_from_bits(uint32_t w) {
-#if defined(__OPENCL_VERSION__)
-  return as_float(w);
-#elif defined(__CUDA_ARCH__)
-  return __uint_as_float((unsigned int)w);
-#elif defined(__INTEL_COMPILER)
-  return _castu32_f32(w);
-#else
-  union {
-    uint32_t as_bits;
-    float as_value;
-  } fp32 = {w};
-  return fp32.as_value;
-#endif
-}
+//beginning of comment
+// C10_DEVICE_HOST_FUNCTION inline float fp32_from_bits(uint32_t w) {
+// #if defined(__OPENCL_VERSION__)
+//   return as_float(w);
+// #elif defined(__CUDA_ARCH__)
+//   return __uint_as_float((unsigned int)w);
+// #elif defined(__INTEL_COMPILER)
+//   return _castu32_f32(w);
+// #else
+//   union {
+//     uint32_t as_bits;
+//     float as_value;
+//   } fp32 = {w};
+//   return fp32.as_value;
+// #endif
+// }
 
-C10_DEVICE_HOST_FUNCTION inline uint32_t fp32_to_bits(float f) {
-#if defined(__OPENCL_VERSION__)
-  return as_uint(f);
-#elif defined(__CUDA_ARCH__)
-  return (uint32_t)__float_as_uint(f);
-#elif defined(__INTEL_COMPILER)
-  return _castf32_u32(f);
-#else
-  union {
-    float as_value;
-    uint32_t as_bits;
-  } fp32 = {f};
-  return fp32.as_bits;
-#endif
-}
+// C10_DEVICE_HOST_FUNCTION inline uint32_t fp32_to_bits(float f) {
+// #if defined(__OPENCL_VERSION__)
+//   return as_uint(f);
+// #elif defined(__CUDA_ARCH__)
+//   return (uint32_t)__float_as_uint(f);
+// #elif defined(__INTEL_COMPILER)
+//   return _castf32_u32(f);
+// #else
+//   union {
+//     float as_value;
+//     uint32_t as_bits;
+//   } fp32 = {f};
+//   return fp32.as_bits;
+// #endif
+// }
+// ending of comment
 
 /*
  * Convert a 8-bit floating-point number in E5M2 format, in bit
@@ -454,94 +456,98 @@ struct alignas(2) complex<Float8> {
   }
 };
 
-// In some versions of MSVC, there will be a compiler error when building.
-// C4146: unary minus operator applied to unsigned type, result still unsigned
-// C4804: unsafe use of type 'bool' in operation
-// It can be addressed by disabling the following warning.
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4146)
-#pragma warning(disable : 4804)
-#pragma warning(disable : 4018)
-#endif
+//beginning of comment
 
-// The overflow checks may involve float to int conversion which may
-// trigger precision loss warning. Re-enable the warning once the code
-// is fixed. See T58053069.
-#ifdef __clang__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunknown-warning-option"
-#pragma GCC diagnostic ignored "-Wimplicit-int-float-conversion"
-#endif
+// // In some versions of MSVC, there will be a compiler error when building.
+// // C4146: unary minus operator applied to unsigned type, result still unsigned
+// // C4804: unsafe use of type 'bool' in operation
+// // It can be addressed by disabling the following warning.
+// #ifdef _MSC_VER
+// #pragma warning(push)
+// #pragma warning(disable : 4146)
+// #pragma warning(disable : 4804)
+// #pragma warning(disable : 4018)
+// #endif
 
-// bool can be converted to any type.
-// Without specializing on bool, in pytorch_linux_trusty_py2_7_9_build:
-// `error: comparison of constant '255' with boolean expression is always false`
-// for `f > limit::max()` below
-template <typename To, typename From>
-typename std::enable_if<std::is_same<From, bool>::value, bool>::type overflows(
-    From /*f*/) {
-  return false;
-}
+// // The overflow checks may involve float to int conversion which may
+// // trigger precision loss warning. Re-enable the warning once the code
+// // is fixed. See T58053069.
+// #ifdef __clang__
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Wunknown-warning-option"
+// #pragma GCC diagnostic ignored "-Wimplicit-int-float-conversion"
+// #endif
 
-// skip isnan and isinf check for integral types
-template <typename To, typename From>
-typename std::enable_if<
-    std::is_integral<From>::value && !std::is_same<From, bool>::value,
-    bool>::type
-overflows(From f) {
-  using limit = std::numeric_limits<typename scalar_value_type<To>::type>;
-  if (!limit::is_signed && std::numeric_limits<From>::is_signed) {
-    // allow for negative numbers to wrap using two's complement arithmetic.
-    // For example, with uint8, this allows for `a - b` to be treated as
-    // `a + 255 * b`.
-    return greater_than_max<To>(f) ||
-        (c10::is_negative(f) && -static_cast<uint64_t>(f) > limit::max());
-  } else {
-    return c10::less_than_lowest<To>(f) || greater_than_max<To>(f);
-  }
-}
+// // bool can be converted to any type.
+// // Without specializing on bool, in pytorch_linux_trusty_py2_7_9_build:
+// // `error: comparison of constant '255' with boolean expression is always false`
+// // for `f > limit::max()` below
+// template <typename To, typename From>
+// typename std::enable_if<std::is_same<From, bool>::value, bool>::type overflows(
+//     From /*f*/) {
+//   return false;
+// }
 
-template <typename To, typename From>
-typename std::enable_if<std::is_floating_point<From>::value, bool>::type
-overflows(From f) {
-  using limit = std::numeric_limits<typename scalar_value_type<To>::type>;
-  if (limit::has_infinity && std::isinf(static_cast<double>(f))) {
-    return false;
-  }
-  if (!limit::has_quiet_NaN && (f != f)) {
-    return true;
-  }
-  return f < limit::lowest() || f > limit::max();
-}
+// // skip isnan and isinf check for integral types
+// template <typename To, typename From>
+// typename std::enable_if<
+//     std::is_integral<From>::value && !std::is_same<From, bool>::value,
+//     bool>::type
+// overflows(From f) {
+//   using limit = std::numeric_limits<typename scalar_value_type<To>::type>;
+//   if (!limit::is_signed && std::numeric_limits<From>::is_signed) {
+//     // allow for negative numbers to wrap using two's complement arithmetic.
+//     // For example, with uint8, this allows for `a - b` to be treated as
+//     // `a + 255 * b`.
+//     return greater_than_max<To>(f) ||
+//         (c10::is_negative(f) && -static_cast<uint64_t>(f) > limit::max());
+//   } else {
+//     return c10::less_than_lowest<To>(f) || greater_than_max<To>(f);
+//   }
+// }
 
-#ifdef __clang__
-#pragma GCC diagnostic pop
-#endif
+// template <typename To, typename From>
+// typename std::enable_if<std::is_floating_point<From>::value, bool>::type
+// overflows(From f) {
+//   using limit = std::numeric_limits<typename scalar_value_type<To>::type>;
+//   if (limit::has_infinity && std::isinf(static_cast<double>(f))) {
+//     return false;
+//   }
+//   if (!limit::has_quiet_NaN && (f != f)) {
+//     return true;
+//   }
+//   return f < limit::lowest() || f > limit::max();
+// }
 
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+// #ifdef __clang__
+// #pragma GCC diagnostic pop
+// #endif
 
-template <typename To, typename From>
-typename std::enable_if<is_complex<From>::value, bool>::type overflows(From f) {
-  // casts from complex to real are considered to overflow if the
-  // imaginary component is non-zero
-  if (!is_complex<To>::value && f.imag() != 0) {
-    return true;
-  }
-  // Check for overflow componentwise
-  // (Technically, the imag overflow check is guaranteed to be false
-  // when !is_complex<To>, but any optimizer worth its salt will be
-  // able to figure it out.)
-  return overflows<
-             typename scalar_value_type<To>::type,
-             typename From::value_type>(f.real()) ||
-      overflows<
-             typename scalar_value_type<To>::type,
-             typename From::value_type>(f.imag());
-}
+// #ifdef _MSC_VER
+// #pragma warning(pop)
+// #endif
 
+// template <typename To, typename From>
+// typename std::enable_if<is_complex<From>::value, bool>::type overflows(From f) {
+//   // casts from complex to real are considered to overflow if the
+//   // imaginary component is non-zero
+//   if (!is_complex<To>::value && f.imag() != 0) {
+//     return true;
+//   }
+//   // Check for overflow componentwise
+//   // (Technically, the imag overflow check is guaranteed to be false
+//   // when !is_complex<To>, but any optimizer worth its salt will be
+//   // able to figure it out.)
+//   return overflows<
+//              typename scalar_value_type<To>::type,
+//              typename From::value_type>(f.real()) ||
+//       overflows<
+//              typename scalar_value_type<To>::type,
+//              typename From::value_type>(f.imag());
+// }
+
+
+//ending of comment
 C10_API std::ostream& operator<<(std::ostream& out, const Float8& value);
 
 } // namespace c10
