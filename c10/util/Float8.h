@@ -1,13 +1,9 @@
 #pragma once
 
-/// Defines the Half type (half-precision floating-point) including conversions
+/// Defines the float8|e5m2 type (8-bit floating-point) including conversions
 /// to standard C types and basic arithmetic operations. Note that arithmetic
 /// operations are implemented by converting to floating point and
-/// performing the operation in float32, instead of using CUDA half intrinsics.
-/// Most uses of this type within ATen are memory bound, including the
-/// element-wise kernels, and the half intrinsics aren't efficient on all GPUs.
-/// If you are writing a compute bound kernel, you can use the CUDA half
-/// intrinsics directly on the Half type from device code.
+/// performing the operation in float32, instead of using CUDA intrinsics.
 
 #include <c10/macros/Macros.h>
 #include <c10/util/C++17.h>
@@ -38,18 +34,18 @@
 #include <utility>
 
 #ifdef __CUDACC__
-#include <cuda_fp16.h>
+#include <cuda_fp8.h>
 #endif
 
-#ifdef __HIPCC__
-#include <hip/hip_fp16.h>
-#endif
+// #ifdef __HIPCC__
+// #include <hip/hip_fp16.h>
+// #endif
 
-#if defined(CL_SYCL_LANGUAGE_VERSION)
-#include <CL/sycl.hpp> // for SYCL 1.2.1
-#elif defined(SYCL_LANGUAGE_VERSION)
-#include <sycl/sycl.hpp> // for SYCL 2020
-#endif
+// #if defined(CL_SYCL_LANGUAGE_VERSION)
+// #include <CL/sycl.hpp> // for SYCL 1.2.1
+// #elif defined(SYCL_LANGUAGE_VERSION)
+// #include <sycl/sycl.hpp> // for SYCL 2020
+// #endif
 
 // Standard check for compiling CUDA with clang
 #if defined(__clang__) && defined(__CUDA__) && defined(__CUDA_ARCH__)
@@ -97,25 +93,25 @@ C10_DEVICE_HOST_FUNCTION inline uint32_t fp32_to_bits(float f) {
 }
 
 /*
- * Convert a 16-bit floating-point number in IEEE half-precision format, in bit
+ * Convert a 8-bit floating-point number in E5M2 format, in bit
  * representation, to a 32-bit floating-point number in IEEE single-precision
  * format, in bit representation.
  *
  * @note The implementation doesn't use any floating-point operations.
  */
-inline uint32_t fp16_ieee_to_fp32_bits(uint16_t h) {
+inline uint32_t fp8_ieee_to_fp32_bits(uint8_t h) {
   /*
-   * Extend the half-precision floating-point number to 32 bits and shift to the
+   * Extend the 8-bit floating-point number to 32 bits and shift to the
    * upper part of the 32-bit word:
-   *      +---+-----+------------+-------------------+
-   *      | S |EEEEE|MM MMMM MMMM|0000 0000 0000 0000|
-   *      +---+-----+------------+-------------------+
-   * Bits  31  26-30    16-25            0-15
+   *      +---+------+--+------------------------------+
+   *      | S |EEEE E|MM| 0000 0000 0000 0000 0000 0000|
+   *      +---+------+--+------------------------------+
+   * Bits  31  26-30    24-25            0-23
    *
    * S - sign bit, E - bits of the biased exponent, M - bits of the mantissa, 0
    * - zero bits.
    */
-  const uint32_t w = (uint32_t)h << 16;
+  const uint32_t w = (uint32_t)h << 24;
   /*
    * Extract the sign of the input number into the high bit of the 32-bit word:
    *
@@ -129,15 +125,15 @@ inline uint32_t fp16_ieee_to_fp32_bits(uint16_t h) {
    * Extract mantissa and biased exponent of the input number into the bits 0-30
    * of the 32-bit word:
    *
-   *      +---+-----+------------+-------------------+
-   *      | 0 |EEEEE|MM MMMM MMMM|0000 0000 0000 0000|
-   *      +---+-----+------------+-------------------+
-   * Bits  30  27-31     17-26            0-16
+   *      +---+------+--+------------------------------+
+   *      | 0 |EEEE E|MM| 0000 0000 0000 0000 0000 0000|
+   *      +---+------+--+------------------------------+
+   * Bits  31  26-30    24-25            0-23
    */
   const uint32_t nonsign = w & UINT32_C(0x7FFFFFFF);
   /*
    * Renorm shift is the number of bits to shift mantissa left to make the
-   * half-precision number normalized. If the initial number is normalized, some
+   * FP8 number normalized. If the initial number is normalized, some
    * of its high 6 bits (sign == 0 and 5-bit exponent) equals one. In this case
    * renorm_shift == 0. If the number is denormalize, renorm_shift > 0. Note
    * that if we shift denormalized nonsign by renorm_shift, the unit bit of
@@ -153,9 +149,9 @@ inline uint32_t fp16_ieee_to_fp32_bits(uint16_t h) {
 #endif
   renorm_shift = renorm_shift > 5 ? renorm_shift - 5 : 0;
   /*
-   * Iff half-precision number has exponent of 15, the addition overflows
+   * Iff FP8 number has exponent of 15, the addition overflows
    * it into bit 31, and the subsequent shift turns the high 9 bits
-   * into 1. Thus inf_nan_mask == 0x7F800000 if the half-precision number
+   * into 1. Thus inf_nan_mask == 0x7F800000 if the FP8 number
    * had exponent of 15 (i.e. was NaN or infinity) 0x00000000 otherwise
    */
   const int32_t inf_nan_mask =
@@ -164,7 +160,7 @@ inline uint32_t fp16_ieee_to_fp32_bits(uint16_t h) {
    * Iff nonsign is 0, it overflows into 0xFFFFFFFF, turning bit 31
    * into 1. Otherwise, bit 31 remains 0. The signed shift right by 31
    * broadcasts bit 31 into all bits of the zero_mask. Thus zero_mask ==
-   * 0xFFFFFFFF if the half-precision number was zero (+0.0h or -0.0h)
+   * 0xFFFFFFFF if the FP8 number was zero (+0.0h or -0.0h)
    * 0x00000000 otherwise
    */
   const int32_t zero_mask = (int32_t)(nonsign - 1) >> 31;
@@ -172,11 +168,11 @@ inline uint32_t fp16_ieee_to_fp32_bits(uint16_t h) {
    * 1. Shift nonsign left by renorm_shift to normalize it (if the input
    * was denormal)
    * 2. Shift nonsign right by 3 so the exponent (5 bits originally)
-   * becomes an 8-bit field and 10-bit mantissa shifts into the 10 high
+   * becomes an 8-bit field and 2-bit mantissa shifts into the 2 high
    * bits of the 23-bit mantissa of IEEE single-precision number.
    * 3. Add 0x70 to the exponent (starting at bit 23) to compensate the
    * different in exponent bias (0x7F for single-precision number less 0xF
-   * for half-precision number).
+   * for FP8 number).
    * 4. Subtract renorm_shift from the exponent (starting at bit 23) to
    * account for renormalization. As renorm_shift is less than 0x70, this
    * can be combined with step 3.
@@ -193,7 +189,7 @@ inline uint32_t fp16_ieee_to_fp32_bits(uint16_t h) {
 }
 
 /*
- * Convert a 16-bit floating-point number in IEEE half-precision format, in bit
+ * Convert a 16-bit floating-point number in IEEE FP8 format, in bit
  * representation, to a 32-bit floating-point number in IEEE single-precision
  * format.
  *
@@ -201,19 +197,19 @@ inline uint32_t fp16_ieee_to_fp32_bits(uint16_t h) {
  * mode and no operations on denormals) floating-point operations and bitcasts
  * between integer and floating-point variables.
  */
-inline float fp16_ieee_to_fp32_value(uint16_t h) {
+inline float fp8_ieee_to_fp32_value(uint8_t h) {
   /*
-   * Extend the half-precision floating-point number to 32 bits and shift to the
+   * Extend the 8-bit floating-point number to 32 bits and shift to the
    * upper part of the 32-bit word:
-   *      +---+-----+------------+-------------------+
-   *      | S |EEEEE|MM MMMM MMMM|0000 0000 0000 0000|
-   *      +---+-----+------------+-------------------+
-   * Bits  31  26-30    16-25            0-15
+   *      +---+------+--+------------------------------+
+   *      | S |EEEE E|MM| 0000 0000 0000 0000 0000 0000|
+   *      +---+------+--+------------------------------+
+   * Bits  31  26-30    24-25            0-23
    *
    * S - sign bit, E - bits of the biased exponent, M - bits of the mantissa, 0
    * - zero bits.
    */
-  const uint32_t w = (uint32_t)h << 16;
+  const uint32_t w = (uint32_t)h << 24;
   /*
    * Extract the sign of the input number into the high bit of the 32-bit word:
    *
@@ -224,13 +220,13 @@ inline float fp16_ieee_to_fp32_value(uint16_t h) {
    */
   const uint32_t sign = w & UINT32_C(0x80000000);
   /*
-   * Extract mantissa and biased exponent of the input number into the high bits
+   * Extract mantissa and biased exponent of the input number into the bits 0-30
    * of the 32-bit word:
    *
-   *      +-----+------------+---------------------+
-   *      |EEEEE|MM MMMM MMMM|0 0000 0000 0000 0000|
-   *      +-----+------------+---------------------+
-   * Bits  27-31    17-26            0-16
+   *      +---+------+--+------------------------------+
+   *      | 0 |EEEE E|MM| 0000 0000 0000 0000 0000 0000|
+   *      +---+------+--+------------------------------+
+   * Bits  31  26-30    24-25            0-23
    */
   const uint32_t two_w = w + w;
 
@@ -239,17 +235,17 @@ inline float fp16_ieee_to_fp32_value(uint16_t h) {
    * mantissa and exponent of a single-precision floating-point number:
    *
    *       S|Exponent |          Mantissa
-   *      +-+---+-----+------------+----------------+
-   *      |0|000|EEEEE|MM MMMM MMMM|0 0000 0000 0000|
-   *      +-+---+-----+------------+----------------+
+   *      +-+---+-----+--+--------------------------+
+   *      |0|000|EEEEE|MM|0000 0000|0 0000 0000 0000|
+   *      +-+---+-----+--+--------------------------+
    * Bits   | 23-31   |           0-22
    *
    * Next, there are some adjustments to the exponent:
    * - The exponent needs to be corrected by the difference in exponent bias
-   * between single-precision and half-precision formats (0x7F - 0xF = 0x70)
+   * between single-precision and FP8 formats (0x7F - 0xF = 0x70)
    * - Inf and NaN values in the inputs should become Inf and NaN values after
    * conversion to the single-precision number. Therefore, if the biased
-   * exponent of the half-precision input was 0x1F (max possible value), the
+   * exponent of the FP8 input was 0x1F (max possible value), the
    * biased exponent of the single-precision output must be 0xFF (max possible
    * value). We do this correction in two steps:
    *   - First, we adjust the exponent by (0xFF - 0x1F) = 0xE0 (see exp_offset
@@ -276,35 +272,41 @@ inline float fp16_ieee_to_fp32_value(uint16_t h) {
       fp32_from_bits((two_w >> 4) + exp_offset) * exp_scale;
 
   /*
-   * Convert denormalized half-precision inputs into single-precision results
+   * Convert denormalized FP8 inputs into single-precision results
    * (always normalized). Zero inputs are also handled here.
    *
+   * two_w representation:
+   *      +------+--+-------------------------------+
+   *      |EEEE E|MM|0 0000 0000 0000 0000 0000 0000|
+   *      +------+--+-------------------------------+
+   * Bits  31  27 25-26            0-24
+   *
    * In a denormalized number the biased exponent is zero, and mantissa has
-   * on-zero bits. First, we shift mantissa into bits 0-9 of the 32-bit word.
+   * on-zero bits. First, we shift mantissa into bits 0-1 of the 32-bit word.
    *
    *                  zeros           |  mantissa
    *      +---------------------------+------------+
-   *      |0000 0000 0000 0000 0000 00|MM MMMM MMMM|
+   *      |0000 0000 0000 0000 0000 00|MM 0000 0000|
    *      +---------------------------+------------+
    * Bits             10-31                0-9
    *
-   * Now, remember that denormalized half-precision numbers are represented as:
-   *    FP16 = mantissa * 2**(-24).
+   * Now, remember that denormalized FP8 numbers are represented as:
+   *    FP8 = mantissa * 2**(-16).
    * The trick is to construct a normalized single-precision number with the
-   * same mantissa and thehalf-precision input and with an exponent which would
+   * same mantissa and the FP8 input and with an exponent which would
    * scale the corresponding mantissa bits to 2**(-24). A normalized
    * single-precision floating-point number is represented as: FP32 = (1 +
    * mantissa * 2**(-23)) * 2**(exponent - 127) Therefore, when the biased
    * exponent is 126, a unit change in the mantissa of the input denormalized
-   * half-precision number causes a change of the constructud single-precision
+   * FP8 number causes a change of the constructud single-precision
    * number by 2**(-24), i.e. the same amount.
    *
    * The last step is to adjust the bias of the constructed single-precision
-   * number. When the input half-precision number is zero, the constructed
+   * number. When the input FP8 number is zero, the constructed
    * single-precision number has the value of FP32 = 1 * 2**(126 - 127) =
    * 2**(-1) = 0.5 Therefore, we need to subtract 0.5 from the constructed
    * single-precision number to get the numerical equivalent of the input
-   * half-precision number.
+   * FP8 number.
    */
   constexpr uint32_t magic_mask = UINT32_C(126) << 23;
   constexpr float magic_bias = 0.5f;
@@ -335,7 +337,7 @@ inline float fp16_ieee_to_fp32_value(uint16_t h) {
  * mode and no operations on denormals) floating-point operations and bitcasts
  * between integer and floating-point variables.
  */
-inline uint16_t fp16_ieee_from_fp32_value(float f) {
+inline uint16_t fp8_ieee_from_fp32_value(float f) {
   // const float scale_to_inf = 0x1.0p+112f;
   // const float scale_to_zero = 0x1.0p-110f;
   constexpr uint32_t scale_to_inf_bits = (uint32_t)239 << 23;
@@ -373,8 +375,8 @@ inline uint16_t fp16_ieee_from_fp32_value(float f) {
 
 } // namespace detail
 
-struct alignas(2) Half {
-  unsigned short x;
+struct alignas(1) Float8 {
+  unsigned char x;
 
   struct from_bits_t {};
   C10_HOST_DEVICE static constexpr from_bits_t from_bits() {
@@ -383,36 +385,36 @@ struct alignas(2) Half {
 
   // HIP wants __host__ __device__ tag, CUDA does not
 #if defined(USE_ROCM)
-  C10_HOST_DEVICE Half() = default;
+  C10_HOST_DEVICE Float8() = default;
 #else
-  Half() = default;
+  Float8() = default;
 #endif
 
-  constexpr C10_HOST_DEVICE Half(unsigned short bits, from_bits_t) : x(bits){};
-  inline C10_HOST_DEVICE Half(float value);
+  constexpr C10_HOST_DEVICE Float8(unsigned short bits, from_bits_t) : x(bits){};
+  inline C10_HOST_DEVICE Float8(float value);
   inline C10_HOST_DEVICE operator float() const;
 
 #if defined(__CUDACC__) || defined(__HIPCC__)
-  inline C10_HOST_DEVICE Half(const __half& value);
-  inline C10_HOST_DEVICE operator __half() const;
+  inline C10_HOST_DEVICE Float8(const __nv_fp8_e5m2 & value);
+  inline C10_HOST_DEVICE operator __nv_fp8_e5m2 () const;
 #endif
-#ifdef SYCL_LANGUAGE_VERSION
-  inline C10_HOST_DEVICE Half(const sycl::half& value);
-  inline C10_HOST_DEVICE operator sycl::half() const;
-#endif
+// #ifdef SYCL_LANGUAGE_VERSION
+//   inline C10_HOST_DEVICE Float8(const sycl::half& value);
+//   inline C10_HOST_DEVICE operator sycl::half() const;
+// #endif
 };
 
 // TODO : move to complex.h
 template <>
-struct alignas(4) complex<Half> {
-  Half real_;
-  Half imag_;
+struct alignas(2) complex<Float8> {
+  Float8 real_;
+  Float8 imag_;
 
   // Constructors
   complex() = default;
-  // Half constructor is not constexpr so the following constructor can't
+  // Float8 constructor is not constexpr so the following constructor can't
   // be constexpr
-  C10_HOST_DEVICE explicit inline complex(const Half& real, const Half& imag)
+  C10_HOST_DEVICE explicit inline complex(const Float8& real, const Float8& imag)
       : real_(real), imag_(imag) {}
   C10_HOST_DEVICE inline complex(const c10::complex<float>& value)
       : real_(value.real()), imag_(value.imag()) {}
@@ -422,26 +424,26 @@ struct alignas(4) complex<Half> {
     return {real_, imag_};
   }
 
-  constexpr C10_HOST_DEVICE Half real() const {
+  constexpr C10_HOST_DEVICE Float8 real() const {
     return real_;
   }
-  constexpr C10_HOST_DEVICE Half imag() const {
+  constexpr C10_HOST_DEVICE Float8 imag() const {
     return imag_;
   }
 
-  C10_HOST_DEVICE complex<Half>& operator+=(const complex<Half>& other) {
+  C10_HOST_DEVICE complex<Float8>& operator+=(const complex<Float8>& other) {
     real_ = static_cast<float>(real_) + static_cast<float>(other.real_);
     imag_ = static_cast<float>(imag_) + static_cast<float>(other.imag_);
     return *this;
   }
 
-  C10_HOST_DEVICE complex<Half>& operator-=(const complex<Half>& other) {
+  C10_HOST_DEVICE complex<Float8>& operator-=(const complex<Float8>& other) {
     real_ = static_cast<float>(real_) - static_cast<float>(other.real_);
     imag_ = static_cast<float>(imag_) - static_cast<float>(other.imag_);
     return *this;
   }
 
-  C10_HOST_DEVICE complex<Half>& operator*=(const complex<Half>& other) {
+  C10_HOST_DEVICE complex<Float8>& operator*=(const complex<Float8>& other) {
     auto a = static_cast<float>(real_);
     auto b = static_cast<float>(imag_);
     auto c = static_cast<float>(other.real());
@@ -540,8 +542,8 @@ typename std::enable_if<is_complex<From>::value, bool>::type overflows(From f) {
              typename From::value_type>(f.imag());
 }
 
-C10_API std::ostream& operator<<(std::ostream& out, const Half& value);
+C10_API std::ostream& operator<<(std::ostream& out, const Float8& value);
 
 } // namespace c10
 
-#include <c10/util/Half-inl.h> // IWYU pragma: keep
+#include <c10/util/Float8-inl.h> // IWYU pragma: keep
