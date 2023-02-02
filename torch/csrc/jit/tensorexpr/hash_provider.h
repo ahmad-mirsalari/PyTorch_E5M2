@@ -94,7 +94,8 @@ class TORCH_API HashProvider : public IRVisitor {
     CACHE_GUARD();                               \
     putHash(v, hash_combine(#Name, v->value())); \
   }
-  AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, IMM_VISIT);
+  // AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, IMM_VISIT);
+  AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, IMM_VISIT);
 #undef IMM_VISIT
 
   void visit(CastPtr v) override;
@@ -169,6 +170,10 @@ class TORCH_API HashProvider : public IRVisitor {
   void _hash_combine(SimplifierHashType& seed, const at::Half& val) {
     seed._h ^=
         te_hash((uint16_t)val) + 0x1f752c19 + (seed._h << 7) + (seed._h >> 4);
+  }
+ void _hash_combine(SimplifierHashType& seed, const at::Float8& val) {
+    seed._h ^=
+        te_hash((uint8_t)val) + 0x1f752c19 + (seed._h << 7) + (seed._h >> 4);
   }
 
   void _hash_combine(SimplifierHashType& seed, const Dtype& val) {
@@ -294,6 +299,13 @@ class TORCH_API HashProvider : public IRVisitor {
     // memcpy as type punning. Should be optimized out.
     // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
     int16_t n;
+    std::memcpy(&n, &d, sizeof d);
+    return te_hash(n);
+  }
+    size_t te_hash(at::Float8 d) {
+    // memcpy as type punning. Should be optimized out.
+    // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
+    int8_t n;
     std::memcpy(&n, &d, sizeof d);
     return te_hash(n);
   }

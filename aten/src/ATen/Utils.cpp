@@ -68,7 +68,11 @@ Tensor tensor_complex_backend(
       return at::detail::tensor_cpu(values, options);               \
     }                                                               \
   }
-AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, TENSOR)
+//Ahmad
+// AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, TENSOR)
+AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, TENSOR)
+//Ahmad*
+
 #undef TENSOR
 
 #define TENSOR(T, _1)                                               \

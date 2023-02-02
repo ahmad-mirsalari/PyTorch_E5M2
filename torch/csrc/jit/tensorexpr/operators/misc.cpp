@@ -35,7 +35,8 @@ ExprHandle promoteToDtype(ExprHandle e, ScalarType dt) {
   case ScalarType::Name:      \
     e = cast<Type>(e);        \
     break;
-    AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, TYPE_CASE);
+    // AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, TYPE_CASE);
+    AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, TYPE_CASE);
 #undef TYPE_CASE
     case ScalarType::QUInt8:
       e = cast<c10::quint8>(e);
@@ -76,6 +77,18 @@ bool isScalar(ExprHandle e) {
 }
 
 ExprHandle promoteHalfToFloat(const ExprHandle& e) {
+  auto scalarType = static_cast<c10::ScalarType>(e.dtype().scalar_type());
+  auto floatType = static_cast<c10::ScalarType>(tensorexpr::ScalarType::Float);
+  if (c10::isFloatingType(scalarType) &&
+      (c10::elementSize(scalarType) < c10::elementSize(floatType))) {
+    return Cast::make(
+        Dtype(tensorexpr::ScalarType::Float, e.dtype().lanes()), e);
+  } else {
+    return e;
+  }
+}
+
+ExprHandle promoteFloat8ToFloat(const ExprHandle& e) {
   auto scalarType = static_cast<c10::ScalarType>(e.dtype().scalar_type());
   auto floatType = static_cast<c10::ScalarType>(tensorexpr::ScalarType::Float);
   if (c10::isFloatingType(scalarType) &&
@@ -149,7 +162,8 @@ ExprHandle demoteOutput(
 #define TYPE_CASE(Type, Name) \
   case ScalarType::Name:      \
     return cast<Type>(e);
-    AT_FORALL_SCALAR_TYPES_AND2(Half, BFloat16, TYPE_CASE);
+    // AT_FORALL_SCALAR_TYPES_AND2(Half, BFloat16, TYPE_CASE);
+    AT_FORALL_SCALAR_TYPES_AND3(Half, BFloat16, Float8, TYPE_CASE);
 #undef TYPE_CASE
     case ScalarType::Bool:
       return cast<bool>(e);

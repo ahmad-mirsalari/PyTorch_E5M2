@@ -88,7 +88,8 @@ ExprHandle ExprHandle::operator>>(const ExprHandle& other) const {
 // NOLINTNEXTLINE
 #define IMM_EXPR_DECLARE(Type, Name) \
   ExprHandle::ExprHandle(Type v) : ExprHandle(Name##Imm::make(v)) {}
-AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, IMM_EXPR_DECLARE);
+// AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, IMM_EXPR_DECLARE);
+AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, IMM_EXPR_DECLARE);
 #undef IMM_EXPR_DECLARE
 
 ExprHandle sin(const ExprHandle& v) {

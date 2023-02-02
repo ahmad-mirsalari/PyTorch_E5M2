@@ -58,6 +58,7 @@
 #include <torch/csrc/jit/tensorexpr/expr.h>
 #include <torch/csrc/jit/tensorexpr/external_functions_registry.h>
 #include <torch/csrc/jit/tensorexpr/half_support.h>
+#include <torch/csrc/jit/tensorexpr/float8_support.h>
 #include <torch/csrc/jit/tensorexpr/ir.h>
 #include <torch/csrc/jit/tensorexpr/ir_printer.h>
 #include <torch/csrc/jit/tensorexpr/tensor.h>
@@ -225,7 +226,8 @@ class LLVMCodeGenImpl : public IRVisitor {
   std::string kernel_func_name_;
 
 #define LLVM_TYPE_DECLARE(_1, Name) llvm::Type* Name##Ty_;
-  AT_FORALL_SCALAR_TYPES_AND2(Bool, Half, LLVM_TYPE_DECLARE);
+  // AT_FORALL_SCALAR_TYPES_AND2(Bool, Half, LLVM_TYPE_DECLARE);
+  AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, Float8, LLVM_TYPE_DECLARE);
 #undef LLVM_TYPE_DECLARE
   llvm::Type* Int8PtrTy_;
   llvm::Type* VoidTy_;
@@ -300,7 +302,8 @@ class LLVMCodeGenImpl : public IRVisitor {
   void visit(CompareSelectPtr v) override;
 
 #define IMM_VISIT_DECLARE(_1, Name) void visit(Name##ImmPtr v) override;
-  AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, IMM_VISIT_DECLARE);
+  // AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, IMM_VISIT_DECLARE);
+  AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, IMM_VISIT_DECLARE);
 #undef IMM_VISIT_DECLARE
 
   void visit(CastPtr v) override;
@@ -477,6 +480,7 @@ LLVMCodeGenImpl::LLVMCodeGenImpl(
   IntTy_ = llvm::Type::getInt32Ty(getContext());
   LongTy_ = llvm::Type::getInt64Ty(getContext());
   HalfTy_ = llvm::Type::getHalfTy(getContext());
+  Float8Ty = llvm::Type::getFloat8Ty(getContext());
   FloatTy_ = llvm::Type::getFloatTy(getContext());
   DoubleTy_ = llvm::Type::getDoubleTy(getContext());
   Int8PtrTy_ = llvm::Type::getInt8PtrTy(getContext());
@@ -546,7 +550,8 @@ llvm::Type* LLVMCodeGenImpl::dtypeToLLVM(Dtype dtype) {
     return n##Ty_;       \
     break;
 
-    AT_FORALL_SCALAR_TYPES_AND2(Bool, Half, TYPE_CASE);
+    // AT_FORALL_SCALAR_TYPES_AND2(Bool, Half, TYPE_CASE);
+    AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, Float5, TYPE_CASE);
 #undef TYPE_CASE
     case ScalarType::QInt8:
       return CharTy_;
@@ -1020,6 +1025,9 @@ void LLVMCodeGenImpl::visit(BFloat16ImmPtr v) {
   value_ = llvm::ConstantInt::get(ShortTy_, v->value().x);
 }
 
+void LLVMCodeGenImpl::visit(Float8ImmPtr v) {
+  value_ = llvm::ConstantFP::get(Float8Ty_, v->value());
+}
 void LLVMCodeGenImpl::visit(BoolImmPtr v) {
   value_ = llvm::ConstantInt::get(BoolTy_, v->value());
 }
@@ -1127,6 +1135,13 @@ void LLVMCodeGenImpl::visit(CastPtr v) {
       // as with eager, convert from Double -> Half by Converting to Float then
       // Half. TODO: __truncdfhf2
       if (v->dtype().scalar_type() == ScalarType::Half &&
+          v->src_value()->dtype().scalar_type() == ScalarType::Double) {
+        value_ = irb_.CreateFPCast(
+            value_, llvmTypeToVec(FloatTy_, v->dtype().lanes()));
+      }
+      // as with eager, convert from Double -> Float8 by Converting to Float then
+      // Float8. TODO: __truncdfhf2
+      if (v->dtype().scalar_type() == ScalarType::Float8 &&
           v->src_value()->dtype().scalar_type() == ScalarType::Double) {
         value_ = irb_.CreateFPCast(
             value_, llvmTypeToVec(FloatTy_, v->dtype().lanes()));
@@ -1258,7 +1273,8 @@ void LLVMCodeGenImpl::visit(RampPtr v) {
   case ScalarType::Name:                                       \
     vecType = llvm::VectorType::get(Name##Ty_, element_count); \
     break;
-    AT_FORALL_SCALAR_TYPES_AND2(Bool, Half, TYPE_CASE);
+    // AT_FORALL_SCALAR_TYPES_AND2(Bool, Half, TYPE_CASE);
+    AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, Float8, TYPE_CASE);
 #undef TYPE_CASE
     case ScalarType::QInt8:
       vecType = llvm::VectorType::get(CharTy_, element_count);
@@ -1336,7 +1352,8 @@ void LLVMCodeGenImpl::visit(LoadPtr v) {
   case ScalarType::Name:                                        \
     loadType = llvm::VectorType::get(Name##Ty_, element_count); \
     break;
-    AT_FORALL_SCALAR_TYPES_AND2(Bool, Half, TYPE_CASE);
+    // AT_FORALL_SCALAR_TYPES_AND2(Bool, Half, TYPE_CASE);
+    AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, Float8, TYPE_CASE);
 #undef TYPE_CASE
     case ScalarType::QInt8:
       loadType = llvm::VectorType::get(CharTy_, element_count);

@@ -18,7 +18,7 @@ static std::unordered_map<std::string, int> op_to_key = {
 namespace caffe2 {
 
 using at::Half; // for AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, ...)
-
+using at::Float8;
 namespace internal {
 TORCH_API at::Tensor index_with_uint8_handling(
     const at::Tensor& self,
@@ -55,7 +55,8 @@ private:
       case at::k##aten_name: \
         return TypeMeta::Make<ctype>();
     switch(st) {
-      AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, DEFINE_CASE)
+      // AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, DEFINE_CASE)
+      AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, DEFINE_CASE)
     default:
       CAFFE_THROW("Unknown ATen Type");
     }
@@ -157,7 +158,8 @@ private:
           auto value = extract<ctype>(scalar); \
           assignToValue<ctype>(dst, at::convert<ctype,decltype(value)>(value)); \
         } break;
-      AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, DEFINE_CASE)
+      // AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, DEFINE_CASE)
+      AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, DEFINE_CASE)
 #undef DEFINE_CASE
       default:
         CAFFE_THROW("Unknown ATen Type");

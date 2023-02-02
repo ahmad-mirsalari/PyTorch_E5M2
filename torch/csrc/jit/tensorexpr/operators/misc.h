@@ -24,6 +24,7 @@ void promoteInputs(
     const int typeConstraints = kAllTypes);
 ExprHandle promoteIntegerToDefaultType(const ExprHandle& e);
 ExprHandle promoteHalfToFloat(const ExprHandle& e);
+ExprHandle promoteFloat8ToFloat(const ExprHandle& e);
 ExprHandle demoteOutput(
     const ExprHandle& e,
     const c10::optional<ScalarType> type);

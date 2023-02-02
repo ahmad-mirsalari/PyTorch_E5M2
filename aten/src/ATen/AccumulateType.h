@@ -4,6 +4,9 @@
 #include <c10/util/BFloat16.h>
 #include <c10/util/Half.h>
 
+//Ahmad
+#include<c10/util/Float8.h>
+//Ahmad*
 // Defines the accumulation type for a scalar type.
 // Example:
 //   using accscalar_t = acc_type<scalar_t, /*is_cuda*/true>;
@@ -42,6 +45,9 @@
 #if defined(__CUDACC__)
 #include <cuda.h>
 #include <cuda_fp16.h>
+//Ahmad
+#include <cuda_fp8.h>
+//Ahmad
 #elif defined(__HIPCC__)
 #include <hip/hip_fp16.h>
 #include <hip/hip_runtime.h>
@@ -58,6 +64,33 @@ struct AccumulateType<half, true> {
   using type = float;
 };
 #endif
+
+//Ahmad
+#if defined(__CUDACC__)
+template <>
+struct AccumulateType<__nv_fp8_e5m2, true> {
+  using type = float;
+};
+#endif
+template <>
+struct AccumulateType<Float8, false> {
+  using type = float;
+};
+
+template <>
+struct AccumulateType<Float8, true> {
+  using type = float;
+};
+template <>
+struct AccumulateType<c10::complex<Float8>, false> {
+  using type = c10::complex<float>;
+};
+
+template <>
+struct AccumulateType<c10::complex<Float8>, true> {
+  using type = c10::complex<float>;
+};
+//Ahmad
 template <>
 struct AccumulateType<BFloat16, true> {
   using type = float;

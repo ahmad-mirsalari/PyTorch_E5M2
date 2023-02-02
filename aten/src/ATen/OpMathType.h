@@ -5,6 +5,10 @@
 #include <c10/util/Exception.h>
 #include <c10/util/Half.h>
 
+//Ahmad
+#include<c10/util/Float8.h>
+//Ahmad*
+
 namespace at {
 
 // For FP16 or BFloat16 inputs, ops should perform internal math in FP32.
@@ -24,7 +28,16 @@ template <>
 struct OpMathType<c10::complex<Half>> {
   using type = c10::complex<float>;
 };
-
+//Ahmad
+template <>
+struct OpMathType<at::Float8> {
+  using type = float;
+};
+template <>
+struct OpMathType<c10::complex<Float8>> {
+  using type = c10::complex<float>;
+};
+//Ahmad
 template <typename T>
 using opmath_type = typename OpMathType<T>::type;
 

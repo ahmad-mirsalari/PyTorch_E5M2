@@ -134,7 +134,11 @@ struct TensorDataContainer {
         type_(TensorDataContainerType::Scalar), \
         scalar_(value) {}
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
-  AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, TENSOR)
+  // Ahmad
+
+  //AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, TENSOR)
+  AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, TENSOR)
+  //Ahmad
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
   AT_FORALL_COMPLEX_TYPES(TENSOR)
 #undef TENSOR
@@ -183,7 +187,11 @@ struct TensorDataContainer {
     }                                                                         \
   }
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
-  AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, TENSOR)
+  // Ahmad
+
+  //AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, TENSOR)
+  AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, TENSOR)
+  //Ahmad
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
   AT_FORALL_COMPLEX_TYPES(TENSOR)
 #undef TENSOR
@@ -203,7 +211,10 @@ struct TensorDataContainer {
   TensorDataContainer(const std::vector<T>& values) \
       : TensorDataContainer(at::ArrayRef<T>(values)) {}
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
-  AT_FORALL_SCALAR_TYPES_AND2(Half, BFloat16, TENSOR)
+  //Ahmad
+  //AT_FORALL_SCALAR_TYPES_AND2(Half, BFloat16, TENSOR)
+  AT_FORALL_SCALAR_TYPES_AND3( Half, BFloat16, Float8, TENSOR)
+  //Ahmad
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
   AT_FORALL_COMPLEX_TYPES(TENSOR)
 #undef TENSOR
@@ -283,10 +294,11 @@ struct TensorDataContainer {
 
   void pretty_print_recursive(std::ostream& stream) const {
     if (is_scalar()) {
-      AT_DISPATCH_ALL_TYPES_AND3(
+      AT_DISPATCH_ALL_TYPES_AND4(
           at::kBool,
           at::kHalf,
           at::kBFloat16,
+          at::kFloat8,
           scalar_type_,
           "TensorDataContainer_pretty_print_scalar",
           [&] { stream << scalar_.to<scalar_t>(); });
@@ -303,10 +315,11 @@ struct TensorDataContainer {
     } else if (is_tensor()) {
       stream << "{";
       for (const auto i : c10::irange(tensor_.sizes()[0])) {
-        AT_DISPATCH_ALL_TYPES_AND3(
+        AT_DISPATCH_ALL_TYPES_AND4(
             at::kBool,
             at::kHalf,
             at::kBFloat16,
+            at::kFloat8,
             scalar_type_,
             "TensorDataContainer_pretty_print_tensor_item",
             [&] { stream << tensor_[i].item<scalar_t>(); });

@@ -44,6 +44,15 @@ halfT = BaseCppType("at", "Half")
 complexHalfT = BaseCppType(
     "c10", "complex<c10::Half>"
 )  # stuffing template param here is an abuse
+
+
+#Ahmad
+float8T = BaseCppType("at", "Float8")
+complexFloat8T = BaseCppType(
+    "c10", "complex<c10::Float8>"
+)  # stuffing template param here is an abuse
+#Ahmad
+
 complexFloatT = BaseCppType("c10", "complex<float>")
 complexDoubleT = BaseCppType("c10", "complex<double>")
 bfloat16T = BaseCppType("at", "BFloat16")
@@ -94,6 +103,10 @@ ScalarTypeToCppMapping: Dict[ScalarType, BaseCppType] = {
     ScalarType.ComplexDouble: complexDoubleT,
     ScalarType.Bool: boolT,
     ScalarType.BFloat16: bfloat16T,
+    #Ahmad
+    ScalarType.Float8: float8T,
+    ScalarType.ComplexFloat8: complexFloat8T,
+    #Ahmad
 }
 
 BaseTypeToCppMapping: Dict[BaseTy, BaseCppType] = {

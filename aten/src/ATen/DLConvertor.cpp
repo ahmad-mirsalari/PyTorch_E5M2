@@ -38,6 +38,15 @@ DLDataType getDLDataType(const Tensor& t) {
     case ScalarType::Half:
       dtype.code = DLDataTypeCode::kDLFloat;
       break;
+    
+    //Ahmad
+    case ScalarType::Float8:
+      dtype.code = DLDataTypeCode::kDLFloat;
+      break;
+    case ScalarType::ComplexFloat8:
+      dtype.code = DLDataTypeCode::kDLComplex;
+      break;
+    //Ahmad
     case ScalarType::Bool:
       TORCH_CHECK(false, "Bool type is not supported by dlpack");
       break;
@@ -155,6 +164,11 @@ ScalarType toScalarType(const DLDataType& dtype) {
       break;
     case DLDataTypeCode::kDLFloat:
       switch (dtype.bits) {
+        //Ahmad
+        case 8:
+          stype = ScalarType::Float8;
+          break;
+        //Ahmad
         case 16:
           stype = ScalarType::Half;
           break;
@@ -181,6 +195,11 @@ ScalarType toScalarType(const DLDataType& dtype) {
       break;
     case DLDataTypeCode::kDLComplex:
       switch (dtype.bits) {
+        //Ahmad
+        case 16:
+          stype = ScalarType::ComplexFloat8;
+          break;
+        //Ahmad
         case 32:
           stype = ScalarType::ComplexHalf;
           break;

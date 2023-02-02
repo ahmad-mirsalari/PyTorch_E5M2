@@ -312,8 +312,11 @@ Tensor& empty_out(IntArrayRef size,
     return self.to(ScalarType::n, non_blocking);                 \
   }
 
-AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, DEFINE_CAST_OP)
+//Ahmad
+// AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, DEFINE_CAST_OP)
+AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, DEFINE_CAST_OP)
 
+//Ahmad
 #undef DEFINE_CAST_OP
 
 Tensor empty_like(

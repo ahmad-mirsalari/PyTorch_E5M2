@@ -243,7 +243,8 @@ inline ExprHandle maximumVal(ScalarType type) {
 #define MAX_BY_TYPE_CASE(Type, Name) \
   case ScalarType::Name:             \
     return ExprHandle(std::numeric_limits<Type>::max());
-    AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, MAX_BY_TYPE_CASE)
+    // AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, MAX_BY_TYPE_CASE)
+    AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, MAX_BY_TYPE_CASE)
 #undef MAX_BY_TYPE_CASE
     default:
       throw unsupported_dtype();
@@ -256,7 +257,8 @@ inline ExprHandle minimumVal(ScalarType type) {
 #define MAX_BY_TYPE_CASE(Type, Name) \
   case ScalarType::Name:             \
     return ExprHandle(std::numeric_limits<Type>::min());
-    AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, MAX_BY_TYPE_CASE)
+    // AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, MAX_BY_TYPE_CASE)
+    AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, MAX_BY_TYPE_CASE)
 #undef MAX_BY_TYPE_CASE
     default:
       throw unsupported_dtype();

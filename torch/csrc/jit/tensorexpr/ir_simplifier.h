@@ -100,7 +100,8 @@ inline ExprPtr evaluateOp(ExprPtr v) {
     Type val = eval.value<Type>();                            \
     return getImmediateByType(v->dtype().scalar_type(), val); \
   }
-    AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, TYPE_CASE);
+    // AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, BFloat16, TYPE_CASE);
+    AT_FORALL_SCALAR_TYPES_AND4(Bool, Half, BFloat16, Float8, TYPE_CASE);
 #undef TYPE_CASE
     default:
       LOG(FATAL) << "Unsupported datatype: " << v->dtype();
