@@ -12,9 +12,11 @@
 #endif
 #include <c10/util/BFloat16.h>
 #include <c10/util/Half.h>
+#include <c10/util/Float8.h>
 
 typedef at::Half half;
 typedef at::BFloat16 bfloat16;
+typedef at::Float8 float8;
 
 template <typename T> inline T mod(T a, T b) { return a % b; }
 template <> inline float mod(float a, float b) { return std::fmod(a, b); }

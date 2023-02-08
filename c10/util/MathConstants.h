@@ -3,6 +3,7 @@
 #include <c10/macros/Macros.h>
 #include <c10/util/BFloat16.h>
 #include <c10/util/Half.h>
+#include <c10/util/Float8.h>
 
 C10_CLANG_DIAGNOSTIC_PUSH()
 #if C10_CLANG_HAS_WARNING("-Wimplicit-float-conversion")
@@ -93,6 +94,10 @@ C10_HOST_DEVICE inline constexpr BFloat16 pi<BFloat16>() {
 template <>
 C10_HOST_DEVICE inline constexpr Half pi<Half>() {
   return Half(0x4248, Half::from_bits());
+}
+template <>
+C10_HOST_DEVICE inline constexpr Float8 pi<Float8>() {
+  return Float8(0x42, Float8::from_bits());
 }
 } // namespace detail
 

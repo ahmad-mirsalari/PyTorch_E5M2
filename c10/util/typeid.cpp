@@ -85,5 +85,7 @@ CAFFE_DEFINE_KNOWN_TYPE(detail::_guard_long_unique<std::vector<long>>)
 
 CAFFE_DEFINE_KNOWN_TYPE(float*)
 CAFFE_DEFINE_KNOWN_TYPE(at::Half*)
+CAFFE_DEFINE_KNOWN_TYPE(at::Float8*)
+
 
 } // namespace caffe2

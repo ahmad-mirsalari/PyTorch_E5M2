@@ -53,6 +53,8 @@ namespace c10 {
 namespace guts {
 template <>
 struct is_fundamental<at::Half> : std::true_type {};
+template <>
+struct is_fundamental<at::Float8> : std::true_type {};
 } // namespace guts
 } // namespace c10
 
@@ -719,5 +721,8 @@ CAFFE_DECLARE_KNOWN_TYPE(detail::_guard_long_unique<std::vector<long>>)
 
 CAFFE_DECLARE_KNOWN_TYPE(float*)
 CAFFE_DECLARE_KNOWN_TYPE(at::Half*)
+CAFFE_DECLARE_KNOWN_TYPE(at::Float8*)
+
+
 
 } // namespace caffe2

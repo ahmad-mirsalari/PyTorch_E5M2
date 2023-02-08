@@ -3,6 +3,7 @@
 #include <c10/core/Scalar.h>
 #include <c10/util/BFloat16.h>
 #include <c10/util/Half.h>
+#include <c10/util/Float8.h>
 #include <c10/util/Optional.h>
 #include <torch/csrc/lazy/core/permutation_util.h>
 #include <torch/csrc/lazy/core/shape.h>

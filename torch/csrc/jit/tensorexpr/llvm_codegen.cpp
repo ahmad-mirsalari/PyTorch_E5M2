@@ -507,6 +507,11 @@ LLVMCodeGenImpl::LLVMCodeGenImpl(
   stmt = stmt->accept_mutator(&hsFix);
   GRAPH_DEBUG("After HalfRewriter ", *stmt);
 
+  GRAPH_DEBUG("Before Float8Rewriter ", *stmt);
+  Float8Rewriter fs8Fix;
+  stmt = stmt->accept_mutator(&fs8Fix);
+  GRAPH_DEBUG("After Float8Rewriter ", *stmt);
+
   // Emit prototype and bind argument Vars to parameter indices.
   llvm::Type* retTy = dtypeToLLVM(dtype);
   std::vector<llvm::Type*> params;
@@ -551,7 +556,7 @@ llvm::Type* LLVMCodeGenImpl::dtypeToLLVM(Dtype dtype) {
     break;
 
     // AT_FORALL_SCALAR_TYPES_AND2(Bool, Half, TYPE_CASE);
-    AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, Float5, TYPE_CASE);
+    AT_FORALL_SCALAR_TYPES_AND3(Bool, Half, Float8, TYPE_CASE);
 #undef TYPE_CASE
     case ScalarType::QInt8:
       return CharTy_;

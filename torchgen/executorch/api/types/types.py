@@ -4,6 +4,7 @@ from typing import Dict
 from torchgen.api.types import BaseCppType, boolT, CType, doubleT, longT
 from torchgen.model import BaseTy
 
+float8T = BaseCppType("torch::executor", "Float8")
 halfT = BaseCppType("torch::executor", "Half")
 bfloat16T = BaseCppType("torch::executor", "BFloat16")
 stringT = BaseCppType("torch::executor", "string_view")

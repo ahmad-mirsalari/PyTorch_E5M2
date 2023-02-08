@@ -305,7 +305,7 @@ def _tensor_str(self, indent):
     if self.is_neg():
         self = self.resolve_neg()
 
-    if self.dtype is torch.float16 or self.dtype is torch.bfloat16:
+    if self.dtype is torch.float16 or self.dtype is torch.bfloat16 or self.dtype is torch.float8:
         self = self.float()
 
     if self.dtype is torch.complex32:

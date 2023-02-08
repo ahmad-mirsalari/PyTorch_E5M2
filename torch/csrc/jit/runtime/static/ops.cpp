@@ -172,10 +172,11 @@ namespace {
   do {                                                             \
     const auto N = self.numel();                                   \
     const auto self_data = self.data_ptr<self_t>();                \
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(                        \
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(                        \
         kHalf,                                                     \
         kBFloat16,                                                 \
         kBool,                                                     \
+        kFloat8,                                                   \
         out.scalar_type(),                                         \
         "to_copy_out_inner_loop",                                  \
         [&]() {                                                    \
@@ -242,9 +243,11 @@ at::Tensor& to_copy_out(
           // FBGEMM optimization might kick in, don't interfere with
           // that.
           (self.dtype() == kFloat && out.dtype() == kHalf) ||
-          (self.dtype() == kHalf && out.dtype() == kFloat))) {
-    AT_DISPATCH_ALL_TYPES_AND3(
-        kHalf, kBFloat16, kBool, self.scalar_type(), "to_copy_out", [&]() {
+          (self.dtype() == kHalf && out.dtype() == kFloat) ||
+          (self.dtype() == kFloat && out.dtype() == kFloat8) ||
+          (self.dtype() == kFloat8 && out.dtype() == kFloat))) {
+    AT_DISPATCH_ALL_TYPES_AND4(
+        kHalf, kBFloat16, kBool, kFloat8, self.scalar_type(), "to_copy_out", [&]() {
           TO_COPY_OUT_FAST_PATH_BODY(out, self);
         });
     return out;

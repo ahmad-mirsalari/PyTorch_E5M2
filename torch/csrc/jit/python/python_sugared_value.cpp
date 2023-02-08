@@ -1246,6 +1246,7 @@ std::shared_ptr<SugaredValue> toSugaredValue(
       {"IntTensor", at::ScalarType::Int},
       {"ShortTensor", at::ScalarType::Short},
       {"HalfTensor", at::ScalarType::Half},
+      {"Float8Tensor", at::ScalarType::Float8},
   };
   for (const auto& name : tensor_names) {
     if (obj.ptr() == py::module::import("torch").attr(name.first).ptr()) {

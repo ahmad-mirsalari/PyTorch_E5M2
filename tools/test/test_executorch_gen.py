@@ -23,7 +23,7 @@ TEST_YAML = """
   structured: True
   structured_inherits: TensorIteratorBase
   ufunc_inner_loop:
-    Generic: add (AllAndComplex, BFloat16, Half, ComplexHalf)
+    Generic: add (AllAndComplex, BFloat16, Half, ComplexHalf, Float8)
     ScalarOnly: add (Bool)
   dispatch:
     SparseCPU: add_out_sparse_cpu

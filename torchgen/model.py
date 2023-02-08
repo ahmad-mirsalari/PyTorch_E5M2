@@ -291,10 +291,8 @@ class ScalarType(Enum):
     ComplexDouble = auto()
     Bool = auto()
     BFloat16 = auto()
-    #Ahmad
     Float8 = auto()
     ComplexFloat8 = auto()
-    #Ahmad
 
     def __str__(self) -> str:
         return self.name

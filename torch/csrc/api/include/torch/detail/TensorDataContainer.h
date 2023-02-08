@@ -297,8 +297,8 @@ struct TensorDataContainer {
       AT_DISPATCH_ALL_TYPES_AND4(
           at::kBool,
           at::kHalf,
-          at::kBFloat16,
           at::kFloat8,
+          at::kBFloat16,
           scalar_type_,
           "TensorDataContainer_pretty_print_scalar",
           [&] { stream << scalar_.to<scalar_t>(); });
@@ -318,8 +318,8 @@ struct TensorDataContainer {
         AT_DISPATCH_ALL_TYPES_AND4(
             at::kBool,
             at::kHalf,
-            at::kBFloat16,
             at::kFloat8,
+            at::kBFloat16,
             scalar_type_,
             "TensorDataContainer_pretty_print_tensor_item",
             [&] { stream << tensor_[i].item<scalar_t>(); });

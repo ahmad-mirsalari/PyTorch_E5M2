@@ -2,6 +2,7 @@
 
 #include <c10/util/BFloat16.h>
 #include <c10/util/Half.h>
+#include <c10/util/Float8.h>
 #include <c10/util/math_compat.h>
 
 namespace c10 {
@@ -18,6 +19,10 @@ inline auto copysign(const T& a, const U& b) {
 // Sign is the most significant bit for both half and bfloat16 types
 inline c10::Half copysign(c10::Half a, c10::Half b) {
   return c10::Half((a.x & 0x7fff) | (b.x & 0x8000), c10::Half::from_bits());
+}
+
+inline c10::Float8 copysign(c10::Float8 a, c10::Float8 b) {
+  return c10::Float8((a.x & 0x7f) | (b.x & 0x80), c10::Float8::from_bits());
 }
 
 inline c10::BFloat16 copysign(c10::BFloat16 a, c10::BFloat16 b) {

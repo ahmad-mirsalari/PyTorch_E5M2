@@ -32,6 +32,7 @@ DTYPE_TO_CPP = {
     torch.float32: "float",
     torch.float64: "double",
     torch.float16: "half",
+    torch.float8: "float8",
     torch.int64: "long",
     torch.int32: "int",
     torch.int16: "short",
@@ -45,6 +46,7 @@ DTYPE_TO_ATEN = {
     torch.float32: "at::ScalarType::Float",
     torch.float64: "at::ScalarType::Double",
     torch.float16: "at::ScalarType::Half",
+    torch.float8: "at::ScalarType::Float8",
     torch.int64: "at::ScalarType::Long",
     torch.int32: "at::ScalarType::Int",
     torch.int16: "at::ScalarType::Short",
@@ -526,7 +528,7 @@ class CppOverrides(OpOverrides):
 
     @staticmethod
     def constant(val, dtype):
-        if dtype in (torch.float16, torch.bfloat16):
+        if dtype in (torch.float16, torch.bfloat16, torch.float8):
             # Since load promotes all half-precision inputs to float, constants
             # must be promoted as well
             dtype = torch.float32

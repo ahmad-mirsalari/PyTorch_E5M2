@@ -1524,6 +1524,8 @@ class ShapePropagator : public PropertyPropBase {
           return at::kFloat;
         case aten::_cast_Half:
           return at::kHalf;
+        case aten::_cast_Float8:
+          return at::kFloat8;
         case aten::_cast_Int:
           return at::kInt;
         case aten::_cast_Long:
@@ -1544,6 +1546,7 @@ class ShapePropagator : public PropertyPropBase {
             "aten::_cast_Double(Tensor self, bool non_blocking) -> Tensor",
             "aten::_cast_Float(Tensor self, bool non_blocking) -> Tensor",
             "aten::_cast_Half(Tensor self, bool non_blocking) -> Tensor",
+            "aten::_cast_Float8(Tensor self, bool non_blocking) -> Tensor",
             "aten::_cast_Int(Tensor self, bool non_blocking) -> Tensor",
             "aten::_cast_Long(Tensor self, bool non_blocking) -> Tensor",
             "aten::_cast_Short(Tensor self, bool non_blocking) -> Tensor",
@@ -1600,6 +1603,9 @@ class ShapePropagator : public PropertyPropBase {
             "aten::batch_norm_stats(Tensor input, float eps) -> (Tensor, Tensor)")) {
       if (auto type = input_type(0)) {
         if (type->scalarType() == at::kHalf) {
+          type = type->withScalarType(at::kFloat);
+        }
+        if (type->scalarType() == at::kFloat8) {
           type = type->withScalarType(at::kFloat);
         }
         type = type->withDim(1);

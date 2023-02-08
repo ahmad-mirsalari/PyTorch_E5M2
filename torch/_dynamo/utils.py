@@ -143,6 +143,7 @@ tensortype_to_dtype = {
     torch.FloatTensor: (torch.float32, torch.float),
     torch.DoubleTensor: (torch.float64, torch.double),
     torch.HalfTensor: (torch.float16, torch.half),
+    torch.Float8Tensor: (torch.float8),
     torch.BFloat16Tensor: (torch.bfloat16,),
     torch.ByteTensor: (torch.uint8,),
     torch.CharTensor: (torch.int8,),

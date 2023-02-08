@@ -18,6 +18,7 @@ if hasattr(torch._C, "_nvfuser"):
         torch.double: DataType.Double,
         torch.float: DataType.Float,
         torch.half: DataType.Half,
+        torch.float8: DataType.Float8,
         torch.bfloat16: DataType.BFloat16,
         torch.long: DataType.Int,
         torch.int: DataType.Int32,
@@ -888,7 +889,7 @@ def check_fp_or_complex(
     )
     check(
         allow_low_precision_dtypes or not is_low_precision_dtype(dtype),
-        lambda: f"{fn_name}: Half precision dtypes not supported. Got {dtype}",
+        lambda: f"{fn_name}: Half and Float 8 precision dtypes not supported. Got {dtype}",
     )
 
 

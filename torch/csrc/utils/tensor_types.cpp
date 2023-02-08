@@ -126,6 +126,7 @@ std::vector<std::pair<Backend, ScalarType>> all_declared_types() {
       ScalarType::Long,
       ScalarType::Short,
       ScalarType::Half,
+      ScalarType::Float8,
       ScalarType::Bool,
       ScalarType::BFloat16};
 

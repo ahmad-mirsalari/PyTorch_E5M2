@@ -1,6 +1,7 @@
 #include <torch/csrc/lazy/core/helpers.h>
 
 #include <c10/util/Half.h>
+#include <c10/util/Float8.h>
 #include <c10/util/irange.h>
 #include <torch/csrc/lazy/core/tensor_util.h>
 

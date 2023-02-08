@@ -882,6 +882,15 @@ class HalfStorage(_LegacyStorage):
     def _dtype(self):
         return torch.half
 
+class Float8Storage(_LegacyStorage):
+    @classproperty
+    def dtype(self):
+        _warn_typed_storage_removal()
+        return self._dtype
+
+    @classproperty
+    def _dtype(self):
+        return torch.float8
 class LongStorage(_LegacyStorage):
     @classproperty
     def dtype(self):
@@ -1017,7 +1026,7 @@ _storage_classes = {
     ShortStorage, CharStorage, ByteStorage, HalfStorage, BoolStorage,
     QUInt8Storage, QInt8Storage, QInt32Storage, BFloat16Storage,
     ComplexFloatStorage, ComplexDoubleStorage, QUInt4x2Storage, QUInt2x4Storage,
-    TypedStorage
+    TypedStorage,Float8Storage
 }
 
 # The _tensor_classes set is initialized by the call to _C._initialize_tensor_type_bindings()

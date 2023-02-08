@@ -34,6 +34,10 @@ std::pair<std::string, std::string> getDtypeNames(at::ScalarType scalarType) {
       return std::make_pair("float16", "half");
     case at::ScalarType::ComplexHalf:
       return std::make_pair("complex32", "chalf");
+    case at::ScalarType::Float8:
+      return std::make_pair("float8", "float8_e5m2");
+    case at::ScalarType::ComplexFloat8:
+      return std::make_pair("complex32", "cfloat8");
     case at::ScalarType::ComplexFloat:
       return std::make_pair("complex64", "cfloat");
     case at::ScalarType::ComplexDouble:

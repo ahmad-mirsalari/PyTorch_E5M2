@@ -148,6 +148,9 @@ class _StorageBase(object):
     def half(self):
         """Casts this storage to half type"""
         return self._to(torch.half)
+    def float8(self):
+        """Casts this storage to float8 type"""
+        return self._to(torch.float8)
 
     def long(self):
         """Casts this storage to long type"""
@@ -256,6 +259,7 @@ def _dtype_to_storage_type_map():
         torch.double: 'DoubleStorage',
         torch.float: 'FloatStorage',
         torch.half: 'HalfStorage',
+        torch.float8: 'Float8Storage',
         torch.long: 'LongStorage',
         torch.int: 'IntStorage',
         torch.int16: 'ShortStorage',
@@ -824,6 +828,10 @@ class TypedStorage:
         """Casts this storage to half type"""
         _warn_typed_storage_removal()
         return self._to(torch.half)
+    def float8(self):
+        """Casts this storage to float8 type"""
+        _warn_typed_storage_removal()
+        return self._to(torch.float8)
 
     def long(self):
         """Casts this storage to long type"""

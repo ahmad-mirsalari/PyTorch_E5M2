@@ -131,6 +131,8 @@ static inline hash_t TensorHash(const at::Tensor& tensor) {
       return DataHash(ctensor.data_ptr<at::BFloat16>(), size);
     case at::ScalarType::Half:
       return DataHash(ctensor.data_ptr<at::Half>(), size);
+    case at::ScalarType::Float8:
+      return DataHash(ctensor.data_ptr<at::Float8>(), size);
     case at::ScalarType::ComplexFloat:
       return DataHash(ctensor.data_ptr<c10::complex<float>>(), size);
     case at::ScalarType::ComplexDouble:

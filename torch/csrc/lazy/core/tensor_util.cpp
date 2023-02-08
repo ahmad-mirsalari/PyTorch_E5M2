@@ -2,6 +2,7 @@
 
 #include <c10/util/BFloat16.h>
 #include <c10/util/Half.h>
+#include <c10/util/Float8.h>
 #include <c10/util/complex.h>
 #include <c10/util/irange.h>
 #include <torch/csrc/lazy/backend/backend_device.h>

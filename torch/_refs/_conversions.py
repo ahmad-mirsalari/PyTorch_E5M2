@@ -23,10 +23,12 @@ __all__ = [
     "cdouble",
     "cfloat",
     "chalf",
+    "cfloat8",
     "char",
     "double",
     "float",
     "half",
+    "float8",
     "int",
     "long",
     "short",
@@ -57,6 +59,8 @@ cfloat = _make_conversion_method("cfloat", torch.cfloat)
 
 chalf = _make_conversion_method("chalf", torch.complex32)
 
+cfloat8 = _make_conversion_method("cfloat8", torch.complex32)
+
 char = _make_conversion_method("char", torch.int8)
 
 double = _make_conversion_method("double", torch.double)
@@ -64,6 +68,8 @@ double = _make_conversion_method("double", torch.double)
 float = _make_conversion_method("float", torch.float)
 
 half = _make_conversion_method("half", torch.half)
+
+float8 = _make_conversion_method("float8", torch.float8)
 
 int = _make_conversion_method("int", torch.int)
 

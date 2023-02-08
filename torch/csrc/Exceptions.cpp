@@ -80,7 +80,7 @@ namespace torch {
 
 void processErrorMsgInplace(std::string& str) {
   // Translate Aten types to their respective pytorch ones
-  constexpr std::array<std::pair<c10::string_view, c10::string_view>, 64>
+  constexpr std::array<std::pair<c10::string_view, c10::string_view>, 66>
       changes{{
           {"Variable[SparseCUDAByteType]", "torch.cuda.sparse.ByteTensor"},
           {"Variable[SparseCUDACharType]", "torch.cuda.sparse.CharTensor"},
@@ -114,6 +114,7 @@ void processErrorMsgInplace(std::string& str) {
           {"Variable[CPULongType]", "torch.LongTensor"},
           {"Variable[CPUShortType]", "torch.ShortTensor"},
           {"Variable[CPUHalfType]", "torch.HalfTensor"},
+          {"Variable[CPUFloat8Type]", "torch.Float8Tensor"},
           {"SparseCUDAByteType", "torch.cuda.sparse.ByteTensor"},
           {"SparseCUDACharType", "torch.cuda.sparse.CharTensor"},
           {"SparseCUDADoubleType", "torch.cuda.sparse.DoubleTensor"},
@@ -146,6 +147,7 @@ void processErrorMsgInplace(std::string& str) {
           {"CPULongType", "torch.LongTensor"},
           {"CPUShortType", "torch.ShortTensor"},
           {"CPUHalfType", "torch.HalfTensor"},
+          {"CPUFloat8Type", "torch.Float8Tensor"},
       }};
 
   // Avoid doing any work if no types need translated

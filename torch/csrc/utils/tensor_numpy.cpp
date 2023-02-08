@@ -279,6 +279,8 @@ int aten_to_numpy_dtype(const ScalarType scalar_type) {
       return NPY_FLOAT;
     case kHalf:
       return NPY_HALF;
+    // case kFloat8:
+    //   return NPY_FLOAT8;
     case kComplexDouble:
       return NPY_COMPLEX128;
     case kComplexFloat:
@@ -308,6 +310,8 @@ ScalarType numpy_dtype_to_aten(int dtype) {
       return kFloat;
     case NPY_HALF:
       return kHalf;
+    // case NPY_FLOAT8:
+    //   return kFloat8;
     case NPY_COMPLEX64:
       return kComplexFloat;
     case NPY_COMPLEX128:
