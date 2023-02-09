@@ -127,6 +127,10 @@ template<>
 inline c10::complex<at::Half> conj_impl <c10::complex<at::Half>> (c10::complex<at::Half> z) {
   return c10::complex<at::Half>{z.real(), -z.imag()};
 }
+template<>
+inline c10::complex<at::Float8> conj_impl <c10::complex<at::Float8>> (c10::complex<at::Float8> z) {
+  return c10::complex<at::Float8>{z.real(), -z.imag()};
+}
 
 template<>
 inline c10::complex<float> conj_impl <c10::complex<float>> (c10::complex<float> z) {

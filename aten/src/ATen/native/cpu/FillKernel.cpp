@@ -35,14 +35,27 @@ void fill_non_native_type<c10::complex<at::Half>>(TensorIterator& iter, const Sc
       [val]() -> int32_t { return val; },
       [val]() { return Vectorized<int32_t>(val); });
 }
-
+template <>
+void fill_non_native_type<c10::complex<at::Float8>>(TensorIterator& iter, const Scalar& value_scalar) {
+  static_assert(sizeof(c10::complex<at::Float8>) == sizeof(int16_t), "Size of ComplexFloat8 should be 16-bits");
+  auto value = c10::complex<at::Float8>(value_scalar.to<c10::complex<float>>());
+  auto val = *reinterpret_cast<int16_t*>(std::addressof(value));
+  cpu_kernel_vec</*check_dynamic_cast=*/false>(
+      iter,
+      [val]() -> int16_t { return val; },
+      [val]() { return Vectorized<int16_t>(val); });
+}
 void fill_kernel(TensorIterator& iter, const Scalar& value_scalar) {
   if (iter.dtype() == ScalarType::Half) {
     fill_non_native_type<at::Half>(iter, value_scalar);
   } else if (iter.dtype() == ScalarType::BFloat16) {
     fill_non_native_type<at::BFloat16>(iter, value_scalar);
-  } else if (iter.dtype() == ScalarType::ComplexHalf) {
+  } else if (iter.dtype() == ScalarType::Float8) {
+    fill_non_native_type<at::Float8>(iter, value_scalar);
+  }else if (iter.dtype() == ScalarType::ComplexHalf) {
     fill_non_native_type<c10::complex<at::Half>>(iter, value_scalar);
+  }else if (iter.dtype() == ScalarType::ComplexFloat8) {
+    fill_non_native_type<c10::complex<at::Float8>>(iter, value_scalar);
   } else {
     AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND(at::ScalarType::Bool, iter.dtype(), "fill_cpu", [&]() {
       scalar_t value = value_scalar.to<scalar_t>();

@@ -356,6 +356,7 @@ INSTANTIATE_DOT_IMPL(int);
 INSTANTIATE_DOT_IMPL(int64_t);
 INSTANTIATE_DOT_IMPL(c10::Half);
 INSTANTIATE_DOT_IMPL(c10::BFloat16);
+INSTANTIATE_DOT_IMPL(c10::Float8);
 
 #define INSTANTIATE_VDOT_IMPL(scalar_t)  \
   template scalar_t vdot_impl<scalar_t>( \

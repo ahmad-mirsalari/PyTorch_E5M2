@@ -50,8 +50,8 @@ void _segment_reduce_lengths_cpu_kernel1(
   auto data_size_axis = data.size(axis);
   auto output_stride_axis = output.stride(axis);
   auto output_size_axis = output.size(axis);
-  AT_DISPATCH_FLOATING_TYPES_AND2(
-      kBFloat16, kHalf, data.scalar_type(), "_segment_reduce_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(
+      kBFloat16, kHalf, kFloat8, data.scalar_type(), "_segment_reduce_cpu", [&]() {
         auto* output_data = output.data_ptr<scalar_t>();
         const auto* values_data = data.data_ptr<scalar_t>();
         for (const auto outer_idx : c10::irange(outer_offset)) {
@@ -206,9 +206,10 @@ void _segment_reduce_cpu_lengths_backward_kernel1(
   auto output_size_axis = output_contig.size(axis);
   // TODO: Switch to TensorIterator for better maintainablility and
   // readability
-  AT_DISPATCH_FLOATING_TYPES_AND2(
+  AT_DISPATCH_FLOATING_TYPES_AND3(
       kBFloat16,
       kHalf,
+      kFloat8,
       data_contig.scalar_type(),
       "_segment_reduce_cpu",
       [&]() {

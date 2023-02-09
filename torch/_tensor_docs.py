@@ -5202,19 +5202,19 @@ Args:
 )
 
 
-add_docstr_all(
-    "float8",
-    r"""
-float8(memory_format=torch.preserve_format) -> Tensor
+# add_docstr_all(
+#     "float8",
+#     r"""
+# float8(memory_format=torch.preserve_format) -> Tensor
 
-``self.float8()`` is equivalent to ``self.to(torch.float8)``. See :func:`to`.
+# ``self.float8()`` is equivalent to ``self.to(torch.float8)``. See :func:`to`.
 
-Args:
-    {memory_format}
-""".format(
-        **common_args
-    ),
-)
+# Args:
+#     {memory_format}
+# """.format(
+#         **common_args
+#     ),
+# )
 
 add_docstr_all(
     "int",

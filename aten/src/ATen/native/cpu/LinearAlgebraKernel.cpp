@@ -39,7 +39,7 @@ void addr_kernel(TensorIterator &iter,
     return;
   }
 
-  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND2(kBFloat16, kHalf,
+  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(kBFloat16, kHalf, kFloat8,
     iter.dtype(), "addr_cpu", [&]() {
       using Vec = Vectorized<scalar_t>;
 

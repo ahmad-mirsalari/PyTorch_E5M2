@@ -5,6 +5,7 @@
 #include <ATen/jiterator_macros.h>
 #include <c10/util/BFloat16.h>
 #include <c10/util/Half.h>
+#include <c10/util/Float8.h>
 #include <c10/util/MathConstants.h>
 #include <c10/util/math_compat.h>
 #include <cfloat>
@@ -1204,6 +1205,10 @@ template <>
 C10_UNUSED c10::Half calc_igamma<c10::Half>(c10::Half a, c10::Half x) {
   return calc_igamma<float>(float(a), float(x));
 }
+template <>
+C10_UNUSED c10::Float8 calc_igamma<c10::Float8>(c10::Float8 a, c10::Float8 x) {
+  return calc_igamma<float>(float(a), float(x));
+}
 
 template <>
 C10_UNUSED c10::BFloat16 calc_igammac<c10::BFloat16>(c10::BFloat16 a, c10::BFloat16 x) {
@@ -1215,6 +1220,10 @@ C10_UNUSED c10::Half calc_igammac<c10::Half>(c10::Half a, c10::Half x) {
   return calc_igammac<float>(float(a), float(x));
 }
 
+template <>
+C10_UNUSED c10::Float8 calc_igammac<c10::Float8>(c10::Float8 a, c10::Float8 x) {
+  return calc_igammac<float>(float(a), float(x));
+}
 inline c10::BFloat16 calc_erfinv(c10::BFloat16 a) { return calc_erfinv(float(a)); }
 
 template <typename T>

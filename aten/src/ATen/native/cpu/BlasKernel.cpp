@@ -193,7 +193,7 @@ void cpublas_gemm_impl(
     const void *b, int64_t ldb,
     const Scalar& beta,
     void *c, int64_t ldc) {
-  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND2(at::kHalf, at::kBFloat16,
+  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(at::kHalf, at::kBFloat16, kFloat8,
     type, "cpublas_gemm_impl",
       [&]{
         using opmath_t = at::opmath_type<scalar_t>;
@@ -216,7 +216,7 @@ void cpublas_axpy_impl(at::ScalarType type, int64_t n, const Scalar& _a, const v
       for(i = 0; i < n; i++)
         y[i*incy] |= a & x[i*incx];
   } else {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND2(at::kHalf, at::kBFloat16, type, "cpublas_axpy_impl",
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(at::kHalf, at::kBFloat16, kFloat8, type, "cpublas_axpy_impl",
       [&] {
         using opmath_t = at::opmath_type<scalar_t>;
         auto a = _a.to<opmath_t>();
@@ -230,7 +230,7 @@ void cpublas_axpy_impl(at::ScalarType type, int64_t n, const Scalar& _a, const v
 }
 
 void cpublas_copy_impl(at::ScalarType type, int64_t n, const void *_x, int64_t incx, void *_y, int64_t incy){
-  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(at::kComplexHalf, at::kHalf, at::kBFloat16, at::kBool, type, "cpublas_copy_impl",
+  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(at::kComplexHalf, at::kHalf, at::kBFloat16, at::kBool, kComplexFloat8, kFloat8, type, "cpublas_copy_impl",
     [&] {
       auto x = static_cast<const scalar_t *>(_x);
       auto y = static_cast<scalar_t *>(_y);

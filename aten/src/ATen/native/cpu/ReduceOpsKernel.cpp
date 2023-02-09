@@ -158,7 +158,7 @@ static void mean_kernel_impl(TensorIterator& iter) {
 }
 
 static void std_var_kernel_impl(TensorIterator& iter, int64_t correction, bool take_sqrt) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(kHalf, kBFloat16, iter.dtype(), "std_cpu", [&] {
+  AT_DISPATCH_FLOATING_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.dtype(), "std_cpu", [&] {
     binary_kernel_reduce(
         iter,
         WelfordOps<
@@ -233,7 +233,7 @@ static void norm_kernel_tensor_iterator_impl(
   // the type `acc_t`. When `scalar_t` is complex, `acc_t` is the downgraded
   // real number type. Otherwise, `acc_t` and `scalar_t` are the same type.
   if (val == 0) {
-    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(kHalf, kBFloat16, iter.input_dtype(), "norm_cpu", [&] {
+    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.input_dtype(), "norm_cpu", [&] {
       using acc_t = typename scalar_value_type<scalar_t>::type;
       binary_kernel_reduce(
         iter,
@@ -242,7 +242,7 @@ static void norm_kernel_tensor_iterator_impl(
       );
     });
   } else if (val == 1) {
-    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(kHalf, kBFloat16, iter.input_dtype(), "norm_cpu", [&] {
+    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.input_dtype(), "norm_cpu", [&] {
       using acc_t = typename scalar_value_type<scalar_t>::type;
       binary_kernel_reduce(
         iter,
@@ -288,7 +288,7 @@ static void norm_kernel_tensor_iterator_impl(
       });
       return;
     }
-    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(kHalf, kBFloat16, iter.input_dtype(), "norm_cpu", [&] {
+    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.input_dtype(), "norm_cpu", [&] {
       using acc_t = typename scalar_value_type<scalar_t>::type;
       binary_kernel_reduce(
         iter,
@@ -297,7 +297,7 @@ static void norm_kernel_tensor_iterator_impl(
       );
     });
   } else if (val == INFINITY) {
-    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(kHalf, kBFloat16, iter.input_dtype(), "norm_cpu", [&] {
+    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.input_dtype(), "norm_cpu", [&] {
       using acc_t = typename scalar_value_type<scalar_t>::type;
       binary_kernel_reduce(
         iter,
@@ -306,7 +306,7 @@ static void norm_kernel_tensor_iterator_impl(
       );
     });
   } else if (val == -INFINITY) {
-    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(kHalf, kBFloat16, iter.input_dtype(), "norm_cpu", [&] {
+    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.input_dtype(), "norm_cpu", [&] {
       using acc_t = typename scalar_value_type<scalar_t>::type;
       binary_kernel_reduce(
         iter,
@@ -315,7 +315,7 @@ static void norm_kernel_tensor_iterator_impl(
       );
     });
   } else {
-    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(kHalf, kBFloat16, iter.input_dtype(), "norm_cpu", [&] {
+    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.input_dtype(), "norm_cpu", [&] {
       using acc_t = typename scalar_value_type<scalar_t>::type;
       binary_kernel_reduce(
         iter,
@@ -414,7 +414,7 @@ static void min_values_kernel_impl(TensorIterator& iter) {
       std::pair<scalar_t, int64_t>(upper_bound<scalar_t>(), -1));
     return;
   }
-  AT_DISPATCH_ALL_TYPES_AND3(kBFloat16, kHalf, kBool, iter.dtype(), "min_values_cpu", [&iter] {
+  AT_DISPATCH_ALL_TYPES_AND4(kBFloat16, kHalf, kBool, kFloat8, iter.dtype(), "min_values_cpu", [&iter] {
     binary_kernel_reduce_vec(
       iter,
       [](scalar_t a, scalar_t b) -> scalar_t { return min_impl(a, b); },
@@ -424,7 +424,7 @@ static void min_values_kernel_impl(TensorIterator& iter) {
 }
 
 static void max_values_kernel_impl(TensorIterator& iter) {
-  AT_DISPATCH_ALL_TYPES_AND3(kBFloat16, kHalf, kBool, iter.dtype(), "max_values_cpu", [&iter] {
+  AT_DISPATCH_ALL_TYPES_AND4(kBFloat16, kHalf, kFloat8, kBool, iter.dtype(), "max_values_cpu", [&iter] {
     binary_kernel_reduce_vec(
       iter,
       [](scalar_t a, scalar_t b) -> scalar_t { return max_impl(a, b); },
@@ -434,7 +434,7 @@ static void max_values_kernel_impl(TensorIterator& iter) {
 }
 
 static void argmax_kernel_impl(TensorIterator &iter) {
-  AT_DISPATCH_ALL_TYPES_AND2(kHalf, kBFloat16, iter.dtype(1), "argmax_cpu", [&] {
+  AT_DISPATCH_ALL_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.dtype(1), "argmax_cpu", [&] {
     if (is_reduce_lastdim(iter)) {
       using arg_t = std::pair<scalar_t, int64_t>;
       auto op = ArgMaxOps<scalar_t>{};
@@ -458,7 +458,7 @@ static void argmax_kernel_impl(TensorIterator &iter) {
 }
 
 static void argmin_kernel_impl(TensorIterator &iter) {
-  AT_DISPATCH_ALL_TYPES_AND2(kHalf, kBFloat16, iter.dtype(1), "argmin_cpu", [&] {
+  AT_DISPATCH_ALL_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.dtype(1), "argmin_cpu", [&] {
     if (is_reduce_lastdim(iter)) {
       using arg_t = std::pair<scalar_t, int64_t>;
       auto op = ArgMinOps<scalar_t>{};

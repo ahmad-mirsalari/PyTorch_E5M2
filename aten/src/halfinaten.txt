@@ -1,0 +1,701 @@
+ATen/core/.txt:TransformationHelper.h:template <> struct DistAccumType<half> { using type = float; };
+ATen/core/.txt:TransformationHelper.h:      // we need log to be not 0, and not underflow when converted to half
+ATen/core/TransformationHelper.h:template <> struct DistAccumType<half> { using type = float; };
+ATen/core/TransformationHelper.h:      // we need log to be not 0, and not underflow when converted to half
+ATen/cuda/Atomic.cuh:  return atomicAdd(reinterpret_cast<__half*>(address), val);
+ATen/cuda/CUDABlas.cpp:      reinterpret_cast<const rocblas_half*>(x),
+ATen/cuda/CUDABlas.cpp:      reinterpret_cast<const rocblas_half*>(y),
+ATen/cuda/CUDABlas.cpp:      reinterpret_cast<rocblas_half*>(result)));
+ATen/cuda/llvm_jit_strings.h:TORCH_CUDA_CPP_API const std::string &get_complex_half_body_string();
+ATen/cuda/CUDATensorMethods.cuh:inline __half* Tensor::data() const {
+ATen/cuda/CUDATensorMethods.cuh:  return reinterpret_cast<__half*>(data<Half>());
+ATen/cuda/llvm_complex.cpp:const std::string complex_half_body = R"ESCAPE(
+ATen/cuda/llvm_complex.cpp:const std::string &get_complex_half_body_string() {
+ATen/cuda/llvm_complex.cpp:  return complex_half_body;
+ATen/cuda/cub.cuh:  using type = __half;
+ATen/cpu/vec/vec256/vec256_complex_float.h:  const Vectorized i_half = _mm256_setr_ps(0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5);
+ATen/cpu/vec/vec256/vec256_complex_float.h:  return i_half*ln;                                                 // i/2*ln()
+ATen/cpu/vec/vec256/vec256_qint.h:    // The vectorized code above always rounds to even in halfway cases
+ATen/cpu/vec/vec256/vec256_qint.h:    // using std::round because it does rounding away from zero in halfway
+ATen/cpu/vec/vec256/vec256_int.h:  // int32_t has half the size of double
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:    const uint64_t half1 = 0xF,
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:    const uint64_t half2 = 0xF0) {
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:  uint64_t both = half1 | half2;
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:  else if (res_mask == half1)
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:  else if (res_mask == half2)
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:  else if (res_mask > 0 && res_mask < half1)
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:  else if ((res_mask & half2) == half2)
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:  else if ((res_mask & half1) == 0 && res_mask > half1)
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:  else if ((res_mask & half1) == half1 && res_mask > half1)
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:constexpr auto pi_half() {
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:constexpr auto pi_half<double>() {
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:constexpr auto image_half() {
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:constexpr auto image_half<double>() {
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:        Vectorized<T>{vinner_type(image_half<underline_type>())}; // i/2*ln()
+ATen/cpu/vec/vec256/zarch/vec256_zarch.h:    return Vectorized<T>(vinner_type(pi_half<underline_type>())) - asin();
+ATen/cpu/vec/vec256/vsx/vec256_complex_double_vsx.h:    return ln * vd_imag_half; // i/2*ln()
+ATen/cpu/vec/vec256/vsx/vsx_helpers.h:constexpr int blendChoice(uint32_t mask, uint32_t half1 = 0xF, uint32_t half2 = 0xF0) {
+ATen/cpu/vec/vec256/vsx/vsx_helpers.h:  uint32_t both = half1 | half2;
+ATen/cpu/vec/vec256/vsx/vsx_helpers.h:  else if (mask == half1)
+ATen/cpu/vec/vec256/vsx/vsx_helpers.h:  else if (mask == half2)
+ATen/cpu/vec/vec256/vsx/vsx_helpers.h:  else if (mask > 0 && mask < half1)
+ATen/cpu/vec/vec256/vsx/vsx_helpers.h:  else if ((mask & half2) == half2)
+ATen/cpu/vec/vec256/vsx/vsx_helpers.h:  else if ((mask & half1) == 0 && mask > half1)
+ATen/cpu/vec/vec256/vsx/vsx_helpers.h:  else if ((mask & half1) == half1 && mask > half1)
+ATen/cpu/vec/vec256/vsx/vsx_helpers.h:const vfloat32 half = vec_splats(0.5f);
+ATen/cpu/vec/vec256/vsx/vsx_helpers.h:const vfloat32 tanh_half_max = vec_splats(44.014845935754205f);
+ATen/cpu/vec/vec256/vsx/vsx_helpers.h:const vfloat32 imag_half = vfloat32{0.f, 0.5f, 0.f, 0.5f};
+ATen/cpu/vec/vec256/vsx/vsx_helpers.h:const vfloat64 vd_imag_half = vfloat64{0.0, 0.5};
+ATen/cpu/vec/vec256/vsx/vec256_complex_float_vsx.h:    return ln * imag_half; // i/2*ln()
+ATen/cpu/vec/vec256/vec256_complex_double.h:  const Vectorized i_half = _mm256_setr_pd(0.0, 0.5, 0.0, 0.5);
+ATen/cpu/vec/vec256/vec256_complex_double.h:  return i_half*ln;                                                 // i/2*ln()
+ATen/cpu/vec/vec512/vec512_complex_float.h:  const Vectorized i_half = _mm512_setr_ps(0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5,
+ATen/cpu/vec/vec512/vec512_complex_float.h:  return i_half*ln;                                                 // i/2*ln()
+ATen/cpu/vec/vec512/vec512_int.h:  // int32_t has half the size of double
+ATen/cpu/vec/vec512/vec512_complex_double.h:  const Vectorized i_half = _mm512_setr_pd(0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5);
+ATen/cpu/vec/vec512/vec512_complex_double.h:  return i_half*ln;                                                 // i/2*ln()
+ATen/cpu/vec/vec512/vec512_qint.h:    // The vectorized code above always rounds to even in halfway cases
+ATen/cpu/vec/vec512/vec512_qint.h:    // using std::round because it does rounding away from zero in halfway
+ATen/cpu/vec/vec_base.h:  static constexpr int half_size = size / 2;
+ATen/cpu/vec/vec_base.h:  for (const auto i : c10::irange(half_size)) {
+ATen/cpu/vec/vec_base.h:    buffer1[half_size + i] = b_arr[i * 2];
+ATen/cpu/vec/vec_base.h:    buffer2[half_size + i] = b_arr[i * 2 + 1];
+ATen/cpu/vec/vec_base.h:  static constexpr int half_size = size / 2;
+ATen/cpu/vec/vec_base.h:  for (const auto i : c10::irange(half_size)) {
+ATen/cpu/vec/vec_base.h:    buffer2[i * 2] = a_arr[half_size + i];
+ATen/cpu/vec/vec_base.h:    buffer2[i * 2 + 1] = b_arr[half_size + i];
+ATen/Dispatch.h:// but NOT booleans (bool), half-precision floats (Half) or
+ATen/Dispatch.h:// are NOT integers mod 2, half precision operations ~essentially
+ATen/Dispatch.h:// 2. Should half be supported?  (If you're on CPU, the answer is almost
+ATen/miopen/Descriptors.cpp:  throw std::runtime_error("TensorDescriptor only supports float, half and bfloat16 tensors");
+ATen/native/GatedLinearUnit.cpp:  // size output to half of input
+ATen/native/GatedLinearUnit.cpp:  // half tensor
+ATen/native/GatedLinearUnit.cpp:  // for second gradinput half, can get a better performance by fusion
+ATen/native/MaxPooling.cpp:      "max_pool1d() padding should be at most half of kernel size, but got padding=",
+ATen/native/LinearAlgebraUtils.h:// Returns the epsilon value for floating types except half
+ATen/native/BatchLinearAlgebraKernel.cpp:Copies the lower (or upper) triangle of the square matrix to the other half and conjugates it.
+ATen/native/cuda/UnaryComplexKernels.cu:  auto conj_chalf = [&] {
+ATen/native/cuda/UnaryComplexKernels.cu:    AT_DISPATCH_CASE(kComplexHalf, conj_chalf)
+ATen/native/cuda/Shape.cu:  //Given half of the GPU, full utilization will always occur.
+ATen/native/cuda/Shape.cu:    //Get grid where x dim fills half gpu and y dim is number of tensors.
+ATen/native/cuda/PowKernel.cu:void pow_chalf_tensor_scalar_impl(TensorIteratorBase& iter, const Scalar& exp_scalar) {
+ATen/native/cuda/PowKernel.cu:      pow_chalf_tensor_scalar_impl(iter, exp);
+ATen/native/cuda/PowKernel.cu:      pow_chalf_tensor_scalar_impl(iter, exp_scalar);
+ATen/native/cuda/SoftMax.cu:Tensor host_softmax(const Tensor & input_, const int64_t dim_, const bool half_to_float, const Tensor& output){
+ATen/native/cuda/SoftMax.cu:  if (half_to_float) {
+ATen/native/cuda/SoftMax.cu:  static_assert(std::is_same<acc_type<at::Half, true>, float>::value, "accscalar_t for half should be float");
+ATen/native/cuda/SoftMax.cu:        if (!half_to_float) {
+ATen/native/cuda/SoftMax.cu:        if (!half_to_float) {
+ATen/native/cuda/SoftMax.cu:void host_softmax_backward(const Tensor &grad_, const Tensor &output_, int64_t dim_, bool half_to_float, const Tensor &gI){
+ATen/native/cuda/SoftMax.cu:  static_assert(std::is_same<acc_type<at::Half, true>, float>::value, "accscalar_t for half should be float");
+ATen/native/cuda/SoftMax.cu:    if (!half_to_float) {
+ATen/native/cuda/SoftMax.cu:      if (!half_to_float) {
+ATen/native/cuda/SoftMax.cu:  const bool half_to_float,
+ATen/native/cuda/SoftMax.cu:  host_softmax<LogSoftMaxForwardEpilogue,true>(input, dim, half_to_float, output);
+ATen/native/cuda/SoftMax.cu:  bool half_to_float = grad.scalar_type() != input_dtype;
+ATen/native/cuda/SoftMax.cu:  if (half_to_float) {
+ATen/native/cuda/SoftMax.cu:  host_softmax_backward<LogSoftMaxBackwardEpilogue, true>(grad, output, dim, half_to_float, grad_input);
+ATen/native/cuda/SoftMax.cu:  const bool half_to_float,
+ATen/native/cuda/SoftMax.cu:  host_softmax<SoftMaxForwardEpilogue,false>(input, dim, half_to_float, output);
+ATen/native/cuda/SoftMax.cu:  bool half_to_float = grad.scalar_type() != input_dtype;
+ATen/native/cuda/SoftMax.cu:  if (half_to_float) {
+ATen/native/cuda/SoftMax.cu:  host_softmax_backward<SoftMaxBackwardEpilogue, false>(tmp, output, dim, half_to_float, grad_input);
+ATen/native/cuda/ForeachBinaryOpList.cu:std::vector<Tensor> all_types_complex_bool_half_bfloat16(TensorList tensors1, TensorList tensors2, const Scalar& alpha = 1) {
+ATen/native/cuda/ForeachBinaryOpList.cu:void all_types_complex_bool_half_bfloat16_(TensorList tensors1, TensorList tensors2, const Scalar& alpha = 1) {
+ATen/native/cuda/ForeachBinaryOpList.cu:std::vector<Tensor> all_types_half_bfloat16(TensorList tensors1, TensorList tensors2, const Scalar& alpha = 1) {
+ATen/native/cuda/ForeachBinaryOpList.cu:void all_types_half_bfloat16_(TensorList tensors1, TensorList tensors2, const Scalar& alpha = 1) {
+ATen/native/cuda/ForeachBinaryOpList.cu:FOREACH_BINARY_OP_LIST_ALPHA(all_types_complex_bool_half_bfloat16, add, std::plus);
+ATen/native/cuda/ForeachBinaryOpList.cu:FOREACH_BINARY_OP_LIST_ALPHA(all_types_complex_bool_half_bfloat16, sub, std::minus);
+ATen/native/cuda/ForeachBinaryOpList.cu:FOREACH_BINARY_OP_LIST(all_types_complex_bool_half_bfloat16, mul, std::multiplies, /*division_op*/ false);
+ATen/native/cuda/ForeachBinaryOpList.cu:FOREACH_BINARY_OP_LIST(all_types_complex_bool_half_bfloat16, div, std::divides, /*division_op*/ true);
+ATen/native/cuda/ForeachBinaryOpList.cu:FOREACH_BINARY_OP_LIST(all_types_half_bfloat16, clamp_max, minimum, /*division_op*/ false);
+ATen/native/cuda/ForeachBinaryOpList.cu:FOREACH_BINARY_OP_LIST(all_types_half_bfloat16, clamp_min, maximum, /*division_op*/ false);
+ATen/native/cuda/SummaryOps.cu:    // check against half of free mem to be extra safe
+ATen/native/cuda/ForeachBinaryOpScalar.cu:std::vector<Tensor> all_types_complex_bool_half_bfloat16(TensorList tensors, const Scalar& scalar) {
+ATen/native/cuda/ForeachBinaryOpScalar.cu:void all_types_complex_bool_half_bfloat16_(TensorList tensors, const Scalar& scalar) {
+ATen/native/cuda/ForeachBinaryOpScalar.cu:std::vector<Tensor> all_types_half_bfloat16(TensorList tensors, const Scalar& scalar) {
+ATen/native/cuda/ForeachBinaryOpScalar.cu:void all_types_half_bfloat16_(TensorList tensors, const Scalar& scalar) {
+ATen/native/cuda/ForeachBinaryOpScalar.cu:FOREACH_BINARY_OP_SCALAR(all_types_complex_bool_half_bfloat16, add, std::plus, /*div_op*/ false);
+ATen/native/cuda/ForeachBinaryOpScalar.cu:FOREACH_BINARY_OP_SCALAR(all_types_complex_bool_half_bfloat16, mul, std::multiplies, /*div_op*/ false);
+ATen/native/cuda/ForeachBinaryOpScalar.cu:FOREACH_BINARY_OP_SCALAR(all_types_complex_bool_half_bfloat16, div, std::divides, /*div_op*/ true);
+ATen/native/cuda/ForeachBinaryOpScalar.cu:FOREACH_BINARY_OP_SCALAR(all_types_half_bfloat16, clamp_max, minimum, false);
+ATen/native/cuda/ForeachBinaryOpScalar.cu:FOREACH_BINARY_OP_SCALAR(all_types_half_bfloat16, clamp_min, maximum, false);
+ATen/native/cuda/CuFFTPlanCache.h:    // For half, base strides on the real part of real-to-complex and
+ATen/native/cuda/CuFFTPlanCache.h:      // cuFFT on half requires compute capability of at least SM_53
+ATen/native/cuda/CuFFTPlanCache.h:               "cuFFT doesn't support signals of half type with compute "
+ATen/native/cuda/CuFFTPlanCache.h:               "capability less than SM_53, but the device containing input half "
+ATen/native/cuda/CuFFTPlanCache.h:            " computing in half precision, but got a signal size of",
+ATen/native/cuda/UpSampleBilinear2d.cu:  const accscalar_t half = 0.5;
+ATen/native/cuda/UpSampleBilinear2d.cu:      (height_scale >= 1.0) ? (interp_filter.size * half) * height_scale : interp_filter.size * half);
+ATen/native/cuda/UpSampleBilinear2d.cu:      (width_scale >= 1.0) ? (interp_filter.size * half) * width_scale : interp_filter.size * half);
+ATen/native/cuda/fused_adam_utils.cuh:// For most optimizers, GradScaler unscales gradients on behalf of those optimizers.
+ATen/native/cuda/WeightNorm.cu:// at least 16 fast elements wide to ensure fully-coalesced half-precision accesses.
+ATen/native/cuda/Math.cuh:    constexpr T half{0.5};
+ATen/native/cuda/Math.cuh:    s -= half * b;
+ATen/native/cuda/SpectralOps.cpp:  auto last_dim_halfsize = (input_sizes[last_dim]) / 2 + 1;
+ATen/native/cuda/SpectralOps.cpp:  onesided_sizes[last_dim] = last_dim_halfsize;
+ATen/native/cuda/SpectralOps.cpp:  // Only need to normalize the onesided slice since data in the other half is overwritten
+ATen/native/cuda/SpectralOps.cpp:  auto out_slice = output.slice(last_dim, 0, last_dim_halfsize);
+ATen/native/cuda/SpectralOps.cpp:      working_tensor.slice(last_dim, 0, last_dim_halfsize).copy_(output);
+ATen/native/cuda/SpectralOps.cpp:  auto last_dim_halfsize = result.sizes()[last_dim];
+ATen/native/cuda/SpectralOps.cpp:  auto out_slice = out.slice(last_dim, 0, last_dim_halfsize);
+ATen/native/cuda/SpectralOps.cu:// In real-to-complex transform, cuFFT only fills half of the values due to
+ATen/native/cuda/SpectralOps.cu:// The following function fills in the other half with symmetry in
+ATen/native/cuda/SpectralOps.cu:// signals, but only contains half (onesided) of the values.
+ATen/native/cuda/SpectralOps.cu:    ScalarType dtype, IntArrayRef mirror_dims, IntArrayRef signal_half_sizes,
+ATen/native/cuda/SpectralOps.cu:      ndim, signal_half_sizes.data(), &in_strides_ptr, &element_size);
+ATen/native/cuda/SpectralOps.cu:      signal_half_sizes, out_strides, mirror_dims, element_size);
+ATen/native/cuda/SpectralOps.cu:  const auto numel = c10::multiply_integers(signal_half_sizes);
+ATen/native/cuda/PersistentSoftmax.cuh:// input_t=half,  acc_t=float, output_t=half  => read half tensor, float accumulators, write half tensor.
+ATen/native/cuda/PersistentSoftmax.cuh:// input_t=half,  acc_t=float, output_t=float => read half tensor, float accumulators, write float tensor.
+ATen/native/cuda/PersistentSoftmax.cuh:// input_t_float, acc_t=float, output_t=half  => read float tensor, float accumulators, write half tensor.
+ATen/native/cuda/Normalization.cu:    bool is_half_float = std::is_same<scalar_t, at::Half>::value && mean_st == at::kFloat;
+ATen/native/cuda/Normalization.cu:      if (is_half_float || is_bfloat16_float) {
+ATen/native/cuda/Normalization.cu:      if (is_half_float || is_bfloat16_float) {
+ATen/native/cuda/Reduce.cuh:  static constexpr bool is_inp_out_type_half_or_chalf =
+ATen/native/cuda/Reduce.cuh:      !(is_inp_out_type_half_or_chalf || is_inp_out_type_bfloat16);
+ATen/native/cuda/Reduce.cuh:  static constexpr bool is_inp_out_type_half_or_chalf =
+ATen/native/cuda/Reduce.cuh:      !(is_inp_out_type_half_or_chalf || is_inp_out_type_bfloat16);
+ATen/native/cuda/SortingRadixSelect.cuh:    RadixType x = __half_as_ushort(v);
+ATen/native/cuda/SortingRadixSelect.cuh:    return __ushort_as_half(v ^ mask);
+ATen/native/cuda/KernelUtils.cuh:  __half* target_addr = reinterpret_cast<__half*>(tensor + index);
+ATen/native/cuda/KernelUtils.cuh:  bool low_byte = (reinterpret_cast<std::uintptr_t>(target_addr) % sizeof(__half2) == 0);
+ATen/native/cuda/KernelUtils.cuh:    __half2 value2;
+ATen/native/cuda/KernelUtils.cuh:    value2.y = __int2half_rz(0);
+ATen/native/cuda/KernelUtils.cuh:    atomicAdd(reinterpret_cast<__half2*>(target_addr), value2);
+ATen/native/cuda/KernelUtils.cuh:    __half2 value2;
+ATen/native/cuda/KernelUtils.cuh:    value2.x = __int2half_rz(0);
+ATen/native/cuda/KernelUtils.cuh:    atomicAdd(reinterpret_cast<__half2*>(target_addr - 1), value2);
+ATen/native/cuda/KernelUtils.cuh:        reinterpret_cast<__half*>(tensor) + index, static_cast<__half>(value));
+ATen/native/cuda/LossCTC.cu:// The second (backward) half of the forward backward algorithm, (10) and (11). This is parallel to the
+ATen/native/cuda/jit_utils.cpp:  ${half_string}
+ATen/native/cuda/jit_utils.cpp:  ${complex_half_body_string}
+ATen/native/cuda/jit_utils.cpp://we need to include half, bfloat16 and complex strings to all kernels with half arguments and to all kernels with type casting
+ATen/native/cuda/jit_utils.cpp://regardless of whether they have half arguments (because fetch_and_cast and cast_and_store loop over all types)
+ATen/native/cuda/jit_utils.cpp:const std::string jiterator_half_support_literal = R"ESCAPE(
+ATen/native/cuda/jit_utils.cpp:    x = __half_as_short(__float2half(value));
+ATen/native/cuda/jit_utils.cpp:      return __half2float(*reinterpret_cast<const __half*>(&x));
+ATen/native/cuda/jit_utils.cpp:    env.s("half_string", jiterator_half_support_literal);
+ATen/native/cuda/jit_utils.cpp:    env.s("half_string", "");
+ATen/native/cuda/jit_utils.cpp:    env.s("complex_half_body_string", get_complex_half_body_string());
+ATen/native/cuda/jit_utils.cpp:    env.s("complex_half_body_string", "");
+ATen/native/cuda/jit_utils.cpp:        env.s("half_string", jiterator_half_support_literal);
+ATen/native/cuda/jit_utils.cpp:        env.s("half_string", "");
+ATen/native/cuda/jit_utils.cpp:        env.s("complex_half_body_string", get_complex_half_body_string());
+ATen/native/cuda/jit_utils.cpp:        env.s("complex_half_body_string", "");
+ATen/native/cuda/ActivationGluKernel.cu:  // We explicitly iterate over the first half of the input tensor, and
+ATen/native/cuda/ActivationGluKernel.cu:  // corresponding index in the second half of the tensor.
+ATen/native/cuda/RreluWithNoise.cu:    // half and float
+ATen/native/cuda/layer_norm_kernel.cu:        // upper half of warps write to shared
+ATen/native/cuda/layer_norm_kernel.cu:        // lower half merges
+ATen/native/cuda/layer_norm_kernel.cu:    //constexpr int alignment = 16; //currently unused to make sure float and half results are bw accurate
+ATen/native/cuda/layer_norm_kernel.cu:        // top half write to shared memory
+ATen/native/cuda/layer_norm_kernel.cu:        // bottom half sums
+ATen/native/cuda/layer_norm_kernel.cu:        // upper half of warps write to shared
+ATen/native/cuda/layer_norm_kernel.cu:        // lower half merges
+ATen/native/cuda/Dropout.cu:    //curand_uniform_double was pure evil anyway, not doing what it promises, and there's nothing for halfs, so generate float for everything
+ATen/native/cuda/Dropout.cu://curand_uniform_double was pure evil anyway, not doing what it promises, and there's nothing for halfs, so generate float for everything
+ATen/native/cuda/ForeachBinaryOpScalarList.cu:std::vector<Tensor> all_types_complex_bool_half_bfloat16(TensorList tensors, at::ArrayRef<Scalar> scalars) {
+ATen/native/cuda/ForeachBinaryOpScalarList.cu:void all_types_complex_bool_half_bfloat16_(TensorList tensors, at::ArrayRef<Scalar> scalars) {
+ATen/native/cuda/ForeachBinaryOpScalarList.cu:std::vector<Tensor> all_types_half_bfloat16(TensorList tensors, at::ArrayRef<Scalar> scalars) {
+ATen/native/cuda/ForeachBinaryOpScalarList.cu:void all_types_half_bfloat16_(TensorList tensors, at::ArrayRef<Scalar> scalars) {
+ATen/native/cuda/ForeachBinaryOpScalarList.cu:FOREACH_BINARY_OP_SCALARLIST(all_types_complex_bool_half_bfloat16, add, std::plus, /*div_op*/ false);
+ATen/native/cuda/ForeachBinaryOpScalarList.cu:FOREACH_BINARY_OP_SCALARLIST(all_types_complex_bool_half_bfloat16, mul, std::multiplies, /*div_op*/ false);
+ATen/native/cuda/ForeachBinaryOpScalarList.cu:FOREACH_BINARY_OP_SCALARLIST(all_types_complex_bool_half_bfloat16, div, std::divides, /*div_op*/ true);
+ATen/native/cuda/ForeachBinaryOpScalarList.cu:FOREACH_BINARY_OP_SCALARLIST(all_types_half_bfloat16, clamp_max, minimum, false);
+ATen/native/cuda/ForeachBinaryOpScalarList.cu:FOREACH_BINARY_OP_SCALARLIST(all_types_half_bfloat16, clamp_min, maximum, false);
+ATen/native/cuda/RangeFactories.cu:      const int64_t halfway = steps / 2;
+ATen/native/cuda/RangeFactories.cu:      gpu_kernel_with_index(r, [scalar_start, scalar_end, steps, step, halfway]GPU_LAMBDA(int64_t ind) -> scalar_t {
+ATen/native/cuda/RangeFactories.cu:        if (ind < halfway) {
+ATen/native/cuda/RangeFactories.cu:      const int64_t halfway = steps / 2;
+ATen/native/cuda/RangeFactories.cu:      gpu_kernel_with_index(r, [scalar_start, scalar_end, steps, step, halfway]GPU_LAMBDA(int64_t ind) -> scalar_t {
+ATen/native/cuda/RangeFactories.cu:        if (ind < halfway) {
+ATen/native/cuda/RangeFactories.cu:      const int64_t halfway = steps / 2;
+ATen/native/cuda/RangeFactories.cu:      gpu_kernel_with_index(r, [scalar_start, scalar_end, scalar_base, steps, step, halfway]GPU_LAMBDA(int64_t ind) -> scalar_t {
+ATen/native/cuda/RangeFactories.cu:        if (ind < halfway) {
+ATen/native/cuda/RangeFactories.cu:      const int64_t halfway = steps / 2;
+ATen/native/cuda/RangeFactories.cu:      gpu_kernel_with_index(r, [scalar_start, scalar_end, scalar_base, steps, step, halfway]GPU_LAMBDA(int64_t ind) -> scalar_t {
+ATen/native/cuda/RangeFactories.cu:        if (ind < halfway) {
+ATen/native/cuda/ForeachUnaryOp.cu:std::vector<Tensor> floating_complex_half(TensorList tensors) {
+ATen/native/cuda/ForeachUnaryOp.cu:void floating_complex_half_(TensorList tensors) {
+ATen/native/cuda/ForeachUnaryOp.cu:std::vector<Tensor> all_types_complex_bfloat16_half_bool(TensorList tensors) {
+ATen/native/cuda/ForeachUnaryOp.cu:void all_types_complex_bfloat16_half_bool_(TensorList tensors) {
+ATen/native/cuda/ForeachUnaryOp.cu:std::vector<Tensor> floating_complex_half_bfloat16(TensorList tensors) {
+ATen/native/cuda/ForeachUnaryOp.cu:void floating_complex_half_bfloat16_(TensorList tensors) {
+ATen/native/cuda/ForeachUnaryOp.cu:std::vector<Tensor> all_types_half_complex_bfloat16(TensorList tensors) {
+ATen/native/cuda/ForeachUnaryOp.cu:void all_types_half_complex_bfloat16_(TensorList tensors) {
+ATen/native/cuda/ForeachUnaryOp.cu:std::vector<Tensor> floating_half(TensorList tensors) {
+ATen/native/cuda/ForeachUnaryOp.cu:void floating_half_(TensorList tensors) {
+ATen/native/cuda/ForeachUnaryOp.cu:std::vector<Tensor> floating_half_bfloat16(TensorList tensors) {
+ATen/native/cuda/ForeachUnaryOp.cu:void floating_half_bfloat16_(TensorList tensors) {
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_half_bfloat16, erfc, Erfc);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_half_bfloat16, expm1, Expm1);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_half, lgamma, Lgamma);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_half_bfloat16, trunc, Truncf);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_half_bfloat16, floor, Floor);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_half_bfloat16, ceil, Ceil);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, acos, Acos);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, asin, Asin);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, atan, Atan);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, cosh, Cosh);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, tan, Tan);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, sin, Sin);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, sinh, Sinh);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, exp, Exp);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, tanh, Tanh);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, log, Log);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, log10, Log10);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, log2, Log2);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, log1p, Log1p);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, cos, Cos);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_complex_half_bfloat16, sqrt, Sqrt);
+ATen/native/cuda/ForeachUnaryOp.cu:OP(floating_half_bfloat16, erf, Erf);
+ATen/native/cuda/ForeachUnaryOp.cu:OP_CUSTOM_FUNCTOR(floating_half_bfloat16, sigmoid, Sigmoid)
+ATen/native/cuda/ForeachUnaryOp.cu:OP_CUSTOM_FUNCTOR(floating_half_bfloat16, round, Round)
+ATen/native/cuda/ForeachUnaryOp.cu:OP_CUSTOM_FUNCTOR(floating_half_bfloat16, frac, Trunc)
+ATen/native/cuda/ForeachUnaryOp.cu:OP_CUSTOM_FUNCTOR(floating_complex_half_bfloat16, reciprocal, Reciprocal)
+ATen/native/cuda/ForeachUnaryOp.cu:    return all_types_half_complex_bfloat16<std::negate>(tensors);
+ATen/native/cuda/ForeachUnaryOp.cu:    all_types_half_complex_bfloat16_<std::negate>(tensors);
+ATen/native/cuda/ForeachUnaryOp.cu:    return all_types_complex_bfloat16_half_bool<Abs>(tensors);
+ATen/native/cuda/ForeachUnaryOp.cu:    all_types_complex_bfloat16_half_bool_<Abs>(tensors);
+ATen/native/cuda/GridSampler.cuh:// The bounds are passed as twice their value so that half-integer values
+ATen/native/cuda/ActivationHardswishKernel.cu:    const opmath_t one_half(0.5f);
+ATen/native/cuda/ActivationHardswishKernel.cu:      [zero, three, neg_three, one_half]GPU_LAMBDA(scalar_t grad_val_, scalar_t self_val_) -> scalar_t {
+ATen/native/cuda/ActivationHardswishKernel.cu:          return grad_val * ((self_val / three) + one_half);
+ATen/native/cpu/Activation.cpp:    const float one_half(0.5f);
+ATen/native/cpu/Activation.cpp:    const Vec kOneHalfVec(one_half);
+ATen/native/cpu/Activation.cpp:          return float(grad_val) * ((float(self_val) / three) + one_half);
+ATen/native/cpu/Activation.cpp:    const scalar_t one_half(0.5f);
+ATen/native/cpu/Activation.cpp:    const Vec kOneHalfVec(one_half);
+ATen/native/cpu/Activation.cpp:          return grad_val * ((self_val / three) + one_half);
+ATen/native/cpu/MultinomialKernel.cpp:// NB: std::isfinite doesn't bode well with libc++ for half datatypes,
+ATen/native/cpu/MultinomialKernel.cpp:// NB: std::isfinite doesn't bode well with libc++ for half datatypes,
+ATen/native/cpu/RangeFactoriesKernel.cpp:    int64_t halfway = steps / 2;
+ATen/native/cpu/RangeFactoriesKernel.cpp:          [start, end, step, halfway, steps, &idx]() -> scalar_t {
+ATen/native/cpu/RangeFactoriesKernel.cpp:            if (idx < halfway) {
+ATen/native/cpu/BinaryOpsKernel.cpp:    TORCH_WARN_ONCE("Applying the CPU mse kernel on half-type tensors. "
+ATen/native/cpu/DepthwiseConvKernel.cpp:  const float32x4_t const_half = vdupq_n_f32(0.5f);
+ATen/native/cpu/DepthwiseConvKernel.cpp:  float32x4_t half_g0_plus_g2 = const_half * (g0 + g2);
+ATen/native/cpu/DepthwiseConvKernel.cpp:  *transform1 = vmuladdq_f32(half_g0_plus_g2, const_half, g1);
+ATen/native/cpu/DepthwiseConvKernel.cpp:  *transform2 = vmulsubq_f32(half_g0_plus_g2, const_half, g1);
+ATen/native/mkl/SpectralOps.cpp:// In real-to-complex transform, MKL FFT only fills half of the values due to
+ATen/native/mkl/SpectralOps.cpp:// The following structs are used to fill in the other half with symmetry in
+ATen/native/mkl/SpectralOps.cpp:    Range range, at::ArrayRef<bool> is_mirrored_dim, IntArrayRef signal_half_sizes,
+ATen/native/mkl/SpectralOps.cpp:  const auto ndim = signal_half_sizes.size();
+ATen/native/mkl/SpectralOps.cpp:      if (iter_index[i] + 1 < signal_half_sizes[i]) {
+ATen/native/mkl/SpectralOps.cpp:            out_ptr += (signal_half_sizes[i] - 1) * out_strides[i];
+ATen/native/mkl/SpectralOps.cpp:    iter_index[0] = range.begin % signal_half_sizes[0];
+ATen/native/mkl/SpectralOps.cpp:    auto linear_idx = range.begin / signal_half_sizes[0];
+ATen/native/mkl/SpectralOps.cpp:      iter_index[i] = linear_idx % signal_half_sizes[i];
+ATen/native/mkl/SpectralOps.cpp:      linear_idx = linear_idx / signal_half_sizes[i];
+ATen/native/mkl/SpectralOps.cpp:          out_ptr += out_strides[i] * (signal_half_sizes[i] - iter_index[i]);
+ATen/native/mkl/SpectralOps.cpp:      auto end = std::min(signal_half_sizes[0], iter_index[0] + numel_remaining);
+ATen/native/mkl/SpectralOps.cpp:        out_ptr[(signal_half_sizes[0] - i) * out_strides[0]] = std::conj(in_ptr[i * in_strides[0]]);
+ATen/native/mkl/SpectralOps.cpp:      auto end = std::min(signal_half_sizes[0], numel_remaining);
+ATen/native/mkl/SpectralOps.cpp:        out_ptr[(signal_half_sizes[0] - i) * out_strides[0]] = std::conj(in_ptr[i * in_strides[0]]);
+ATen/native/mkl/SpectralOps.cpp:      auto end = std::min(signal_half_sizes[0], iter_index[0] + numel_remaining);
+ATen/native/mkl/SpectralOps.cpp:    ScalarType dtype, IntArrayRef mirror_dims, IntArrayRef signal_half_sizes,
+ATen/native/mkl/SpectralOps.cpp:  const auto ndim = signal_half_sizes.size();
+ATen/native/mkl/SpectralOps.cpp:  const auto numel = c10::multiply_integers(signal_half_sizes);
+ATen/native/mkl/SpectralOps.cpp:              {begin, end}, is_mirrored_dim, signal_half_sizes,
+ATen/native/mkl/SpectralOps.cpp:  auto last_dim_halfsize = result.sizes()[last_dim];
+ATen/native/mkl/SpectralOps.cpp:  auto out_slice = out.slice(last_dim, 0, last_dim_halfsize);
+ATen/native/mkl/SpectralOps.cpp:  auto last_dim_halfsize = (input_sizes[last_dim]) / 2 + 1;
+ATen/native/mkl/SpectralOps.cpp:    out_sizes[last_dim] = last_dim_halfsize;
+ATen/native/mkl/SpectralOps.cpp:  auto last_dim_halfsize = (input_sizes[last_dim]) / 2 + 1;
+ATen/native/mkl/SpectralOps.cpp:    out_sizes[last_dim] = last_dim_halfsize;
+ATen/native/QuantizedLinear.cpp:  // Convert raw 16 bits half precision floating point number
+ATen/native/SpectralOps.cpp:// * Raises an error for half-precision dtypes to allow future support
+ATen/native/SpectralOps.cpp:  const bool maybe_support_half = (
+ATen/native/SpectralOps.cpp:    // Only CUDA supports half precision, but since meta tensors don't have a
+ATen/native/SpectralOps.cpp:  if (maybe_support_half) {
+ATen/native/SpectralOps.cpp:  DimVector in_strides(ndim), signal_half_sizes(ndim);
+ATen/native/SpectralOps.cpp:  std::copy(iter_sizes.begin(), iter_sizes.end(), signal_half_sizes.begin());
+ATen/native/SpectralOps.cpp:    signal_half_sizes[iter_strides.size() + i] = input_sizes[dim[i]];
+ATen/native/SpectralOps.cpp:  signal_half_sizes.back() = (input_sizes[dim.back()] - 1) / 2;
+ATen/native/SpectralOps.cpp:  apply_permutation(signal_half_sizes);
+ATen/native/SpectralOps.cpp:      mirror_dims, signal_half_sizes, in_strides, in_data, out_strides, out_data);
+ATen/native/SoftMax.cpp:(const Tensor& input, const int64_t dim, const bool half_to_float) {
+ATen/native/SoftMax.cpp:  if (half_to_float) {
+ATen/native/SoftMax.cpp:  const bool half_to_float) {
+ATen/native/SoftMax.cpp:  if (half_to_float) {
+ATen/native/SoftMax.cpp:  bool half_to_float = grad.scalar_type() != input_dtype;
+ATen/native/SoftMax.cpp:  if (half_to_float) {
+ATen/native/SoftMax.cpp:    // to put it here because half-to-float conversion is not supported by
+ATen/native/SoftMax.cpp:    // float and the input dtype is half (see #63057).
+ATen/native/SoftMax.cpp:  bool half_to_float = grad.scalar_type() != input_dtype;
+ATen/native/SoftMax.cpp:  if (half_to_float) {
+ATen/native/SoftMax.cpp:    // to put it here because half-to-float conversion is not supported by
+ATen/native/SoftMax.cpp:    // float and the input dtype is half (see #63057).
+ATen/native/SoftMax.cpp: const bool half_to_float,
+ATen/native/SoftMax.cpp:  TORCH_CHECK(!half_to_float, "softmax with half to float conversion is not supported on CPU");
+ATen/native/SoftMax.cpp: const bool half_to_float,
+ATen/native/SoftMax.cpp:      !half_to_float,
+ATen/native/SoftMax.cpp:      "softmax with half to float conversion is not supported on CPU");
+ATen/native/LossCTC.cpp:// a) computing the beta analogous to the alphas in the forward (backward half of the forward-backward algorithm) (eq (10) and (11))
+ATen/native/SpectralOpsUtils.h:// Therefore, in such cases, FFT libraries return only roughly half of the
+ATen/native/SpectralOpsUtils.h:    void (*)(ScalarType dtype, IntArrayRef mirror_dims, IntArrayRef half_sizes,
+ATen/native/SpectralOpsUtils.h:// In real-to-complex transform, cuFFT and MKL only fill half of the values
+ATen/native/SpectralOpsUtils.h:// due to conjugate symmetry. This function fills in the other half of the full
+ATen/native/transformers/cuda/attention.cu:      // TODO: specialize for float2half2/half2float2?
+ATen/native/transformers/cuda/attention.cu:        // TODO: specialize for float2half2/half2float2?
+ATen/native/transformers/cuda/flash_attn/utils.h:inline __device__ uint32_t hrelu2<__half>(uint32_t x) {
+ATen/native/transformers/cuda/flash_attn/utils.h:static inline __device__ uint16_t float_to_half(float f) {
+ATen/native/transformers/cuda/flash_attn/utils.h:inline __device__ uint32_t float2_pack<__half>(float a, float b) {
+ATen/native/transformers/cuda/flash_attn/utils.h:    __half2 result = __floats2half2_rn(a, b);
+ATen/native/transformers/cuda/flash_attn/utils.h:inline __device__ float2 half2_unpack(uint32_t a);
+ATen/native/transformers/cuda/flash_attn/utils.h:inline __device__ float2 half2_unpack<__half>(uint32_t a) {
+ATen/native/transformers/cuda/flash_attn/utils.h:    return __half22float2(reinterpret_cast<__half2 (&)>(a));
+ATen/native/transformers/cuda/flash_attn/utils.h:inline __device__ float2 half2_unpack<__nv_bfloat16>(uint32_t a) {
+ATen/native/transformers/cuda/flash_attn/utils.h:// Convert two half2's or bf162's into float, then take their dot product.
+ATen/native/transformers/cuda/flash_attn/utils.h:    float2 af = fmha::half2_unpack<T>(a);
+ATen/native/transformers/cuda/flash_attn/utils.h:    float2 bf = fmha::half2_unpack<T>(b);
+ATen/native/transformers/cuda/flash_attn/utils.h:// Converted two vectors of 8 half's or bf16's into float, then take their dot product.
+ATen/native/transformers/cuda/flash_attn/kernel_traits.h:template<int S, int D, int STEP, int WARPS_M, int WARPS_N, uint32_t FLAGS = 0x08u, typename elem_type=cutlass::half_t>
+ATen/native/transformers/cuda/flash_attn/kernel_traits.h:    using Element = cutlass::half_t;
+ATen/native/transformers/cuda/flash_attn/fmha_fprop_kernel_dispatch.cu:        using elem_type = std::conditional<IsBf16Const, cutlass::bfloat16_t, cutlass::half_t>::type;
+ATen/native/transformers/cuda/sdp_utils.h:    bool is_half) {
+ATen/native/transformers/cuda/sdp_utils.h:    return is_half;
+ATen/native/transformers/cuda/sdp_utils.h:  bool is_half = (params.query.dtype() == at::kHalf) ||
+ATen/native/transformers/cuda/sdp_utils.h:  bool use_tc = use_tensor_cores(params, dprops, is_half);
+ATen/native/transformers/cuda/sdp_utils.h:  int64_t bits_per_scalar = is_half ? 16 : 32;
+ATen/native/transformers/cuda/mem_eff_attention/mma_from_smem.h:  // from accum_t (float) -> scalar_t (can be half)
+ATen/native/transformers/cuda/mem_eff_attention/mma_from_smem.h:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/mma_from_smem.h:  using scalar_t = cutlass::half_t;
+ATen/native/transformers/cuda/mem_eff_attention/kernel_backward.h:  bool is_half = !std::is_same<scalar_t, float>::value;
+ATen/native/transformers/cuda/mem_eff_attention/kernel_backward.h:    return is_half ? 12 : 8;
+ATen/native/transformers/cuda/mem_eff_attention/epilogue_thread_apply_logsumexp.h:struct ArrayExponential<half_t, ElementsPerAccess> {
+ATen/native/transformers/cuda/mem_eff_attention/epilogue_thread_apply_logsumexp.h:  Array<half_t, ElementsPerAccess> operator()(
+ATen/native/transformers/cuda/mem_eff_attention/epilogue_thread_apply_logsumexp.h:      Array<half_t, ElementsPerAccess> const& input) const {
+ATen/native/transformers/cuda/mem_eff_attention/epilogue_thread_apply_logsumexp.h:    Array<half_t, ElementsPerAccess> result;
+ATen/native/transformers/cuda/mem_eff_attention/epilogue_thread_apply_logsumexp.h:    __half2 const* input_ptr =
+ATen/native/transformers/cuda/mem_eff_attention/epilogue_thread_apply_logsumexp.h:        reinterpret_cast<__half2 const*>(input.raw_data());
+ATen/native/transformers/cuda/mem_eff_attention/epilogue_thread_apply_logsumexp.h:    __half2* res_ptr = reinterpret_cast<__half2*>(result.raw_data());
+ATen/native/transformers/cuda/mem_eff_attention/kernel_forward.h:  bool is_half = !std::is_same<scalar_t, float>::value;
+ATen/native/transformers/cuda/mem_eff_attention/kernel_forward.h:    return is_half ? 16 : 12;
+ATen/native/transformers/cuda/mem_eff_attention/gemm_kernel_utils.h:      using scalar_t = cutlass::half_t;                                     \
+ATen/native/transformers/cuda/mem_eff_attention/gemm_kernel_utils.h:      TORCH_CHECK(false, "Only fp32, half & bf16 supported at the moment"); \
+ATen/native/transformers/cuda/mem_eff_attention/gemm_kernel_utils.h:struct TypeTraits<cutlass::half_t> {
+ATen/native/transformers/cuda/mem_eff_attention/gemm_kernel_utils.h:  using scalar_t = cutlass::half_t;
+ATen/native/transformers/cuda/mem_eff_attention/gemm_kernel_utils.h:struct DefaultGemmType<cutlass::arch::Sm70, cutlass::half_t, void> {
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_aligned.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM50(cutlass::half_t, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_aligned.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM70(cutlass::half_t, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_aligned.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM75(cutlass::half_t, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_aligned.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM80(cutlass::half_t, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_aligned_k64.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM50(cutlass::half_t, true, 64);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_aligned_k64.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM70(cutlass::half_t, true, 64);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_aligned_k64.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM75(cutlass::half_t, true, 64);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_aligned_k64.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM80(cutlass::half_t, true, 64);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_aligned_k128.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM50(cutlass::half_t, true, 128);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_aligned_k128.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM70(cutlass::half_t, true, 128);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_aligned_k128.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM75(cutlass::half_t, true, 128);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_aligned_k128.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM80(cutlass::half_t, true, 128);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_k128.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM50(cutlass::half_t, false, 128);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_k128.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM70(cutlass::half_t, false, 128);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_k128.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM75(cutlass::half_t, false, 128);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_k128.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM80(cutlass::half_t, false, 128);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16.cu:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16.cu:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16.cu:INSTANTIATE_ATTENTION_KERNEL_FORWARD_SM50(cutlass::half_t, false, 64, 64, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16.cu:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16.cu:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16.cu:INSTANTIATE_ATTENTION_KERNEL_FORWARD_SM70(cutlass::half_t, false, 64, 64, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16.cu:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16.cu:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16.cu:INSTANTIATE_ATTENTION_KERNEL_FORWARD_SM75(cutlass::half_t, false, 64, 64, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16.cu:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16.cu:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16.cu:INSTANTIATE_ATTENTION_KERNEL_FORWARD_SM80(cutlass::half_t, false, 64, 64, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_k64.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM50(cutlass::half_t, false, 64);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_k64.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM70(cutlass::half_t, false, 64);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_k64.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM75(cutlass::half_t, false, 64);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16_k64.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM80(cutlass::half_t, false, 64);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM50(cutlass::half_t, false);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM70(cutlass::half_t, false);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM75(cutlass::half_t, false);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/backward_f16.cu:INSTANTIATE_ATTENTION_KERNEL_BACKWARD_SM80(cutlass::half_t, false);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16_aligned.cu:INSTANTIATE_ATTENTION_KERNEL_FORWARD_SM50(cutlass::half_t, true, 32, 128, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16_aligned.cu:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16_aligned.cu:INSTANTIATE_ATTENTION_KERNEL_FORWARD_SM50(cutlass::half_t, true, 64, 64, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16_aligned.cu:INSTANTIATE_ATTENTION_KERNEL_FORWARD_SM70(cutlass::half_t, true, 32, 128, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16_aligned.cu:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16_aligned.cu:INSTANTIATE_ATTENTION_KERNEL_FORWARD_SM70(cutlass::half_t, true, 64, 64, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16_aligned.cu:INSTANTIATE_ATTENTION_KERNEL_FORWARD_SM75(cutlass::half_t, true, 32, 128, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16_aligned.cu:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16_aligned.cu:INSTANTIATE_ATTENTION_KERNEL_FORWARD_SM75(cutlass::half_t, true, 64, 64, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16_aligned.cu:INSTANTIATE_ATTENTION_KERNEL_FORWARD_SM80(cutlass::half_t, true, 32, 128, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16_aligned.cu:    cutlass::half_t,
+ATen/native/transformers/cuda/mem_eff_attention/kernels/forward_f16_aligned.cu:INSTANTIATE_ATTENTION_KERNEL_FORWARD_SM80(cutlass::half_t, true, 64, 64, true);
+ATen/native/transformers/cuda/mem_eff_attention/kernels/generate_kernels.sh:                "f16") dtype="cutlass::half_t" ;;
+ATen/native/transformers/cuda/mem_eff_attention/kernels/generate_kernels.sh:            "f16") dtype="cutlass::half_t" ;;
+ATen/native/ComplexHelper.h:    "view_as_complex is only supported for half, float and double tensors, but got a tensor of scalar type: ", self.scalar_type());
+ATen/native/Pool.h:                "pad should be at most half of kernel size, but got pad=",
+ATen/native/Pool.h:              "pad should be smaller than or equal to half of kernel size, but got ",
+ATen/native/Pool.h:              "pad should be smaller than or equal to half of kernel size, but got "
+ATen/native/TensorTransformations.cpp:Tensor chalf(const Tensor& self, c10::optional<MemoryFormat> memory_format) {
+ATen/native/RangeFactories.cpp:      const int64_t halfway = steps / 2;
+ATen/native/RangeFactories.cpp:          if (i < halfway) {
+ATen/native/RangeFactories.cpp:      const int64_t halfway = steps / 2;
+ATen/native/RangeFactories.cpp:          if (i < halfway) {
+ATen/native/Math.h:  constexpr acc_t half = acc_t{0.5};
+ATen/native/Math.h:  s -= half * b;
+ATen/native/TensorFactories.cpp:  const int64_t first_half_size = ((window_length - 1) >> 1) + 1;
+ATen/native/TensorFactories.cpp:  window.narrow(0, first_half_size, window_length - first_half_size).mul_(-1).add_(2);
+ATen/native/metal/MetalShaders.h:void elementwise_broadcast_nonarray(texture2d<half, access::read> in0,
+ATen/native/metal/MetalShaders.h:                                   texture2d<half, access::read> in1,
+ATen/native/metal/MetalShaders.h:                                   texture2d<half, access::write> out,
+ATen/native/metal/MetalShaders.h:void elementwise_broadcast(texture2d_array<half, access::read> in0,
+ATen/native/metal/MetalShaders.h:                           texture2d_array<half, access::read> in1,
+ATen/native/metal/MetalShaders.h:                           texture2d_array<half, access::write> out,
+ATen/native/metal/MetalShaders.h:kernel void elementwise_add_nonarray(texture2d<half, access::read> in0[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                                     texture2d<half, access::read> in1[[texture(1)]],
+ATen/native/metal/MetalShaders.h:                                     texture2d<half, access::write> out[[texture(2)]],
+ATen/native/metal/MetalShaders.h:kernel void elementwise_add(texture2d_array<half, access::read> in0[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                            texture2d_array<half, access::read> in1[[texture(1)]],
+ATen/native/metal/MetalShaders.h:                            texture2d_array<half, access::write> out[[texture(2)]],
+ATen/native/metal/MetalShaders.h:kernel void elementwise_sub_nonarray(texture2d<half, access::read> in0[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                                     texture2d<half, access::read> in1[[texture(1)]],
+ATen/native/metal/MetalShaders.h:                                     texture2d<half, access::write> out[[texture(2)]],
+ATen/native/metal/MetalShaders.h:kernel void elementwise_sub(texture2d_array<half, access::read> in0[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                            texture2d_array<half, access::read> in1[[texture(1)]],
+ATen/native/metal/MetalShaders.h:                            texture2d_array<half, access::write> out[[texture(2)]],
+ATen/native/metal/MetalShaders.h:kernel void elementwise_mul_nonarray(texture2d<half, access::read> in0[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                                     texture2d<half, access::read> in1[[texture(1)]],
+ATen/native/metal/MetalShaders.h:                                     texture2d<half, access::write> out[[texture(2)]],
+ATen/native/metal/MetalShaders.h:kernel void elementwise_mul(texture2d_array<half, access::read> in0[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                            texture2d_array<half, access::read> in1[[texture(1)]],
+ATen/native/metal/MetalShaders.h:                            texture2d_array<half, access::write> out[[texture(2)]],
+ATen/native/metal/MetalShaders.h:kernel void elementwise_div_nonarray(texture2d<half, access::read> in0[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                                     texture2d<half, access::read> in1[[texture(1)]],
+ATen/native/metal/MetalShaders.h:                                     texture2d<half, access::write> out[[texture(2)]],
+ATen/native/metal/MetalShaders.h:kernel void elementwise_div(texture2d_array<half, access::read> in0[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                            texture2d_array<half, access::read> in1[[texture(1)]],
+ATen/native/metal/MetalShaders.h:                            texture2d_array<half, access::write> out[[texture(2)]],
+ATen/native/metal/MetalShaders.h:                               texture2d_array<half, access::write> out[[texture(0)]],
+ATen/native/metal/MetalShaders.h:    half4 trns;
+ATen/native/metal/MetalShaders.h:                                        texture2d<half, access::write> out[[texture(0)]],
+ATen/native/metal/MetalShaders.h:    half4 trns;
+ATen/native/metal/MetalShaders.h:kernel void copy_metal_to_nchw(texture2d_array<half, access::read> in[[texture(0)]],
+ATen/native/metal/MetalShaders.h:    half4 cs = in.read(gid.xy, gid.z);
+ATen/native/metal/MetalShaders.h:kernel void copy_metal_to_nchw_nonarray(texture2d<half, access::read> in[[texture(0)]],
+ATen/native/metal/MetalShaders.h:    half4 cs = in.read(gid.xy);
+ATen/native/metal/MetalShaders.h:kernel void copy(texture2d_array<half, access::read> in[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                 texture2d_array<half, access::write> out[[texture(1)]],
+ATen/native/metal/MetalShaders.h:kernel void copy_nonarray(texture2d<half, access::read> in[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                          texture2d<half, access::write> out[[texture(1)]],
+ATen/native/metal/MetalShaders.h:kernel void copy_offset(texture2d_array<half, access::read> in[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                        texture2d_array<half, access::write> out[[texture(1)]],
+ATen/native/metal/MetalShaders.h:kernel void copy_offset_nonarray(texture2d<half, access::read> in[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                                 texture2d_array<half, access::write> out[[texture(1)]],
+ATen/native/metal/MetalShaders.h:kernel void store_features(texture2d_array<half, access::read> in[[texture(0)]],
+ATen/native/metal/MetalShaders.h:                           texture2d<half, access::write> out_tex[[texture(1), function_constant(store_features_out_is_tex)]],
+ATen/native/metal/MetalShaders.h:                           texture2d_array<half, access::write> out_arr[[texture(1), function_constant(store_features_out_is_arr)]],
+ATen/native/metal/MetalShaders.h:kernel void append_features(texture2d<half, access::read> in_tex[[texture(0), function_constant(append_features_in_is_tex)]],
+ATen/native/metal/MetalShaders.h:                            texture2d_array<half, access::read> in_arr[[texture(0), function_constant(append_features_in_is_arr)]],
+ATen/native/metal/MetalShaders.h:                            texture2d_array<half, access::write> out[[texture(1)]],
+ATen/native/metal/MetalShaders.h:    half4 intex;
+ATen/native/metal/MetalShaders.h:kernel void append_features_off(texture2d<half, access::read> in_tex[[texture(0), function_constant(append_features_off_in_is_tex)]],
+ATen/native/metal/MetalShaders.h:                                texture2d_array<half, access::read> in_arr[[texture(0), function_constant(append_features_off_in_is_arr)]],
+ATen/native/metal/MetalShaders.h:                                texture2d<half, access::read> prev_tex[[texture(1), function_constant(prev_is_tex)]],
+ATen/native/metal/MetalShaders.h:                                texture2d_array<half, access::read> prev_arr[[texture(1), function_constant(prev_is_arr)]],
+ATen/native/metal/MetalShaders.h:                                texture2d_array<half, access::write> out[[texture(2)]],
+ATen/native/metal/MetalShaders.h:    half4 outtex;
+ATen/native/metal/MetalShaders.h:    half4 intex1;
+ATen/native/metal/MetalShaders.h:    half4 intex0;
+ATen/native/metal/MetalShaders.h:kernel void clamp(texture2d_array<half, access::read> in_arr[[texture(0), function_constant(clamp_is_arr)]],
+ATen/native/metal/MetalShaders.h:                  texture2d<half, access::read> in_tex[[texture(0), function_constant(clamp_is_tex)]],
+ATen/native/metal/MetalShaders.h:                  texture2d_array<half, access::write> out_arr[[texture(1), function_constant(clamp_is_arr)]],
+ATen/native/metal/MetalShaders.h:                  texture2d<half, access::write> out_tex[[texture(1), function_constant(clamp_is_tex)]],
+ATen/native/metal/MetalShaders.h:        half4 clamped = (half4)clamp(value, min_, max_);
+ATen/native/metal/MetalShaders.h:        half4 clamped = (half4)clamp(value, min_, max_);
+ATen/native/metal/MetalShaders.h:kernel void hardswish(texture2d_array<half, access::read> in_arr[[texture(0), function_constant(hardswish_is_arr)]],
+ATen/native/metal/MetalShaders.h:                      texture2d<half, access::read> in_tex[[texture(0), function_constant(hardswish_is_tex)]],
+ATen/native/metal/MetalShaders.h:                      texture2d_array<half, access::write> out_arr[[texture(1), function_constant(hardswish_is_arr)]],
+ATen/native/metal/MetalShaders.h:                      texture2d<half, access::write> out_tex[[texture(1), function_constant(hardswish_is_tex)]],
+ATen/native/metal/MetalShaders.h:      half4 value = in_arr.read(gid_, gid.z);
+ATen/native/metal/MetalShaders.h:      half4 mask1 = half4(value < 3.0);
+ATen/native/metal/MetalShaders.h:      half4 mask2 = half4(value > -3.0);
+ATen/native/metal/MetalShaders.h:      half4 outval = mask2*(mask1*(value*(value + 3.0)/6.0) + (1 - mask1)*value);
+ATen/native/metal/MetalShaders.h:      half4 value = in_tex.read(gid_);
+ATen/native/metal/MetalShaders.h:      half4 mask1 = half4(value < 3);
+ATen/native/metal/MetalShaders.h:      half4 mask2 = half4(value > -3.0);
+ATen/native/metal/MetalShaders.h:      half4 outval = mask2*(mask1*(value*(value + 3.0)/6.0) + (1 - mask1)*value);
+ATen/native/metal/MetalShaders.h:kernel void hardshrink(texture2d_array<half, access::read> in_arr[[texture(0), function_constant(hardshrink_is_arr)]],
+ATen/native/metal/MetalShaders.h:                      texture2d<half, access::read> in_tex[[texture(0), function_constant(hardshrink_is_tex)]],
+ATen/native/metal/MetalShaders.h:                      texture2d_array<half, access::write> out_arr[[texture(1), function_constant(hardshrink_is_arr)]],
+ATen/native/metal/MetalShaders.h:                      texture2d<half, access::write> out_tex[[texture(1), function_constant(hardshrink_is_tex)]],
+ATen/native/metal/MetalShaders.h:    const half lambda = (half)float_arg_0;
+ATen/native/metal/MetalShaders.h:      half4 value = in_arr.read(gid_, gid.z);
+ATen/native/metal/MetalShaders.h:      half4 mask1 = half4(value <= lambda);
+ATen/native/metal/MetalShaders.h:      half4 mask2 = half4(value >= -lambda);
+ATen/native/metal/MetalShaders.h:      half4 outval = (1 - mask1)*value + (1 - mask2)*value;
+ATen/native/metal/MetalShaders.h:      half4 value = in_tex.read(gid_);
+ATen/native/metal/MetalShaders.h:      half4 mask1 = half4(value <= lambda);
+ATen/native/metal/MetalShaders.h:      half4 mask2 = half4(value >= -lambda);
+ATen/native/metal/MetalShaders.h:      half4 outval = (1 - mask1)*value + (1 - mask2)*value;
+ATen/native/metal/MetalShaders.h:kernel void leaky_relu(texture2d_array<half, access::read> in_arr[[texture(0), function_constant(leaky_relu_is_arr)]],
+ATen/native/metal/MetalShaders.h:                      texture2d<half, access::read> in_tex[[texture(0), function_constant(leaky_relu_is_tex)]],
+ATen/native/metal/MetalShaders.h:                      texture2d_array<half, access::write> out_arr[[texture(1), function_constant(leaky_relu_is_arr)]],
+ATen/native/metal/MetalShaders.h:                      texture2d<half, access::write> out_tex[[texture(1), function_constant(leaky_relu_is_tex)]],
+ATen/native/metal/MetalShaders.h:    const half negative_slope = (half)float_arg_0;
+ATen/native/metal/MetalShaders.h:      half4 value = in_arr.read(gid_, gid.z);
+ATen/native/metal/MetalShaders.h:      half4 is_negative = half4(value < 0.0);
+ATen/native/metal/MetalShaders.h:      half4 outval = is_negative*value*negative_slope + (1-is_negative)*value;
+ATen/native/metal/MetalShaders.h:      half4 value = in_tex.read(gid_);
+ATen/native/metal/MetalShaders.h:      half4 is_negative = half4(value < 0.0);
+ATen/native/metal/MetalShaders.h:      half4 outval = is_negative*value*negative_slope + (1-is_negative)*value;
+ATen/native/metal/MetalShaders.h:kernel void reflection_pad2d(texture2d_array<half, access::read> in_arr[[texture(0), function_constant(in_is_arr)]],
+ATen/native/metal/MetalShaders.h:                             texture2d<half, access::read> in_tex[[texture(0),function_constant(in_is_tex)]],
+ATen/native/metal/MetalShaders.h:                             texture2d_array<half, access::write> out_arr[[texture(1), function_constant(out_is_arr)]],
+ATen/native/metal/MetalShaders.h:                             texture2d<half, access::write> out_tex[[texture(1), function_constant(out_is_tex)]],
+ATen/native/metal/MetalShaders.h:  half4 intex;
+ATen/native/metal/MetalShaders.h:kernel void reshape(texture2d_array<half, access::read> in_arr[[texture(0), function_constant(reshape_in_is_arr)]],
+ATen/native/metal/MetalShaders.h:                    texture2d<half, access::read> in_tex[[texture(0),function_constant(reshape_in_is_tex)]],
+ATen/native/metal/MetalShaders.h:                    texture2d_array<half, access::write> out_arr[[texture(1), function_constant(reshape_out_is_arr)]],
+ATen/native/metal/MetalShaders.h:                    texture2d<half, access::write> out_tex[[texture(1),
+ATen/native/metal/MetalShaders.h:    half4 value;
+ATen/native/metal/MetalShaders.h:kernel void transpose(texture2d_array<half, access::read>in_arr[[texture(0),function_constant(transpose_in_is_arr)]],
+ATen/native/metal/MetalShaders.h:                      texture2d<half, access::read> in_tex[[texture(0), function_constant(transpose_in_is_tex)]],
+ATen/native/metal/MetalShaders.h:                      texture2d_array<half, access::write>out_arr[[texture(1),function_constant(transpose_out_is_arr)]],
+ATen/native/metal/MetalShaders.h:                      texture2d<half, access::write> out_tex[[texture(1), function_constant(transpose_out_is_tex)]],
+ATen/native/metal/MetalShaders.h:    half4 value;
+ATen/native/metal/MetalShaders.h:kernel void split_channels(texture2d_array<half, access::read> in_arr[[texture(0), function_constant(split_channels_in_is_arr)]],
+ATen/native/metal/MetalShaders.h:                           texture2d<half, access::read> in_tex[[texture(0), function_constant(split_channels_in_is_tex)]],
+ATen/native/metal/MetalShaders.h:                           texture2d_array<half, access::write> out1_arr[[texture(1),function_constant(split_channels_out1_is_arr)]],
+ATen/native/metal/MetalShaders.h:                           texture2d<half, access::write> out1_tex[[texture(1),function_constant(split_channels_out1_is_tex)]],
+ATen/native/metal/MetalShaders.h:                           texture2d_array<half, access::write> out2_arr[[texture(2), function_constant(split_channels_out2_is_arr)]],
+ATen/native/metal/MetalShaders.h:                           texture2d<half, access::write> out2_tex[[texture(2),function_constant(split_channels_out2_is_tex)]],
+ATen/native/metal/MetalShaders.h:    half4 tmp1(0.0, 0.0, 0.0, 0.0);
+ATen/native/metal/MetalShaders.h:    half4 tmp2(0.0, 0.0, 0.0, 0.0);
+ATen/native/metal/MetalShaders.h:    half4 in41 = split_channels_in_is_arr ? in_arr.read(gid.xy, gid.z) : in_tex.read(gid.xy);
+ATen/native/metal/MetalShaders.h:    half4 in42 = split_channels_in_is_arr ? in_arr.read(gid.xy, gid.z+1) : half4(0,0,0,0);
+ATen/native/metal/MetalShaders.h:kernel void roi_align(texture2d_array<half, access::sample> ina[[texture(0), function_constant(ra_has_in_arr)]],
+ATen/native/metal/MetalShaders.h:                      texture2d<half, access::sample> in[[texture(0), function_constant(ra_has_in_tex)]],
+ATen/native/metal/MetalShaders.h:                      texture2d_array<half, access::write> outa[[texture(1), function_constant(ra_has_out_arr)]],
+ATen/native/metal/MetalShaders.h:                      texture2d<half, access::write> out[[texture(1), function_constant(ra_has_out_tex)]],
+ATen/native/metal/MetalShaders.h:                      constant half4* rois[[buffer(0)]],
+ATen/native/metal/MetalShaders.h:    const half spatial_scale = half(ushort_arg_0) / 10000;
+ATen/native/metal/MetalShaders.h:    const half4 roi_scaled = rois[n] * spatial_scale;
+ATen/native/metal/MetalShaders.h:    const half roi_start_w = roi_scaled[0];
+ATen/native/metal/MetalShaders.h:    const half roi_start_h = roi_scaled[1];
+ATen/native/metal/MetalShaders.h:    const half roi_end_w = roi_scaled[2];
+ATen/native/metal/MetalShaders.h:    const half roi_end_h = roi_scaled[3];
+ATen/native/metal/MetalShaders.h:    const half roi_width = max(roi_end_w - roi_start_w, (half)1.);
+ATen/native/metal/MetalShaders.h:    const half roi_height = max(roi_end_h - roi_start_h, (half)1.);
+ATen/native/metal/MetalShaders.h:    const half bin_size_h = static_cast<half>(roi_height) / static_cast<half>(out_height);
+ATen/native/metal/MetalShaders.h:    const half bin_size_w = static_cast<half>(roi_width) / static_cast<half>(out_width);
+ATen/native/metal/MetalShaders.h:    const ushort roi_bin_grid_h = sampling_ratio > 0 ? sampling_ratio : ceil(roi_height / static_cast<half>(out_height));
+ATen/native/metal/MetalShaders.h:    const ushort roi_bin_grid_w = sampling_ratio > 0 ? sampling_ratio : ceil(roi_width / static_cast<half>(out_width));
+ATen/native/metal/MetalShaders.h:    const half count = roi_bin_grid_h * roi_bin_grid_w;
+ATen/native/metal/MetalShaders.h:    half4 output_val = 0.0;
+ATen/native/metal/MetalShaders.h:            const half y =
+ATen/native/metal/MetalShaders.h:            roi_start_h + ph * bin_size_h + (iy+0.5) * bin_size_h / static_cast<half>(roi_bin_grid_h);
+ATen/native/metal/MetalShaders.h:            const half x =
+ATen/native/metal/MetalShaders.h:            roi_start_w + pw * bin_size_w + (ix+0.5) * bin_size_w / static_cast<half>(roi_bin_grid_w);
+ATen/native/metal/MetalShaders.h:        outa.write(static_cast<half4>(output_val), gid.xy, gid.z);
+ATen/native/metal/MetalShaders.h:        out.write(static_cast<half4>(output_val), gid.xy);
+ATen/native/sparse/cuda/SoftMax.cu:    const bool half_to_float) {
+ATen/native/sparse/cuda/SoftMax.cu:      input_, dim, half_to_float, "softmax");
+ATen/native/sparse/cuda/SoftMax.cu:    const bool half_to_float) {
+ATen/native/sparse/cuda/SoftMax.cu:      input_, dim, half_to_float, "log_softmax");
+ATen/native/sparse/cuda/SparseMatMul.cu:      "cusparseSpGEMM only supports data type of half, bfloat16, float, double and complex float, double.");
+ATen/native/sparse/cuda/SparseMatMul.cu:    "sparse_sparse_matmul_cuda_kernel only supports data type of half, bfloat16, float, double and complex float, double.");
+ATen/native/sparse/cuda/SparseBlasLegacy.cpp:  // No half support, so we don't have to use CUDATypeConversion
+ATen/native/sparse/ParamUtils.cpp:    const bool half_to_float,
+ATen/native/sparse/ParamUtils.cpp:      !half_to_float,
+ATen/native/sparse/ParamUtils.cpp:          ": with half to float conversion is not supported on " +
+ATen/native/sparse/SoftMax.cpp:    const bool half_to_float) {
+ATen/native/sparse/SoftMax.cpp:      input_, dim, half_to_float, "softmax");
+ATen/native/sparse/SoftMax.cpp:    const bool half_to_float) {
+ATen/native/sparse/SoftMax.cpp:      input_, dim, half_to_float, "log_softmax");
+ATen/native/sparse/SparseBlasImpl.cpp:  // Promote to float if output is half or bfloat16 for better precision
+ATen/native/sparse/SparseBlasImpl.cpp:  // If result is neither half nor bfloat16, do everyting in-place.
+ATen/native/sparse/ParamUtils.h:    const bool half_to_float,
+ATen/native/Normalization.cpp:  // For cuda half, calculate norm in float precision then cast
+ATen/native/Normalization.cpp:  // normalization factor to half
+ATen/native/nested/cuda/NestedTensorMatmul.cu:  std::vector<cutlass::half_t*> aptr;
+ATen/native/nested/cuda/NestedTensorMatmul.cu:  std::vector<cutlass::half_t*> bptr;
+ATen/native/nested/cuda/NestedTensorMatmul.cu:  std::vector<cutlass::half_t*> dptr;
+ATen/native/nested/cuda/NestedTensorMatmul.cu:    aptr.push_back(reinterpret_cast<cutlass::half_t*>(aptr_[i]));
+ATen/native/nested/cuda/NestedTensorMatmul.cu:    bptr.push_back(reinterpret_cast<cutlass::half_t*>(bptr_[i]));
+ATen/native/nested/cuda/NestedTensorMatmul.cu:    dptr.push_back(reinterpret_cast<cutlass::half_t*>(dptr_[i]));
+ATen/native/nested/cuda/NestedTensorMatmul.cu:        cutlass::half_t,
+ATen/native/nested/cuda/NestedTensorMatmul.cu:        cutlass::half_t,
+ATen/native/nested/NestedTensorMath.cpp:    const bool half_to_float) {
+ATen/native/nested/NestedTensorMath.cpp:        half_to_float);
+ATen/native/Distributions.cpp:      "multinomial is not implemented for half on CPU");
+ATen/native/cudnn/ConvShared.cpp:    case CUDNN_DATA_HALF: partial_dtype = "half"; break;
+ATen/native/native_functions.yaml:- func: chalf(Tensor self, *, MemoryFormat? memory_format=None) -> Tensor
+ATen/native/native_functions.yaml:- func: _log_softmax(Tensor self, int dim, bool half_to_float) -> Tensor
+ATen/native/native_functions.yaml:- func: _log_softmax.out(Tensor self, int dim, bool half_to_float, *, Tensor(a!) out) -> Tensor(a!)
+ATen/native/native_functions.yaml:- func: _softmax(Tensor self, int dim, bool half_to_float) -> Tensor
+ATen/native/native_functions.yaml:- func: _softmax.out(Tensor self, int dim, bool half_to_float, *, Tensor(a!) out) -> Tensor(a!)
+ATen/native/native_functions.yaml:- func: _sparse_softmax(Tensor self, int dim, bool half_to_float) -> Tensor
+ATen/native/native_functions.yaml:- func: _sparse_log_softmax(Tensor self, int dim, bool half_to_float) -> Tensor
+ATen/native/WeightNorm.cpp:  auto has_half_dtype = v.scalar_type() == at::ScalarType::Half
+ATen/native/WeightNorm.cpp:  bool can_use_fused = !has_half_dtype && ((dim == 0) || (dim == v.dim() - 1));
+ATen/native/WeightNorm.cpp:  // ...but saved_norms might be Float when saved_g and saved_v are half.
+ATen/native/GridSampler.h:// The bounds are passed as twice their value so that half-integer values
+ATen/native/mps/operations/LossOps.mm:          MPSGraphTensor *halfTensorMulBetaTensor = [mpsGraph constantWithScalar: beta * 0.5
+ATen/native/mps/operations/LossOps.mm:                                                             secondaryTensor: halfTensorMulBetaTensor
+ATen/native/mps/operations/LossOps.mm:                    MPSGraphTensor* halfTensor = [mpsGraph constantWithScalar:.5f
+ATen/native/mps/operations/LossOps.mm:                                                                secondaryTensor: halfTensor
+ATen/native/mps/operations/LossOps.mm:                                                                secondaryTensor: halfTensor
+ATen/native/mps/operations/SoftMax.mm: const bool half_to_float,
+ATen/native/mps/operations/SoftMax.mm:  TORCH_CHECK(!half_to_float, "softmax with half to float conversion is not supported on MPS");
+ATen/native/mps/operations/Activation.mm:  const bool half_to_float,
+ATen/native/mps/operations/Activation.mm:    MPSGraphTensor *halff = [mpsGraph constantWithScalar: 0.5f
+ATen/native/mps/operations/Activation.mm:                                        secondaryTensor: halff
+ATen/native/mps/operations/Activation.mm:          MPSGraphTensor *halff = [mpsGraph constantWithScalar: -0.5f
+ATen/native/mps/operations/Activation.mm:                                          secondaryTensor : halff
+ATen/native/mps/operations/Activation.mm:          // first half
+ATen/native/mps/operations/Activation.mm:          // second half
+ATen/native/mps/operations/Activation.mm:              MPSGraphTensor* halfTensor = [mpsGraph
+ATen/native/mps/operations/Activation.mm:                                      secondaryTensor:halfTensor
+ATen/native/mps/operations/CrossKernel.mm:// Metal only supports half and float for native cross implementation.
+ATen/native/mps/operations/CrossKernel.mm:REGISTER_CROSS_OP(half);
+ATen/native/mps/OperationUtils.mm:      return "half";
+ATen/native/DistributionTemplates.h://    auto actual = torch::empty({3, 3}, torch::half);
+ATen/native/DistributionTemplates.h:// If random's uint64_t arithmetics produces 65503 as a random value after casting to torch::half it becomes 65504
+ATen/native/DistributionTemplates.h:// available number for torch::half dtype.
+ATen/native/DistributionTemplates.h:    // is half of the input variance
+ATen/native/BatchLinearAlgebra.cpp:  // Half optimisation half precondition for some parts of the LAPACK / cuSOLVER
+ATen/native/quantized/cuda/EmbeddingBag.cu:            __half2float(reinterpret_cast<const __half*>(&row[D_bytes - 4])[0]),
+ATen/native/quantized/cuda/EmbeddingBag.cu:            __half2float(reinterpret_cast<const __half*>(&row[D_bytes - 2])[0]));
+ATen/native/quantized/cpu/QuantUtils.h:    // Convert raw 16 bits half precision floating point number
+ATen/native/quantized/cpu/qnnpack/src/q8gemm_sparse/8x4c1x4-dq-packedA-sse2.h:  // Transform low half of 4x8 result
+ATen/native/quantized/cpu/qnnpack/src/q8gemm_sparse/4x4-packA-aarch32-neon.S:    # Since upper half of d0 just contains duplicate values
+ATen/native/quantized/cpu/qnnpack/src/q8gemm_sparse/4x4-packA-aarch32-neon.S:    # So let's combine upper half of d0 to the lower part of d0
+ATen/native/quantized/cpu/qnnpack/src/q8gemm_sparse/4x4-packA-aarch32-neon.S:    # And lower half of d1 to upper half of d0
+ATen/native/quantized/cpu/Pooling.cpp:      "padding should be smaller than half of kernel_size.");
+ATen/native/quantized/AffineQuantizerBase.cpp:  // rounding mode and the default rounding mode is rounds to even in half-way
+ATen/native/quantized/AffineQuantizerBase.cpp:  // typically faster than an alternatives like std::round that rounds half-way
+ATen/native/quantized/AffineQuantizerBase.cpp:  // rounding mode and the default rounding mode is rounds to even in half-way
+ATen/native/quantized/AffineQuantizerBase.cpp:  // typically faster than an alternatives like std::round that rounds half-way
+ATen/native/mkldnn/SoftMax.cpp:    const bool half_to_float) {
+ATen/native/mkldnn/SoftMax.cpp:    const bool half_to_float) {
+ATen/native/mkldnn/SoftMax.cpp:      !half_to_float,
+ATen/native/mkldnn/SoftMax.cpp:      "softmax with half to float conversion is not supported on Mkldnn");
+ATen/native/vulkan/ops/Softmax.cpp:    const bool half_to_float,
+ATen/native/vulkan/ops/Softmax.cpp:    const bool half_to_float) {
+ATen/native/vulkan/ops/Softmax.cpp:  return softmax_internal(input_arg, dim, half_to_float, VK_KERNEL(softmax));
+ATen/native/vulkan/ops/Softmax.cpp:    const bool half_to_float) {
+ATen/native/vulkan/ops/Softmax.cpp:      input_arg, dim, half_to_float, VK_KERNEL(log_softmax));
+ATen/EmptyTensor.cpp:inline void raise_warning_for_complex_half(ScalarType dtype) {
+ATen/EmptyTensor.cpp:  at::detail::raise_warning_for_complex_half(scalar_type);
+ATen/EmptyTensor.cpp:  at::detail::raise_warning_for_complex_half(scalar_type);
+ATen/cudnn/Descriptors.cpp:  throw std::runtime_error("TensorDescriptor only supports double, float and half tensors");
+ATen/AccumulateType.h:struct AccumulateType<half, true> {
+ATen/autocast_mode.cpp:This strategy uses an exterior "WrapFunction" that extracts arguments on behalf of
+ATen/test/vec_test_all_types.h:        //half coverage for byte
+ATen/test/CMakeLists.txt:  ${CMAKE_CURRENT_SOURCE_DIR}/half_test.cpp
+ATen/test/CMakeLists.txt:  ${CMAKE_CURRENT_SOURCE_DIR}/cuda_half_test.cu
+ATen/test/CMakeLists.txt:  ${CMAKE_CURRENT_SOURCE_DIR}/hip/hip_half_test.hip
+ATen/test/cuda_half_test.cu:  // test half construction and implicit conversions in device
+ATen/test/cuda_half_test.cu:  // there is no float <=> __half implicit conversion
+ATen/test/cuda_half_test.cu:  __half a = __float2half(3.0f);
+ATen/test/cuda_half_test.cu:  __half b = __float2half(2.0f);
+ATen/test/cuda_half_test.cu:  __half c = a - Half(b);
+ATen/test/cuda_half_test.cu:  // half types give almost equivalent results when using
+ATen/test/cuda_half_test.cu:  // half API for the common mathematical functions.
+ATen/test/cuda_half_test.cu:// half common math functions tests in device

@@ -11,7 +11,7 @@
 
 namespace at {
 
-// For FP16 or BFloat16 inputs, ops should perform internal math in FP32.
+// For FP8, FP16 or BFloat16 inputs, ops should perform internal math in FP32.
 template <typename scalar_t>
 struct OpMathType {
   using type = scalar_t;

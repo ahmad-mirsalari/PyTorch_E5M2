@@ -85,6 +85,9 @@ inline void check_supported_max_int_with_precision(int64_t n, const Tensor& tens
     case at::ScalarType::Half:
       TORCH_CHECK(n <= (int64_t(1) << 11) + 1, "n cannot be greater than 2049 for Half type.");
       break;
+    case at::ScalarType::Float8:
+      TORCH_CHECK(n <= (int64_t(1) << 11) + 1, "n cannot be greater than 2049 for Float8 type.");
+      break;
     case at::ScalarType::Float:
       TORCH_CHECK(n <= (int64_t(1) << 24) + 1, "n cannot be greater than 2^24+1 for Float type.");
       break;

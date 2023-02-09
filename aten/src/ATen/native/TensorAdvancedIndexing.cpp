@@ -856,7 +856,9 @@ TORCH_IMPL_FUNC(index_add_cpu_out)
         result.numel() > at::internal::GRAIN_SIZE &&
         // scatter_add does not support ComplexHalf
         source.scalar_type() != ScalarType::ComplexHalf &&
-        result.scalar_type() != ScalarType::ComplexHalf) {
+        result.scalar_type() != ScalarType::ComplexHalf &&
+        source.scalar_type() != ScalarType::ComplexFloat8 &&
+        result.scalar_type() != ScalarType::ComplexFloat8) {
       std::vector<int64_t> ep_sizes(result.sizes().size());
       std::vector<int64_t> ep_strides(source.sizes().size());
 
@@ -920,7 +922,7 @@ TORCH_IMPL_FUNC(index_add_cpu_out)
 
     // explicitly capture all required variables to work around windows build
     // TODO: fix this when windows can correctly capture variables in nested lambda
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(ScalarType::Half, ScalarType::Bool, ScalarType::BFloat16, ScalarType::ComplexHalf,
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(ScalarType::Half, ScalarType::Float8, ScalarType::Bool, ScalarType::BFloat16, ScalarType::ComplexHalf, ScalarType::ComplexFloat8,
       result.scalar_type(), "index_add_", [&result, &source, &dim, &index_contig, &numel, &alpha] {
       auto alpha_value = alpha.to<scalar_t>();
       auto result_stride = result.dim() == 0 ? 1 : result.stride(dim);
@@ -952,8 +954,8 @@ void index_reduce_func_impl(
   const ReductionType& op) {
   if (!result.is_same(self)) result.copy_(self);
   if (!include_self) {
-    AT_DISPATCH_ALL_TYPES_AND2(
-      at::ScalarType::Half, at::ScalarType::BFloat16,
+    AT_DISPATCH_ALL_TYPES_AND3(
+      at::ScalarType::Half, at::ScalarType::BFloat16, ScalarType::Float8,
       self.scalar_type(), "index_reduce_func_exclude_input_init", [&] {
       scalar_t init_val;
       switch (op) {
@@ -1043,7 +1045,7 @@ void index_reduce_func_impl(
     auto counts = include_self ? at::ones_like(result) : at::zeros_like(result);
     // explicitly capture all required variables to work around windows build
     // TODO: fix this when windows can correctly capture variables in nested lambda
-    AT_DISPATCH_ALL_TYPES_AND2(ScalarType::Half, ScalarType::BFloat16,
+    AT_DISPATCH_ALL_TYPES_AND3(ScalarType::Half, ScalarType::BFloat16, ScalarType::Float8,
       result.scalar_type(), "index_func_", [&result, &source, &dim, &index_contig, &numel, &op, &counts] {
       auto result_stride = result.dim() == 0 ? 1 : result.stride(dim);
       auto source_stride = source.dim() == 0 ? 1 : source.stride(dim);
@@ -1318,7 +1320,7 @@ Tensor & index_select_out_cpu_(const Tensor & self, int64_t dim, const Tensor & 
         });
       });
     } else {
-      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(ScalarType::ComplexHalf, ScalarType::Half, ScalarType::Bool, ScalarType::BFloat16,
+      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(ScalarType::ComplexHalf, ScalarType::Half, ScalarType::Bool, ScalarType::BFloat16, ScalarType::Float8, ScalarType::ComplexFloat8,
         self.scalar_type(), "index_select", [&index_contig, &self, &result, &dim, &numel] {
         auto self_stride = self.dim() == 0 ? 1 : self.stride(dim);
         auto result_stride = result.dim() == 0 ? 1 : result.stride(dim);
@@ -1486,8 +1488,8 @@ static void scatter_reduce_exclude_self_helper(
   int64_t dim,
   const Tensor& index,
   const ReductionType& op) {
-  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(
-    at::ScalarType::Half, at::ScalarType::BFloat16, at::ScalarType::Bool,
+  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(
+    at::ScalarType::Half, at::ScalarType::BFloat16, at::ScalarType::Bool, ScalarType::Float8,
     self.scalar_type(), "scatter_reduce_exclude_input_init", [&] {
     scalar_t init_val;
     switch (op) {
@@ -2096,8 +2098,8 @@ Tensor count_nonzero_cpu(const Tensor& self, IntArrayRef dims){
   const auto num_threads = at::get_num_threads();
   DimVector thread_count_nonzero(num_threads);
 
-  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(
-      kComplexHalf, kHalf, kBFloat16, kBool, self.scalar_type(), "nonzero_count_cpu", [&] {
+  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(
+      kComplexHalf, kHalf, kBFloat16, kBool, kComplexFloat8, kFloat8, self.scalar_type(), "nonzero_count_cpu", [&] {
     at::parallel_for(0, iter.numel(), internal::GRAIN_SIZE, [&] (int64_t begin, int64_t end) {
       const auto tid = at::get_thread_num();
       thread_count_nonzero[tid] = count_nonzero_impl<scalar_t>(iter, {begin, end});
@@ -2139,8 +2141,8 @@ Tensor& nonzero_out_cpu(const Tensor& self, Tensor& result) {
   DimVector thread_count_nonzero(num_threads + 1);
 
   // Pass 1: Count nonzero element per-thread
-  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(
-      kComplexHalf, kHalf, kBFloat16, kBool, self.scalar_type(), "nonzero_count_cpu", [&] {
+  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(
+      kComplexHalf, kHalf, kBFloat16, kComplexFloat8, kFloat8, kBool, self.scalar_type(), "nonzero_count_cpu", [&] {
     at::parallel_for(0, numel, internal::GRAIN_SIZE, [&] (int64_t begin, int64_t end) {
       const auto tid = at::get_thread_num();
       thread_begin[tid] = begin;
@@ -2166,8 +2168,8 @@ Tensor& nonzero_out_cpu(const Tensor& self, Tensor& result) {
   }
 
   // Pass 2: Write indexes
-  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(
-      kComplexHalf, kHalf, kBFloat16, kBool, self.scalar_type(), "nonzero_cpu", [&] {
+  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(
+      kComplexHalf, kHalf, kBFloat16, kComplexFloat8, kFloat8, kBool, self.scalar_type(), "nonzero_cpu", [&] {
     at::parallel_for(0, numel, internal::GRAIN_SIZE, [&] (int64_t begin, int64_t end) {
       auto tid = at::get_thread_num();
       // Work needs to be distributed the same on both passes

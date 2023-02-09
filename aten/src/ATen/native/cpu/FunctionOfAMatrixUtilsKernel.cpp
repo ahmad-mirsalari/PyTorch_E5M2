@@ -21,8 +21,8 @@ void _compute_linear_combination_cpu_kernel(
   int64_t coeff_stride,
   int64_t num_summations
 ) {
-  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(
-    at::ScalarType::Half, at::ScalarType::Bool, at::ScalarType::BFloat16,
+  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(
+    at::ScalarType::Half, at::ScalarType::Bool, at::ScalarType::BFloat16, ScalarType::Float8,
     iter.dtype(),
     "_compute_linear_combination_cpu", [&] {
       auto loop = [&](char** data, const int64_t* strides, int64_t n) {

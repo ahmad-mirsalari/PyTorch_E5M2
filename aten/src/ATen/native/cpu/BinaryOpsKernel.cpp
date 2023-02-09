@@ -64,8 +64,16 @@ void mul_kernel(TensorIteratorBase& iter) {
           using comp_t = c10::complex<float>;
           return comp_t{a} * comp_t{b};
         });
-  } else {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND2(kBFloat16, kHalf, iter.dtype(), "mul_cpu", [&]() {
+  } else if (iter.dtype() == kComplexFloat8) {
+    cpu_kernel(
+        iter,
+        [=](c10::complex<at::Float8> a,
+            c10::complex<at::Float8> b) -> c10::complex<at::Float8> {
+          using comp_t = c10::complex<float>;
+          return comp_t{a} * comp_t{b};
+        });
+  }else {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(kBFloat16, kHalf, kFloat8, iter.dtype(), "mul_cpu", [&]() {
       cpu_kernel_vec(iter,
         [=](scalar_t a, scalar_t b) __ubsan_ignore_undefined__ -> scalar_t { return a * b; },
         [=](Vectorized<scalar_t> a, Vectorized<scalar_t> b) __ubsan_ignore_undefined__ {
@@ -76,7 +84,7 @@ void mul_kernel(TensorIteratorBase& iter) {
 }
 
 void div_true_kernel(TensorIteratorBase& iter) {
-  AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(kBFloat16, kHalf, iter.common_dtype(), "div_cpu", [&]() {
+  AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "div_cpu", [&]() {
     cpu_kernel_vec(iter,
       [](scalar_t a, scalar_t b) __ubsan_ignore_float_divide_by_zero__ -> scalar_t {
         return a / b;
@@ -99,7 +107,7 @@ void div_trunc_kernel(TensorIteratorBase& iter) {
       });
     });
   } else {
-    AT_DISPATCH_FLOATING_TYPES_AND2(kBFloat16, kHalf, dtype, "div_trunc_cpu", [&]() {
+    AT_DISPATCH_FLOATING_TYPES_AND3(kBFloat16, kHalf, kFloat8, dtype, "div_trunc_cpu", [&]() {
       cpu_kernel_vec(iter,
         [](scalar_t a, scalar_t b) __ubsan_ignore_float_divide_by_zero__ -> scalar_t {
           return std::trunc(a / b);
@@ -147,7 +155,7 @@ void div_floor_kernel(TensorIteratorBase& iter) {
     });
   } else {
     // See NOTE: [Floor Division in Python]
-    AT_DISPATCH_FLOATING_TYPES_AND2(kBFloat16, kHalf, dtype, "div_floor_cpu", [&]() {
+    AT_DISPATCH_FLOATING_TYPES_AND3(kBFloat16, kHalf, kFloat8, dtype, "div_floor_cpu", [&]() {
       using vec_t = Vectorized<scalar_t>;
       cpu_kernel_vec(iter,
           [](scalar_t a, scalar_t b) __ubsan_ignore_float_divide_by_zero__ -> scalar_t {
@@ -229,7 +237,7 @@ void remainder_kernel(TensorIteratorBase& iter) {
         return convert_float_bfloat16(a0, a1);
       });
   } else {
-    AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.common_dtype(), "remainder_cpu", [&]() {
+    AT_DISPATCH_FLOATING_TYPES_AND_HALF_FLOAT8(iter.common_dtype(), "remainder_cpu", [&]() {
       cpu_kernel_vec(iter,
         [=](scalar_t a, scalar_t b) __ubsan_ignore_float_divide_by_zero__ -> scalar_t {
           scalar_t mod = std::fmod(a, b);
@@ -326,14 +334,14 @@ void lshift_kernel(TensorIteratorBase& iter) {
 void logical_and_kernel(TensorIterator& iter) {
   // See Note [special-case bool outputs]
   if (iter.dtype() == ScalarType::Bool) {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(kBool, kBFloat16, kHalf, iter.common_dtype(), "logical_and_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(kBool, kBFloat16, kHalf, kFloat8, iter.common_dtype(), "logical_and_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> bool {
           return a && b;
         });
     });
   } else {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND2(kBFloat16, kHalf, iter.common_dtype(), "logical_and_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "logical_and_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
           return static_cast<scalar_t>(a && b);
@@ -345,14 +353,14 @@ void logical_and_kernel(TensorIterator& iter) {
 void logical_or_kernel(TensorIterator& iter) {
   // See Note [special-case bool outputs]
   if (iter.dtype() == ScalarType::Bool) {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(kBool, kBFloat16, kHalf, iter.common_dtype(), "logical_or_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(kBool, kBFloat16, kHalf, kFloat8, iter.common_dtype(), "logical_or_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> bool {
           return a || b;
         });
     });
   } else {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(kBool, kBFloat16, kHalf, iter.common_dtype(), "logical_or_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(kBool, kBFloat16, kHalf, kFloat8, iter.common_dtype(), "logical_or_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
           return static_cast<scalar_t>(a || b);
@@ -364,14 +372,14 @@ void logical_or_kernel(TensorIterator& iter) {
 void logical_xor_kernel(TensorIterator& iter) {
   // See Note [special-case bool outputs]
   if (iter.dtype() == ScalarType::Bool) {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(kBool, kBFloat16, kHalf, iter.common_dtype(), "logical_xor_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(kBool, kBFloat16, kHalf, kFloat8, iter.common_dtype(), "logical_xor_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> bool {
           return bool(a) != bool(b);
         });
     });
   } else {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND2(kBFloat16, kHalf, iter.common_dtype(), "logical_xor_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "logical_xor_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
           return static_cast<scalar_t>(bool(a) != bool(b));
@@ -395,14 +403,14 @@ void rshift_kernel(TensorIteratorBase& iter) {
 void lt_kernel(TensorIteratorBase& iter) {
   // See Note [special-case bool outputs]
   if (iter.dtype() == ScalarType::Bool) {
-    AT_DISPATCH_ALL_TYPES_AND3(kBool, kBFloat16, kHalf, iter.common_dtype(), "lt_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND4(kBool, kBFloat16, kHalf, kFloat8, iter.common_dtype(), "lt_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> bool {
           return a < b;
         });
     });
   } else {
-    AT_DISPATCH_ALL_TYPES_AND2(kBFloat16, kHalf, iter.common_dtype(), "lt_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND3(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "lt_cpu", [&]() {
       cpu_kernel_vec(
         iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
@@ -418,14 +426,14 @@ void lt_kernel(TensorIteratorBase& iter) {
 void le_kernel(TensorIteratorBase& iter) {
   // See Note [special-case bool outputs]
   if (iter.dtype() == ScalarType::Bool) {
-    AT_DISPATCH_ALL_TYPES_AND3(kBool, kBFloat16, kHalf, iter.common_dtype(), "le_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND4(kBool, kBFloat16, kHalf, kFloat8, iter.common_dtype(), "le_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> bool {
           return a <= b;
         });
     });
   } else {
-    AT_DISPATCH_ALL_TYPES_AND2(kBFloat16, kHalf, iter.common_dtype(), "le_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND3(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "le_cpu", [&]() {
       cpu_kernel_vec(
         iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
@@ -441,14 +449,14 @@ void le_kernel(TensorIteratorBase& iter) {
 void gt_kernel(TensorIteratorBase& iter) {
   // See Note [special-case bool outputs]
   if (iter.dtype() == ScalarType::Bool) {
-    AT_DISPATCH_ALL_TYPES_AND3(kBool, kBFloat16, kHalf, iter.common_dtype(), "gt_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND4(kBool, kBFloat16, kHalf, kFloat8, iter.common_dtype(), "gt_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> bool {
           return a > b;
         });
     });
   } else {
-    AT_DISPATCH_ALL_TYPES_AND2(kBFloat16, kHalf, iter.common_dtype(), "gt_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND3(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "gt_cpu", [&]() {
       cpu_kernel_vec(
         iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
@@ -464,14 +472,14 @@ void gt_kernel(TensorIteratorBase& iter) {
 void ge_kernel(TensorIteratorBase& iter) {
   // See Note [special-case bool outputs]
   if (iter.dtype() == ScalarType::Bool) {
-    AT_DISPATCH_ALL_TYPES_AND3(kBool, kBFloat16, kHalf, iter.common_dtype(), "ge_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND4(kBool, kBFloat16, kHalf, kFloat8, iter.common_dtype(), "ge_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> bool {
           return a >= b;
         });
     });
   } else {
-    AT_DISPATCH_ALL_TYPES_AND2(kBFloat16, kHalf, iter.common_dtype(), "ge_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND3(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "ge_cpu", [&]() {
       cpu_kernel_vec(
         iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
@@ -487,14 +495,14 @@ void ge_kernel(TensorIteratorBase& iter) {
 void eq_kernel(TensorIteratorBase& iter) {
   // See Note [special-case bool outputs]
   if (iter.dtype() == ScalarType::Bool) {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(kComplexHalf, kBool, kBFloat16, kHalf, iter.common_dtype(), "eq_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(kComplexHalf, kBool, kBFloat16, kHalf, kComplexFloat8, kFloat8, iter.common_dtype(), "eq_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> bool {
           return a == b;
         });
     });
   } else {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(kComplexHalf, kBFloat16, kHalf, iter.common_dtype(), "eq_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND5(kComplexHalf, kBFloat16, kHalf, kComplexFloat8, kFloat8, iter.common_dtype(), "eq_cpu", [&]() {
       cpu_kernel_vec(
         iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
@@ -510,14 +518,14 @@ void eq_kernel(TensorIteratorBase& iter) {
 void ne_kernel(TensorIteratorBase& iter) {
   // See Note [special-case bool outputs]
   if (iter.dtype() == ScalarType::Bool) {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(kComplexHalf, kBool, kBFloat16, kHalf, iter.common_dtype(), "ne_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(kComplexHalf, kBool, kBFloat16, kHalf, kComplexFloat8, kFloat8, iter.common_dtype(), "ne_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> bool {
           return a != b;
         });
     });
   } else {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(kComplexHalf, kBFloat16, kHalf, iter.common_dtype(), "ne_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND5(kComplexHalf, kBFloat16, kHalf, kComplexFloat8, kFloat8, iter.common_dtype(), "ne_cpu", [&]() {
       cpu_kernel_vec(
         iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
@@ -543,7 +551,7 @@ void maximum_kernel(TensorIteratorBase& iter) {
         [](Vectorized<scalar_t> a, Vectorized<scalar_t> b) { return at::vec::maximum(a, b); });
     });
   } else {
-    AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, iter.dtype(), "maximum_cpu", [&]() {
+    AT_DISPATCH_FLOATING_TYPES_AND3(at::ScalarType::Half, at::ScalarType::BFloat16, at::ScalarType::Float8, iter.dtype(), "maximum_cpu", [&]() {
       cpu_kernel_vec(iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
           if (a != a || b != b) {
@@ -570,7 +578,7 @@ void minimum_kernel(TensorIteratorBase& iter) {
         [](Vectorized<scalar_t> a, Vectorized<scalar_t> b) { return at::vec::minimum(a, b); });
     });
   } else {
-    AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, iter.dtype(), "minimum_cpu", [&]() {
+    AT_DISPATCH_FLOATING_TYPES_AND3(at::ScalarType::Half, at::ScalarType::BFloat16, at::ScalarType::Float8, iter.dtype(), "minimum_cpu", [&]() {
       cpu_kernel_vec(iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
           if (a != a || b != b) {
@@ -586,7 +594,7 @@ void minimum_kernel(TensorIteratorBase& iter) {
 
 void fmax_kernel(TensorIteratorBase& iter) {
   if (isFloatingType(iter.common_dtype())) {
-    AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, iter.common_dtype(), "fmax_cpu", [&]() {
+    AT_DISPATCH_FLOATING_TYPES_AND3(at::ScalarType::Half, at::ScalarType::BFloat16, at::ScalarType::Float8, iter.common_dtype(), "fmax_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
           return std::fmax(a, b);
@@ -599,7 +607,7 @@ void fmax_kernel(TensorIteratorBase& iter) {
 
 void fmin_kernel(TensorIteratorBase& iter) {
   if (isFloatingType(iter.common_dtype())) {
-    AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, iter.common_dtype(), "fmin_cpu", [&]() {
+    AT_DISPATCH_FLOATING_TYPES_AND3(at::ScalarType::Half, at::ScalarType::BFloat16, at::ScalarType::Float8, iter.common_dtype(), "fmin_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
           return std::fmin(a, b);
@@ -636,8 +644,8 @@ void smooth_l1_kernel(TensorIteratorBase& iter, double beta) {
           return convert_float_bfloat16(a0, a1);
         });
   } else {
-    AT_DISPATCH_FLOATING_TYPES_AND(
-        kHalf, iter.dtype(), "smooth_l1_cpu", [&]() {
+    AT_DISPATCH_FLOATING_TYPES_AND2(
+        kHalf,kFloat8, iter.dtype(), "smooth_l1_cpu", [&]() {
         using Vec = Vectorized<scalar_t>;
         const scalar_t beta_val(beta);
         const Vec beta_val_vec(beta_val);
@@ -660,7 +668,7 @@ void smooth_l1_kernel(TensorIteratorBase& iter, double beta) {
 }
 
 void huber_kernel(TensorIterator& iter, double delta) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(kBFloat16, kHalf, iter.dtype(), "huber_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(kBFloat16, kHalf, kFloat8, iter.dtype(), "huber_cpu", [&]() {
     using Vec = Vectorized<scalar_t>;
     const scalar_t delta_val(delta);
     const Vec delta_val_vec(delta_val);
@@ -712,7 +720,7 @@ void sigmoid_backward_kernel(TensorIteratorBase& iter) {
          return convert_float_bfloat16(a0, a1);
       });
   } else {
-    AT_DISPATCH_FLOATING_TYPES_AND(kHalf, iter.dtype(), "sigmoid_backward_cpu", [&]() {
+    AT_DISPATCH_FLOATING_TYPES_AND2(kHalf, kFloat8, iter.dtype(), "sigmoid_backward_cpu", [&]() {
       auto one_vec = Vectorized<scalar_t>((scalar_t)(1));
       cpu_kernel_vec(
         iter,
@@ -822,12 +830,12 @@ void tanh_backward_kernel(TensorIteratorBase& iter) {
 }
 
 void mse_kernel(TensorIteratorBase& iter) {
-  if (iter.dtype() == ScalarType::Half) {
-    TORCH_WARN_ONCE("Applying the CPU mse kernel on half-type tensors. "
+  if (iter.dtype() == ScalarType::Half || iter.dtype() == ScalarType::Float8) {
+    TORCH_WARN_ONCE("Applying the CPU mse kernel on half-type or float8-type tensors. "
                     "This may be slower than using float or double-type tensors.");
   }
 
-  AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.dtype(), "mse_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND_HALF_FLOAT8(iter.dtype(), "mse_cpu", [&]() {
     cpu_kernel_vec(iter,
       [=](scalar_t a, scalar_t b) -> scalar_t {
         auto diff = a - b;
@@ -849,7 +857,7 @@ void fmod_kernel(TensorIteratorBase& iter) {
       });
     });
   } else {
-    AT_DISPATCH_FLOATING_TYPES_AND2(kBFloat16, kHalf, iter.common_dtype(), "fmod_cpu", [&]() {
+    AT_DISPATCH_FLOATING_TYPES_AND3(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "fmod_cpu", [&]() {
       cpu_kernel_vec(
         iter,
         [](scalar_t x, scalar_t d) -> scalar_t {
@@ -1011,7 +1019,7 @@ void hypot_kernel(TensorIteratorBase& iter) {
 }
 
 void igamma_kernel(TensorIteratorBase& iter) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(kHalf, kBFloat16, iter.dtype(), "igamma_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.dtype(), "igamma_cpu", [&]() {
     cpu_kernel_vec(
         iter,
         [=](scalar_t a, scalar_t b) -> scalar_t {
@@ -1024,7 +1032,7 @@ void igamma_kernel(TensorIteratorBase& iter) {
 }
 
 void igammac_kernel(TensorIteratorBase& iter) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(kHalf, kBFloat16, iter.dtype(), "igammac_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.dtype(), "igammac_cpu", [&]() {
     cpu_kernel_vec(
         iter,
         [=](scalar_t a, scalar_t b) -> scalar_t {
@@ -1059,7 +1067,7 @@ void nextafter_kernel(TensorIteratorBase& iter) {
 }
 
 void heaviside_kernel(TensorIteratorBase& iter) {
-  AT_DISPATCH_ALL_TYPES_AND3(kHalf, kBool, kBFloat16, iter.dtype(), "heaviside_cpu", [&]() {
+  AT_DISPATCH_ALL_TYPES_AND4(kHalf, kBool, kBFloat16, kFloat8, iter.dtype(), "heaviside_cpu", [&]() {
     cpu_kernel(iter, [](scalar_t a, scalar_t b) -> scalar_t {
         return a == 0 ? b : static_cast<scalar_t>(a > 0);
     });
@@ -1067,7 +1075,7 @@ void heaviside_kernel(TensorIteratorBase& iter) {
 }
 
 void copysign_kernel(TensorIteratorBase& iter) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(kBFloat16, kHalf, iter.common_dtype(), "copysign_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "copysign_cpu", [&]() {
     cpu_kernel_vec(iter,
       [](scalar_t a, scalar_t b) -> scalar_t {
         return c10::copysign(a, b);
@@ -1079,7 +1087,7 @@ void copysign_kernel(TensorIteratorBase& iter) {
 }
 
 void xlogy_kernel(TensorIteratorBase& iter) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(kBFloat16, kHalf, iter.common_dtype(), "xlogy_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "xlogy_cpu", [&]() {
     cpu_kernel(iter, [](scalar_t x, scalar_t y) -> scalar_t {
       if (at::_isnan(y)){
         return NAN;
@@ -1093,7 +1101,7 @@ void xlogy_kernel(TensorIteratorBase& iter) {
 }
 
 void xlog1py_kernel(TensorIteratorBase& iter) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(kBFloat16, kHalf, iter.common_dtype(), "xlog1py_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "xlog1py_cpu", [&]() {
     cpu_kernel(iter, [](scalar_t x, scalar_t y) -> scalar_t {
       if (at::_isnan(y)){
         return NAN;

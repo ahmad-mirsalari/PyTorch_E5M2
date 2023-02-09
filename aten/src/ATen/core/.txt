@@ -1,0 +1,2 @@
+TransformationHelper.h:template <> struct DistAccumType<half> { using type = float; };
+TransformationHelper.h:      // we need log to be not 0, and not underflow when converted to half

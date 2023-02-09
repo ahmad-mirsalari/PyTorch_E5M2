@@ -126,6 +126,7 @@
 #include <c10/util/ExclusivelyOwned.h>
 #include <c10/util/Flags.h>
 #include <c10/util/Half.h>
+#include <c10/util/Float8.h>
 #include <c10/util/IdWrapper.h>
 #include <c10/util/Logging.h>
 #include <c10/util/MaybeOwned.h>

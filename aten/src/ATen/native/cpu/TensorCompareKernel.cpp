@@ -106,7 +106,7 @@ static void min_kernel_impl(
     bool keepdim) {
   int64_t self_dim_size = ensure_nonempty_size(self, dim);
 
-  AT_DISPATCH_ALL_TYPES_AND3(ScalarType::Half, ScalarType::BFloat16, ScalarType::Bool, self.scalar_type(), "min_cpu", [&] {
+  AT_DISPATCH_ALL_TYPES_AND4(ScalarType::Half, ScalarType::Float8, ScalarType::BFloat16, ScalarType::Bool, self.scalar_type(), "min_cpu", [&] {
     compare_base_kernel<scalar_t>(result, indice, self, dim, keepdim, [&] (
       scalar_t* result_data, int64_t* indice_data,
       const scalar_t* self_data, auto self_dim_stride) {
@@ -139,7 +139,7 @@ static void max_kernel_impl(
     bool keepdim) {
   int64_t self_dim_size = ensure_nonempty_size(self, dim);
 
-  AT_DISPATCH_ALL_TYPES_AND3(ScalarType::Half, ScalarType::BFloat16, ScalarType::Bool, self.scalar_type(), "max_cpu", [&] {
+  AT_DISPATCH_ALL_TYPES_AND4(ScalarType::Half, ScalarType::Float8, ScalarType::BFloat16, ScalarType::Bool, self.scalar_type(), "max_cpu", [&] {
     compare_base_kernel<scalar_t>(result, indice, self, dim, keepdim, [&] (
       scalar_t* result_data, int64_t* indice_data,
       const scalar_t* self_data, auto self_dim_stride) {
@@ -204,7 +204,7 @@ static void aminmax_kernel(
 }
 
 static void where_kernel_impl(TensorIterator &iter) {
-  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(kComplexHalf, kHalf, kBFloat16, kBool,
+  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(kComplexHalf, kHalf, kBFloat16, kBool, kComplexFloat8, kFloat8,
     iter.dtype(), "where_cpu", [&] {
       cpu_kernel(
         iter,
@@ -215,13 +215,13 @@ static void where_kernel_impl(TensorIterator &iter) {
 }
 
 static void isposinf_kernel_impl(TensorIteratorBase& iter) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, iter.input_dtype(), "isposinf_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(at::ScalarType::Half,  at::ScalarType::Float8, at::ScalarType::BFloat16, iter.input_dtype(), "isposinf_cpu", [&]() {
     cpu_kernel(iter, [](scalar_t a) -> bool { return a == std::numeric_limits<scalar_t>::infinity(); });
   });
 }
 
 static void isneginf_kernel_impl(TensorIteratorBase& iter) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, iter.input_dtype(), "isneginf_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(at::ScalarType::Half, at::ScalarType::Float8, at::ScalarType::BFloat16, iter.input_dtype(), "isneginf_cpu", [&]() {
     cpu_kernel(iter, [](scalar_t a) -> bool { return a == -std::numeric_limits<scalar_t>::infinity(); });
   });
 }
@@ -235,8 +235,8 @@ static void mode_kernel_impl(
   auto self_dim_size = ensure_nonempty_size(self, dim);
   auto self_dim_stride = ensure_nonempty_stride(self, dim);
 
-  AT_DISPATCH_ALL_TYPES_AND3(
-      kHalf, kBFloat16, kBool, self.scalar_type(), "mode_cpu", [&] {
+  AT_DISPATCH_ALL_TYPES_AND4(
+      kHalf, kBFloat16, kBool, kFloat8, self.scalar_type(), "mode_cpu", [&] {
         auto loop = [&](char** data, const int64_t* strides, int64_t n) {
           auto* values_data_bytes = data[0];
           auto* indices_data_bytes = data[1];

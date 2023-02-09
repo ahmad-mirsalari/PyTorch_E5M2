@@ -170,8 +170,8 @@ struct cpu_scatter_gather_base_kernel {
     // to keep equal granularity in parallelism.
     int64_t grain_size = std::max((int64_t) 1, at::internal::GRAIN_SIZE / index_dim_size);
 
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(
-      ScalarType::Bool, ScalarType::Half, ScalarType::BFloat16, iter.dtype(),
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(
+      ScalarType::Bool, ScalarType::Half, ScalarType::BFloat16, ScalarType::Float8, iter.dtype(),
       "scatter_gather_scalar_cpu", [&] {
         constexpr auto SELF_ITER_STRIDE_IDX = 0;
         constexpr auto INDEX_ITER_STRIDE_IDX = 1;
@@ -251,8 +251,8 @@ struct cpu_scatter_gather_base_kernel {
 
     int64_t grain_size = std::max((int64_t) 1, at::internal::GRAIN_SIZE / index_dim_size);
 
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(
-      ScalarType::Bool, ScalarType::Half, ScalarType::BFloat16, iter.dtype(),
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(
+      ScalarType::Bool, ScalarType::Half, ScalarType::BFloat16, ScalarType::Float8, iter.dtype(),
       "scatter_gather_tensor_cpu", [&] {
         constexpr auto SELF_ITER_STRIDE_IDX = 0;
         constexpr auto INDEX_ITER_STRIDE_IDX = 2;
@@ -338,8 +338,8 @@ struct cpu_scatter_gather_base_kernel {
 
     int64_t grain_size = std::max((int64_t) 1, at::internal::GRAIN_SIZE / index_dim_size);
 
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND2(
-      ScalarType::Half, ScalarType::BFloat16, iter.dtype(),
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(
+      ScalarType::Half, ScalarType::BFloat16, ScalarType::Float8, iter.dtype(),
       "scatter_gather_tensor_cpu_reduce_mean", [&] {
         constexpr auto SELF_ITER_STRIDE_IDX = 0;
         constexpr auto INDEX_ITER_STRIDE_IDX = 2;
@@ -425,8 +425,8 @@ struct cpu_scatter_gather_base_kernel {
 
     int64_t grain_size = std::max((int64_t) 1, at::internal::GRAIN_SIZE / index_dim_size);
 
-    AT_DISPATCH_ALL_TYPES_AND3(
-      ScalarType::Bool, ScalarType::Half, ScalarType::BFloat16, iter.dtype(),
+    AT_DISPATCH_ALL_TYPES_AND4(
+      ScalarType::Bool, ScalarType::Half, ScalarType::BFloat16, ScalarType::Float8, iter.dtype(),
       "scatter_gather_tensor_cpu_reduce_amax", [&] {
         constexpr auto SELF_ITER_STRIDE_IDX = 0;
         constexpr auto INDEX_ITER_STRIDE_IDX = 2;
@@ -512,8 +512,8 @@ struct cpu_scatter_gather_base_kernel {
 
     int64_t grain_size = std::max((int64_t) 1, at::internal::GRAIN_SIZE / index_dim_size);
 
-    AT_DISPATCH_ALL_TYPES_AND3(
-      ScalarType::Bool, ScalarType::Half, ScalarType::BFloat16, iter.dtype(),
+    AT_DISPATCH_ALL_TYPES_AND4(
+      ScalarType::Bool, ScalarType::Half, ScalarType::BFloat16, ScalarType::Float8, iter.dtype(),
       "scatter_gather_tensor_cpu_reduce_amin", [&] {
         constexpr auto SELF_ITER_STRIDE_IDX = 0;
         constexpr auto INDEX_ITER_STRIDE_IDX = 2;

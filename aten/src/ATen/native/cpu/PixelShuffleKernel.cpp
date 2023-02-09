@@ -199,14 +199,14 @@ void pixel_shuffle_kernel_impl(
     int64_t upscale_factor) {
   switch (input.suggest_memory_format()) {
     case at::MemoryFormat::Contiguous: {
-      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(ScalarType::Bool, ScalarType::BFloat16, ScalarType::Half,
+      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(ScalarType::Bool, ScalarType::BFloat16, ScalarType::Float8, ScalarType::Half,
           input.scalar_type(), "pixel_shuffle", [&] {
         cpu_pixel_shuffle<scalar_t>(output, input, upscale_factor);
       });
       break;
     }
     case at::MemoryFormat::ChannelsLast: {
-      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(ScalarType::Bool, ScalarType::BFloat16, ScalarType::Half,
+      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(ScalarType::Bool, ScalarType::Float8, ScalarType::BFloat16, ScalarType::Half,
           input.scalar_type(), "pixel_shuffle_channels_last", [&] {
         cpu_pixel_shuffle_channels_last<scalar_t>(output, input, upscale_factor);
       });
@@ -225,7 +225,7 @@ void pixel_unshuffle_kernel_impl(
     case at::MemoryFormat::Contiguous: {
       // input tensor shape of [N, C, Hr, Wr]
       // output tensor shape of [N, Crr, H, W]
-      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(ScalarType::Bool, ScalarType::BFloat16, ScalarType::Half,
+      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(ScalarType::Bool, ScalarType::Float8, ScalarType::BFloat16, ScalarType::Half,
           input.scalar_type(), "pixel_unshuffle", [&] {
         cpu_pixel_unshuffle<scalar_t>(output, input, downscale_factor);
       });
@@ -234,7 +234,7 @@ void pixel_unshuffle_kernel_impl(
     case at::MemoryFormat::ChannelsLast: {
       // input tensor shape of [N, Hr, Wr, C]
       // output tensor shape of [N, H, W, Crr]
-      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(ScalarType::Bool, ScalarType::BFloat16, ScalarType::Half,
+      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(ScalarType::Bool, ScalarType::Float8, ScalarType::BFloat16, ScalarType::Half,
           input.scalar_type(), "pixel_unshuffle_channels_last", [&] {
         cpu_pixel_unshuffle_channels_last<scalar_t>(output, input, downscale_factor);
       });

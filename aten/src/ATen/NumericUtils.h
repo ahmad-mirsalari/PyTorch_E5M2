@@ -7,6 +7,7 @@
 #include <c10/macros/Macros.h>
 #include <c10/util/BFloat16.h>
 #include <c10/util/Half.h>
+#include <c10/util/Float8.h>
 #include <c10/util/complex.h>
 
 #include <cmath>
@@ -49,6 +50,12 @@ template <
 inline C10_HOST_DEVICE bool _isnan(T val) {
   return at::_isnan(static_cast<float>(val));
 }
+template <
+    typename T,
+    typename std::enable_if<std::is_same<T, at::Float8>::value, int>::type = 0>
+inline C10_HOST_DEVICE bool _isnan(T val) {
+  return at::_isnan(static_cast<float>(val));
+}
 
 template <
     typename T,
@@ -85,6 +92,10 @@ inline C10_HOST_DEVICE bool _isinf(T val) {
 }
 
 inline C10_HOST_DEVICE bool _isinf(at::Half val) {
+  return at::_isinf(static_cast<float>(val));
+}
+
+inline C10_HOST_DEVICE bool _isinf(at::Float8 val) {
   return at::_isinf(static_cast<float>(val));
 }
 

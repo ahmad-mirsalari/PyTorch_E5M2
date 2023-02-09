@@ -45,6 +45,7 @@ int64_t update_from(int64_t from) {
   static_assert(
     std::is_floating_point<scalar_t>::value ||
     std::is_same<scalar_t, at::Half>::value ||
+    std::is_same<scalar_t, at::Float8>::value ||
     std::is_same<scalar_t, at::BFloat16>::value, "scalar_t must be floating-point type");
   const auto from_plus_1 = static_cast<int64_t>(static_cast<scalar_t>(from + 1));
   if (from_plus_1 < from) {
@@ -62,6 +63,7 @@ int64_t update_to(int64_t to) {
   static_assert(
     std::is_floating_point<scalar_t>::value ||
     std::is_same<scalar_t, at::Half>::value ||
+    std::is_same<scalar_t, at::Float8>::value ||
     std::is_same<scalar_t, at::BFloat16>::value, "scalar_t must be floating-point type");
   const auto to_minus_1 = static_cast<int64_t>(static_cast<scalar_t>(to - 1));
   if (to_minus_1 >= to) {
@@ -94,7 +96,7 @@ at::Tensor& random_impl(at::Tensor& self, c10::optional<Generator> generator) {
 static void check_from_to_in_range(int64_t from, int64_t to_inc, caffe2::TypeMeta dtype) {
   const auto scalar_type = typeMetaToScalarType(dtype);
   if (isFloatingType(scalar_type)) {
-    AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, scalar_type, "check_random_fp_bounds", [&] {
+    AT_DISPATCH_FLOATING_TYPES_AND3(at::ScalarType::Half,at::ScalarType::Float8, at::ScalarType::BFloat16, scalar_type, "check_random_fp_bounds", [&] {
       const auto min = static_cast<double>(std::numeric_limits<scalar_t>::lowest());
       const auto max = static_cast<double>(std::numeric_limits<scalar_t>::max());
       CHECK_OUT_OF_BOUNDS(from, "from", min, max, dtype);
@@ -125,7 +127,7 @@ at::Tensor& random_from_to_impl(at::Tensor& self, int64_t from, c10::optional<in
     int64_t to = *to_opt;
     TORCH_CHECK(from < to, "random_ expects 'from' to be less than 'to', but got from=", from, " >= to=", to);
     if (isFloatingType(iter.dtype())) {
-      AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, self.scalar_type(), "random_update_from_to", [&] {
+      AT_DISPATCH_FLOATING_TYPES_AND3(at::ScalarType::Half,at::ScalarType::Float8, at::ScalarType::BFloat16, self.scalar_type(), "random_update_from_to", [&] {
         from = update_from<scalar_t>(from);
         to = update_to<scalar_t>(to);
         TORCH_CHECK(from < to, "random_ expects 'from' casted to dtype to be less than 'to' casted to dtype, but got from=", from, " >= to=", to);
@@ -138,7 +140,7 @@ at::Tensor& random_from_to_impl(at::Tensor& self, int64_t from, c10::optional<in
     // [from, std::numeric_limits<int64_t>::max()]
     int64_t to_inc = 0;
     if (isFloatingType(iter.dtype())) {
-      AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, self.scalar_type(), "random_from_to_range_calc", [&] {
+      AT_DISPATCH_FLOATING_TYPES_AND3(at::ScalarType::Half, at::ScalarType::Float8, at::ScalarType::BFloat16, self.scalar_type(), "random_from_to_range_calc", [&] {
         constexpr int64_t scalar_t_max = static_cast<int64_t>(1) << std::numeric_limits<scalar_t>::digits;
         to_inc = scalar_t_max > std::numeric_limits<int64_t>::max() ? std::numeric_limits<int64_t>::max() : static_cast<int64_t>(scalar_t_max);
         from = update_from<scalar_t>(from);
@@ -268,7 +270,7 @@ at::Tensor& uniform_impl_(at::Tensor& self, double from, double to, c10::optiona
     auto float_tensor = at::view_as_real(self);
     uniform_impl_<uniform_kernel, RNG>(float_tensor, from, to, generator);
   } else {
-    AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, self.scalar_type(), "check_uniform_bounds", [&] {
+    AT_DISPATCH_FLOATING_TYPES_AND3(at::ScalarType::Half, at::ScalarType::Float8, at::ScalarType::BFloat16, self.scalar_type(), "check_uniform_bounds", [&] {
       const auto dtype = self.dtype();
       const auto min = static_cast<double>(std::numeric_limits<scalar_t>::lowest());
       const auto max = static_cast<double>(std::numeric_limits<scalar_t>::max());

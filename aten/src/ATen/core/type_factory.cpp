@@ -19,6 +19,7 @@ namespace c10 {
   _(IntTensor, TensorType)          \
   _(ShortTensor, TensorType)        \
   _(HalfTensor, TensorType)         \
+  _(Float8Tensor, TensorType)         \
   _(CharTensor, TensorType)         \
   _(ByteTensor, TensorType)         \
   _(BoolTensor, TensorType)         \

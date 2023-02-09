@@ -233,6 +233,9 @@ std::vector<Tensor> atleast_3d(TensorList tensors) {
 Tensor chalf(const Tensor& self, c10::optional<MemoryFormat> memory_format) {
   return self.to(kComplexHalf, false, false, memory_format);
 }
+Tensor cfloat8(const Tensor& self, c10::optional<MemoryFormat> memory_format) {
+  return self.to(kComplexFloat8, false, false, memory_format);
+}
 
 DEFINE_DISPATCH(flip_stub);
 

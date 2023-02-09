@@ -128,8 +128,8 @@ void unfold_backward_cpu_kernel(
   TensorIterator iter = _make_unfold_backward_iter_over_grad_out(
       grad_out, grad_in, dim, size, step);
 
-  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(
-    at::ScalarType::Half, at::ScalarType::Bool, at::ScalarType::BFloat16,
+  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(
+    at::ScalarType::Half, at::ScalarType::Bool, at::ScalarType::BFloat16, at::ScalarType::Float8,
     iter.dtype(),
     "unfold_backward_cpu", [&] {
       _unfold_backward_internal_kernel<scalar_t>(

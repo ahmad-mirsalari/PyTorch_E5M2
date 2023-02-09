@@ -115,9 +115,10 @@ void searchsorted_cpu_contiguous(Tensor& result, const Tensor& input, const Tens
 
 void dispatch(Tensor& result, const Tensor& input, const Tensor& boundaries, bool out_int32, bool right, const Tensor& sorter) {
   if (!out_int32) {
-    AT_DISPATCH_ALL_TYPES_AND2(
+    AT_DISPATCH_ALL_TYPES_AND3(
         ScalarType::Half,
         ScalarType::BFloat16,
+        ScalarType::Float8,
         input.scalar_type(),
         "searchsorted_out_cpu",
         [&] {
@@ -126,9 +127,10 @@ void dispatch(Tensor& result, const Tensor& input, const Tensor& boundaries, boo
         });
   }
   else {
-    AT_DISPATCH_ALL_TYPES_AND2(
+    AT_DISPATCH_ALL_TYPES_AND3(
         ScalarType::Half,
         ScalarType::BFloat16,
+        ScalarType::Float8,
         input.scalar_type(),
         "searchsorted_out_cpu",
         [&] {

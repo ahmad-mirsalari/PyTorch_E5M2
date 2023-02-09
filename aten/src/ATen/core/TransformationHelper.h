@@ -1,5 +1,6 @@
 #include <c10/macros/Macros.h>
 #include <c10/util/Half.h>
+#include <c10/util/Float8.h>
 #include <c10/util/BFloat16.h>
 #include <c10/util/MathConstants.h>
 #include <ATen/NumericUtils.h>
@@ -22,6 +23,7 @@ template <> struct DistAccumType<half> { using type = float; };
 #endif
 template <> struct DistAccumType<BFloat16> { using type = float; };
 template <> struct DistAccumType<Half> { using type = float; };
+template <> struct DistAccumType<Float8> { using type = float; };
 template <> struct DistAccumType<float> { using type = float; };
 template <> struct DistAccumType<double> { using type = double; };
 
@@ -59,7 +61,7 @@ C10_HOST_DEVICE inline typename std::enable_if<!(std::is_floating_point<T>::valu
     return static_cast<bool>(val & 1);
   } else if (std::is_same<T, int64_t>::value) {
     return static_cast<T>(val % (static_cast<uint64_t>(std::numeric_limits<T>::max()) + 1));
-  } else if (std::is_same<T, at::Half>::value || std::is_same<T, at::BFloat16>::value) {
+  } else if (std::is_same<T, at::Half>::value || std::is_same<T, at::BFloat16>::value || std::is_same<T, at::Float8>::value) {
     return static_cast<T>(val % static_cast<uint64_t>((1ULL << std::numeric_limits<T>::digits) + 1));
   } else if (std::is_integral<T>::value) {
     return static_cast<T>(val % (static_cast<uint64_t>(std::numeric_limits<T>::max()) + 1));

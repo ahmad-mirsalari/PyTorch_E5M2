@@ -90,7 +90,7 @@ void channel_shuffle_kernel_impl(
     int64_t groups) {
   switch (input.suggest_memory_format()) {
     case at::MemoryFormat::Contiguous: {
-      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(ScalarType::Bool, ScalarType::BFloat16, ScalarType::Half,
+      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(ScalarType::Bool, ScalarType::BFloat16, ScalarType::Half, ScalarType::Float8,
           input.scalar_type(), "channel_shuffle", [&] {
         cpu_channel_shuffle<scalar_t>(output, input, groups);
       });
@@ -98,7 +98,7 @@ void channel_shuffle_kernel_impl(
     }
     case at::MemoryFormat::ChannelsLast:
     case at::MemoryFormat::ChannelsLast3d: {
-      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(ScalarType::Bool, ScalarType::BFloat16, ScalarType::Half,
+      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(ScalarType::Bool, ScalarType::BFloat16, ScalarType::Half, ScalarType::Float8,
           input.scalar_type(), "channel_shuffle_cl", [&] {
         cpu_channel_shuffle_cl<scalar_t>(output, input, groups);
       });

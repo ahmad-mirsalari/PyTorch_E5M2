@@ -1,0 +1,115 @@
+aten/src/ATen/Dispatch.h:#define AT_DISPATCH_FLOATING_TYPES_AND_HALF(TYPE, NAME, ...) \
+aten/src/ATen/Dispatch.h:#define AT_DISPATCH_FLOATING_TYPES_AND_HALF_FLOAT8(TYPE, NAME, ...) \
+aten/src/ATen/native/cuda/EmbeddingBag.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/EmbeddingBag.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/UpSampleBicubic2d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/UpSampleBicubic2d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/GridSampler.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(input.scalar_type(), "grid_sampler_2d_cuda", [&] {
+aten/src/ATen/native/cuda/GridSampler.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(input.scalar_type(), "grid_sampler_3d_cuda", [&] {
+aten/src/ATen/native/cuda/GridSampler.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(input.scalar_type(), "grid_sampler_2d_backward_cuda", [&] {
+aten/src/ATen/native/cuda/GridSampler.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(input.scalar_type(), "grid_sampler_3d_backward_cuda", [&] {
+aten/src/ATen/native/cuda/UpSampleLinear1d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/UpSampleLinear1d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/UnaryGammaKernels.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.common_dtype(), "digamma_cuda", [&]() {
+aten/src/ATen/native/cuda/UnaryGammaKernels.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.common_dtype(), "digamma_cuda", [&]() {
+aten/src/ATen/native/cuda/UnaryGammaKernels.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.common_dtype(), "trigamma_cuda", [&]() {
+aten/src/ATen/native/cuda/UnaryGammaKernels.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.common_dtype(), "trigamma_cuda", [&]() {
+aten/src/ATen/native/cuda/UnaryGammaKernels.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/UnaryGammaKernels.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/UnaryGammaKernels.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.common_dtype(), "lgamma_cuda", [&]() {
+aten/src/ATen/native/cuda/UnaryGammaKernels.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.common_dtype(), "lgamma_cuda", [&]() {
+aten/src/ATen/native/cuda/UpSampleBilinear2d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(input.scalar_type(), "upsample_bilinear2d_out_frame", [&] {
+aten/src/ATen/native/cuda/UpSampleBilinear2d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(grad_output_.scalar_type(), "upsample_bilinear2d_backward_out_frame", [&] {
+aten/src/ATen/native/cuda/UpSampleBilinear2d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/UpSampleBilinear2d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/WeightNorm.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF
+aten/src/ATen/native/cuda/WeightNorm.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF
+aten/src/ATen/native/cuda/WeightNorm.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF
+aten/src/ATen/native/cuda/WeightNorm.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF
+aten/src/ATen/native/cuda/MultinomialKernel.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(t.scalar_type(), "renormRows_cuda", [&] {
+aten/src/ATen/native/cuda/MultinomialKernel.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(self_v.scalar_type(), "multinomial_kernel_cuda", [&] {
+aten/src/ATen/native/cuda/Distributions.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.input_dtype(), "binomial_cuda", [&] {
+aten/src/ATen/native/cuda/UpSampleTrilinear3d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/UpSampleTrilinear3d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/BinaryMiscOpsKernels.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.dtype(), "smooth_l1_cuda", [&iter, beta]() {
+aten/src/ATen/native/cuda/DepthwiseConv3d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/DepthwiseConv3d.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/DepthwiseConv3d.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/AmpKernels.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/AmpKernels.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/FractionalMaxPool3d.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/FractionalMaxPool3d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/cuda/UnarySpecialOpsKernel.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.common_dtype(), "erfinv_cuda", [&]() {
+aten/src/ATen/native/cuda/UnarySpecialOpsKernel.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.common_dtype(), "erfinv_cuda", [&]() {
+aten/src/ATen/native/cuda/RNN.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(input_gates.scalar_type(), "_thnn_fused_lstm_cell_cuda", [&] {
+aten/src/ATen/native/cuda/RNN.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(workspace.scalar_type(), "_thnn_fused_lstm_cell_cuda_backward", [&] {
+aten/src/ATen/native/cuda/RNN.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(input_gates.scalar_type(), "_thnn_fused_gru_cell_cuda", [&] {
+aten/src/ATen/native/cuda/RNN.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(grad_hy.scalar_type(), "_thnn_fused_gru_cell_cuda_backward", [&] {
+aten/src/ATen/native/cuda/NaiveDilatedConvolution.cu:     AT_DISPATCH_FLOATING_TYPES_AND_HALF. So, we define the code
+aten/src/ATen/native/cuda/FractionalMaxPool2d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(input.scalar_type(),
+aten/src/ATen/native/cuda/FractionalMaxPool2d.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(gradOutput.scalar_type(),
+aten/src/ATen/native/cuda/ForeachUnaryOp.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(tensors[0].scalar_type(), "foreach_unary_op_cuda_", [&]() {
+aten/src/ATen/native/cpu/BinaryOpsKernel.cpp:    AT_DISPATCH_FLOATING_TYPES_AND_HALF_FLOAT8(iter.common_dtype(), "remainder_cpu", [&]() {
+aten/src/ATen/native/cpu/BinaryOpsKernel.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF_FLOAT8(iter.dtype(), "mse_cpu", [&]() {
+aten/src/ATen/native/AdaptiveAveragePooling3d.cpp:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/AdaptiveAveragePooling3d.cpp:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/AdaptiveAveragePooling3d.cpp:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/AdaptiveAveragePooling3d.cpp:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/nested/cuda/NestedTensorTransformerFunctions.cpp:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/nested/cuda/NestedTensorMatmul.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/EmbeddingBag.cpp:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+aten/src/ATen/native/mps/operations/Distributions.mm:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(self.scalar_type(), "check_uniform_bounds", [&] {
+aten/src/ATen/native/quantized/cuda/FakeQuantizeCore.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(input.scalar_type(), "fake_quantize_tensor_cachemask_kernel_types", [&] {
+aten/src/ATen/native/quantized/cuda/FakeQuantizeCore.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(input.scalar_type(), "fake_quantize_tensor_cachemask_kernel_types", [&] {
+aten/src/ATen/native/quantized/cuda/FakeQuantizeCore.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(zero_point_dtype, "fake_quantize_channel_cachemask_cuda_mask_type_handling", [&] {
+aten/src/ATen/native/quantized/cuda/FakeQuantizeCore.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.dtype(), "fake_quantize_channel_cachemask_cpu_type_handling", [&] {
+aten/src/ATen/native/quantized/cpu/kernels/QuantizedOpKernels.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(input.scalar_type(), "fake_quantize_tensor_cachemask_kernel_type_handling", [&] {
+aten/src/ATen/native/quantized/cpu/kernels/QuantizedOpKernels.cpp:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(zero_point_dtype, "fake_quantize_channel_cachemask_cpu_zero_point_handling", [&] {
+aten/src/ATen/native/quantized/cpu/kernels/QuantizedOpKernels.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(iter.dtype(), "fake_quantize_channel_cachemask_cpu_type_handling", [&] {
+test/test_cpp_extensions_jit.py:            AT_DISPATCH_FLOATING_TYPES_AND_HALF(input.scalar_type(), "half_test", [&] {
+third_party/fbgemm/fbgemm_gpu/src/jagged_tensor_ops.cu:                        AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/jagged_tensor_ops_cpu.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/histogram_binning_calibration_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/histogram_binning_calibration_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/histogram_binning_calibration_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:      AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:      AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:      AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:      AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/metric_ops.cu:          AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/layout_transform_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/layout_transform_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/layout_transform_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/permute_pooled_embedding_ops.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/sparse_ops.cu:        AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/sparse_ops.cu:        AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/sparse_ops.cu:    AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/sparse_ops.cu:        AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/sparse_ops.cu:        AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/sparse_ops.cu:        AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/permute_pooled_embedding_ops_split.cu:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops_cpu.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/quantize_ops_cpu.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/layout_transform_ops_cpu.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/sparse_ops_cpu.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/sparse_ops_cpu.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/src/sparse_ops_cpu.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/codegen/embedding_forward_split_cpu.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/codegen/embedding_forward_split_cpu.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/codegen/embedding_forward_split_cpu.cpp:        AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/codegen/embedding_backward_split_cpu_approx_template.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/codegen/embedding_backward_split_cpu_approx_template.cpp:        AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/codegen/embedding_backward_split_cpu_template.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/codegen/embedding_backward_split_cpu_template.cpp:      AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+third_party/fbgemm/fbgemm_gpu/codegen/embedding_backward_split_cpu_template.cpp:  AT_DISPATCH_FLOATING_TYPES_AND_HALF(
+torch/include/ATen/Dispatch.h:#define AT_DISPATCH_FLOATING_TYPES_AND_HALF(TYPE, NAME, ...) \
+torch/include/ATen/Dispatch.h:#define AT_DISPATCH_FLOATING_TYPES_AND_HALF_FLOAT8(TYPE, NAME, ...) \

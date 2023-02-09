@@ -20,11 +20,13 @@ void _spdiags_kernel_cpu(
   auto* col_index_write_ptr = row_index_write_ptr + indices.stride(0);
   const int64_t diagonals_index_stride = diagonals.stride(0);
   const int64_t diagonals_read_stride = diagonals.stride(1);
-  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(
+  AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(
       at::ScalarType::BFloat16,
       at::ScalarType::Half,
       at::ScalarType::Bool,
       at::ScalarType::ComplexHalf,
+      at::ScalarType::Float8,
+      at::ScalarType::ComplexFloat8,
       diagonals.scalar_type(),
       "spdiags_cpu",
       [&] {

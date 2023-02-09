@@ -75,8 +75,8 @@ inline SymDimVector computeStrideForViewAsComplex(SymIntArrayRef oldstride) {
 // and returns back a tensor with corresponding complex dtype
 Tensor view_as_complex(const Tensor& self) {
   TORCH_CHECK(
-    self.scalar_type() == kFloat || self.scalar_type() == kDouble || self.scalar_type() == kHalf,
-    "view_as_complex is only supported for half, float and double tensors, but got a tensor of scalar type: ", self.scalar_type());
+    self.scalar_type() == kFloat || self.scalar_type() == kDouble || self.scalar_type() == kHalf|| self.scalar_type() == kFloat8,
+    "view_as_complex is only supported for float8, half, float and double tensors, but got a tensor of scalar type: ", self.scalar_type());
 
   auto old_sizes = self.sym_sizes();
   TORCH_CHECK(old_sizes.size() != 0, "Input tensor must have one or more dimensions");

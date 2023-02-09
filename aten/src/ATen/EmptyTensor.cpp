@@ -27,9 +27,9 @@ constexpr uint64_t storage_max() {
 }
 
 inline void raise_warning_for_complex_half(ScalarType dtype) {
-  if (dtype == kComplexHalf) {
+  if (dtype == kComplexHalf || dtype == kComplexFloat8) {
     TORCH_WARN_ONCE(
-        "ComplexHalf support is experimental and many operators don't support it yet.");
+        "ComplexHalf or ComplexFloat8 support is experimental and many operators don't support it yet.");
   }
 }
 

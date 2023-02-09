@@ -16,7 +16,7 @@ inline namespace CPU_CAPABILITY {
 void pow_tensor_tensor_kernel(TensorIteratorBase& iter) {
   const auto dtype = iter.common_dtype();
   if (isFloatingType(dtype) || isComplexType(dtype)) {
-    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(kHalf, kBFloat16, dtype, "pow", [&]() {
+    AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(kHalf, kBFloat16, kFloat8, dtype, "pow", [&]() {
 
       using Vec = Vectorized<scalar_t>;
       cpu_kernel_vec(iter,
@@ -131,7 +131,20 @@ void pow_tensor_scalar_kernel(
           [=](Vec base) -> Vec { return base.pow(exp); }
       );
     }();
-  } else if (dtype == ScalarType::BFloat16) {
+  } else if (dtype == ScalarType::Float8) {
+    [&]() {
+      using scalar_t =
+          decltype(c10::impl::ScalarTypeToCPPType<ScalarType::Float8>::t);
+      const auto exp = exp_scalar.to<scalar_t>();
+      using Vec = Vectorized<scalar_t>;
+      cpu_kernel_vec(iter,
+          [=](scalar_t base) -> scalar_t {
+            return std::pow(base, exp);
+          },
+          [=](Vec base) -> Vec { return base.pow(exp); }
+      );
+    }();
+  }else if (dtype == ScalarType::BFloat16) {
       AT_DISPATCH_FLOATING_TYPES_AND(kBFloat16, dtype, "pow", [&]() {
         pow_tensor_scalar_optimized_kernel<scalar_t, scalar_t>(
             iter, exp_scalar.to<scalar_t>());

@@ -25,7 +25,7 @@ namespace {
 
 template<typename RNG>
 void random_from_to_kernel(TensorIteratorBase& iter, uint64_t range, int64_t base, RNG generator) {
-  AT_DISPATCH_ALL_TYPES_AND3(at::ScalarType::Bool, at::ScalarType::Half, at::ScalarType::BFloat16, iter.dtype(), "random_from_to_kernel_cpu", [&] {
+  AT_DISPATCH_ALL_TYPES_AND4(at::ScalarType::Bool, at::ScalarType::Half, at::ScalarType::Float8, at::ScalarType::BFloat16, iter.dtype(), "random_from_to_kernel_cpu", [&] {
     std::lock_guard<std::mutex> lock(generator->mutex_);
     cpu_serial_kernel(iter, [range, base, generator]() -> scalar_t {
       uniform_int_from_to_distribution<scalar_t> random(range, base);
@@ -68,7 +68,7 @@ struct RandomFromToKernel {
 template<typename RNG>
 void random_kernel(TensorIteratorBase& iter, RNG generator) {
   std::lock_guard<std::mutex> lock(generator->mutex_);
-  AT_DISPATCH_ALL_TYPES_AND3(at::ScalarType::Half, at::ScalarType::BFloat16, at::ScalarType::Bool, iter.dtype(), "random_kernel_cpu", [&] {
+  AT_DISPATCH_ALL_TYPES_AND4(at::ScalarType::Half, at::ScalarType::Float8, at::ScalarType::BFloat16, at::ScalarType::Bool, iter.dtype(), "random_kernel_cpu", [&] {
     cpu_serial_kernel(iter, [generator]() -> scalar_t {
       uniform_int_distribution<scalar_t> random;
       return random(generator);
@@ -182,7 +182,7 @@ void normal_kernel(const TensorBase &self, double mean, double std, RNG generato
     normal_fill(self, static_cast<float>(mean), static_cast<float>(std), generator);
 #endif
   } else {
-    AT_DISPATCH_FLOATING_TYPES_AND2(kHalf, kBFloat16, self.scalar_type(), "normal_kernel_cpu", [&] {
+    AT_DISPATCH_FLOATING_TYPES_AND3(kHalf, kBFloat16, kFloat8, self.scalar_type(), "normal_kernel_cpu", [&] {
       if (size >= 16 && self.is_contiguous()) {
         normal_fill<scalar_t>(self, static_cast<scalar_t>(mean), static_cast<scalar_t>(std), generator);
       } else {
@@ -208,7 +208,7 @@ struct NormalKernel {
 
 template<typename RNG>
 void uniform_kernel(TensorIteratorBase& iter, double from_, double to_, RNG generator) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(kHalf, kBFloat16, iter.dtype(), "uniform_kernel_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.dtype(), "uniform_kernel_cpu", [&]() {
     std::lock_guard<std::mutex> lock(generator->mutex_);
     auto from = static_cast<scalar_t>(from_);
     auto to = static_cast<scalar_t>(to_);
@@ -230,7 +230,7 @@ struct UniformKernel {
 
 template<typename RNG>
 void cauchy_kernel(TensorIteratorBase& iter, double median, double sigma, RNG generator) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(kHalf, kBFloat16, iter.dtype(), "cauchy_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(kHalf, kBFloat16, kFloat8, iter.dtype(), "cauchy_cpu", [&]() {
     std::lock_guard<std::mutex> lock(generator->mutex_);
     at::cauchy_distribution<double> cauchy(median, sigma);
     cpu_serial_kernel(iter, [&cauchy, generator]() -> scalar_t {
@@ -250,7 +250,7 @@ struct CauchyKernel {
 
 template<typename RNG>
 void log_normal_kernel(TensorIteratorBase& iter, double mean, double std, RNG generator) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, iter.dtype(), "log_normal_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(at::ScalarType::Half, at::ScalarType::Float8, at::ScalarType::BFloat16, iter.dtype(), "log_normal_cpu", [&]() {
     std::lock_guard<std::mutex> lock(generator->mutex_);
     at::lognormal_distribution<double> logNormal(mean, std);
     cpu_serial_kernel(iter, [&logNormal, generator]() -> scalar_t {
@@ -270,7 +270,7 @@ struct LogNormalKernel {
 
 template<typename RNG>
 void geometric_kernel(TensorIteratorBase& iter, double p, RNG generator) {
-  AT_DISPATCH_ALL_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, iter.dtype(), "geometric_cpu", [&]() {
+  AT_DISPATCH_ALL_TYPES_AND3(at::ScalarType::Half, at::ScalarType::Float8, at::ScalarType::BFloat16, iter.dtype(), "geometric_cpu", [&]() {
     std::lock_guard<std::mutex> lock(generator->mutex_);
     at::geometric_distribution<double> geometric(p);
     cpu_serial_kernel(iter, [&geometric, generator]() -> scalar_t {
@@ -290,7 +290,7 @@ struct GeometricKernel {
 
 template<typename RNG>
 void exponential_kernel(TensorIteratorBase& iter, double lambda, RNG generator) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, iter.dtype(), "exponential_cpu", [&]() {
+  AT_DISPATCH_FLOATING_TYPES_AND3(at::ScalarType::Half, at::ScalarType::Float8, at::ScalarType::BFloat16, iter.dtype(), "exponential_cpu", [&]() {
     std::lock_guard<std::mutex> lock(generator->mutex_);
     at::exponential_distribution<double> exponential(lambda);
     cpu_serial_kernel(iter, [&exponential, generator]() -> scalar_t {

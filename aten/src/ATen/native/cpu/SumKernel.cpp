@@ -614,15 +614,15 @@ void sum_kernel_impl(TensorIterator &iter) {
     return;
   }
 
-  AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(
-      ScalarType::BFloat16, ScalarType::Half, iter.dtype(), "sum_cpu", [&] {
+  AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(
+      ScalarType::BFloat16, ScalarType::Half, ScalarType::Float8, iter.dtype(), "sum_cpu", [&] {
     cascade_sum</*ignore_nan=*/false, scalar_t>(iter);
   });
 }
 
 void nansum_kernel_impl(TensorIterator &iter) {
-  AT_DISPATCH_FLOATING_TYPES_AND2(
-      ScalarType::BFloat16, ScalarType::Half, iter.dtype(), "nansum_cpu", [&] {
+  AT_DISPATCH_FLOATING_TYPES_AND3(
+      ScalarType::BFloat16, ScalarType::Half, ScalarType::Float8, iter.dtype(), "nansum_cpu", [&] {
     cascade_sum</*ignore_nan=*/true, scalar_t>(iter);
   });
 }

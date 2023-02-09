@@ -178,7 +178,7 @@ static void smooth_l1_backward_cpu_kernel(TensorIterator& iter, const Scalar& no
 
 static void huber_backward_cpu_kernel(TensorIterator& iter, const Scalar& norm, double delta) {
   ScalarType dtype = iter.dtype(0);
-  AT_DISPATCH_FLOATING_TYPES_AND2(kBFloat16, kHalf, dtype, "huber_backward_cpu_out", [&] {
+  AT_DISPATCH_FLOATING_TYPES_AND3(kBFloat16, kHalf, kFloat8, dtype, "huber_backward_cpu_out", [&] {
     auto norm_val = norm.to<scalar_t>();
     scalar_t delta_val(delta);
     auto norm_val_vec = Vectorized<scalar_t>(norm_val);

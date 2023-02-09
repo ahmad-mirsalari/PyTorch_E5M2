@@ -78,7 +78,7 @@ static void min_all_kernel_impl(Tensor& result, const Tensor& input) {
     reduce_all_impl<int64_t>(result, input, upper_bound<int64_t>(),
       [=](int64_t a, int64_t b) -> int64_t { return min_impl(a, b); });
   } else {
-    AT_DISPATCH_ALL_TYPES_AND2(kHalf, kBFloat16, input.scalar_type(), "min_all", [&] {
+    AT_DISPATCH_ALL_TYPES_AND3(kHalf, kBFloat16, kFloat8, input.scalar_type(), "min_all", [&] {
       // TODO: replace vec_scalar_t with at::opmath_type when float16 specialization is done.
       using Vec = Vectorized<vec_scalar_t<scalar_t>>;
       reduce_all_impl_vec<scalar_t>(result, input, upper_bound<scalar_t>(),
@@ -104,7 +104,7 @@ static void max_all_kernel_impl(Tensor& result, const Tensor& input) {
     reduce_all_impl<int64_t>(result, input, lower_bound<int64_t>(),
       [=](int64_t a, int64_t b) -> int64_t { return max_impl(a, b); });
   } else {
-    AT_DISPATCH_ALL_TYPES_AND2(kHalf, kBFloat16, input.scalar_type(), "max_all", [&] {
+    AT_DISPATCH_ALL_TYPES_AND3(kHalf, kBFloat16, kFloat8, input.scalar_type(), "max_all", [&] {
       // TODO: replace vec_scalar_t with at::opmath_type when float16 specialization is done.
       using Vec = Vectorized<vec_scalar_t<scalar_t>>;
       reduce_all_impl_vec<scalar_t>(result, input, lower_bound<scalar_t>(),
