@@ -339,11 +339,11 @@ inline float fp8_ieee_to_fp32_value(uint8_t h) {
  * mode and no operations on denormals) floating-point operations and bitcasts
  * between integer and floating-point variables.
  */
-inline uint16_t fp8_ieee_from_fp32_value(float f) {
+inline uint8_t fp8_ieee_from_fp32_value(float f) {
   // const float scale_to_inf = 0x1.0p+112f;
   // const float scale_to_zero = 0x1.0p-110f;
-  constexpr uint32_t scale_to_inf_bits = (uint32_t)239 << 23;
-  constexpr uint32_t scale_to_zero_bits = (uint32_t)17 << 23;
+  constexpr uint32_t scale_to_inf_bits = (uint32_t)2 << 23;
+  constexpr uint32_t scale_to_zero_bits = (uint32_t)7 << 23;
   float scale_to_inf_val, scale_to_zero_val;
   std::memcpy(&scale_to_inf_val, &scale_to_inf_bits, sizeof(scale_to_inf_val));
   std::memcpy(
@@ -370,9 +370,9 @@ inline uint16_t fp8_ieee_from_fp32_value(float f) {
   const uint32_t exp_bits = (bits >> 13) & UINT32_C(0x00007C00);
   const uint32_t mantissa_bits = bits & UINT32_C(0x00000FFF);
   const uint32_t nonsign = exp_bits + mantissa_bits;
-  return static_cast<uint16_t>(
-      (sign >> 16) |
-      (shl1_w > UINT32_C(0xFF000000) ? UINT16_C(0x7E00) : nonsign));
+  return static_cast<uint8_t>(
+      (sign >> 24) |
+      (shl1_w > UINT32_C(0xFF000000) ? UINT8_C(0x7E) : nonsign));
 }
 
 } // namespace detail
@@ -392,7 +392,7 @@ struct alignas(1) Float8 {
   Float8() = default;
 #endif
 
-  constexpr C10_HOST_DEVICE Float8(unsigned short bits, from_bits_t) : x(bits){};
+  constexpr C10_HOST_DEVICE Float8(unsigned char bits, from_bits_t) : x(bits){};
   inline C10_HOST_DEVICE Float8(float value);
   inline C10_HOST_DEVICE operator float() const;
 

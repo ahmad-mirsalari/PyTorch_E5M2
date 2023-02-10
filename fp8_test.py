@@ -1,6 +1,6 @@
 import torch
 
-x = torch.tensor(2, dtype=torch.float8)
+x = torch.tensor(0.0485, dtype=torch.float8)
 t = torch.tensor(1, dtype=torch.float16)
 t = x - t
 
