@@ -379,7 +379,7 @@ void logical_xor_kernel(TensorIterator& iter) {
         });
     });
   } else {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND4(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "logical_xor_cpu", [&]() {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND3(kBFloat16, kHalf, kFloat8, iter.common_dtype(), "logical_xor_cpu", [&]() {
       cpu_kernel(iter,
         [](scalar_t a, scalar_t b) -> scalar_t {
           return static_cast<scalar_t>(bool(a) != bool(b));

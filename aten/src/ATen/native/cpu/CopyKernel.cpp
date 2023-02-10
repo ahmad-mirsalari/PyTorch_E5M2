@@ -239,9 +239,9 @@ void copy_kernel(TensorIterator& iter, bool /*non_blocking*/) {
     sizeof(BFloat16) == strides_out[0] && (sizeof(float) == strides_in[0] || strides_in[0] == 0)))) {
     float_bfloat16_copy_kernel(iter, requires_neg);
   } else {
-    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(ScalarType::ComplexHalf, ScalarType::Half, ScalarType::Bool, ScalarType::BFloat16,ScalarType::ComplexFloat8, ScalarType::Float8, dtype, "copy_", [&] {
+    AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(ScalarType::ComplexHalf,ScalarType::ComplexFloat8, ScalarType::Half, ScalarType::Float8, ScalarType::Bool, ScalarType::BFloat16, dtype, "copy_", [&] {
       using dest_t = scalar_t;
-      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(ScalarType::ComplexHalf, ScalarType::Half, ScalarType::Bool, ScalarType::BFloat16, ScalarType::ComplexFloat8, ScalarType::Float8,iter.dtype(1), "copy_", [&] {
+      AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND6(ScalarType::ComplexHalf,ScalarType::ComplexFloat8, ScalarType::Half, ScalarType::Float8, ScalarType::Bool, ScalarType::BFloat16,iter.dtype(1), "copy_", [&] {
         if (iter.has_contiguous_first_dim()) {
           TORCH_INTERNAL_ASSERT(iter.ninputs() == 1);
           TORCH_INTERNAL_ASSERT(iter.noutputs() == 1);
