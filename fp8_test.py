@@ -1,11 +1,13 @@
 import torch
 
-x = torch.tensor(0.0485, dtype=torch.float8)
-t = torch.tensor(1, dtype=torch.float16)
-t = x - t
+print(torch.finfo(torch.float8))
+x = torch.tensor(-10.0, dtype=torch.float8)
+#y = 12
+y = torch.tensor(1.23, dtype=torch.float)
+y = x + y
 
-print(x)
+print(x.item())
 print(x.dtype)
 
-print(t)
-print(t.dtype)
+print(f"y is: {y.item()}")
+print(f"y data type: {y.dtype}")

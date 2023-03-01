@@ -283,8 +283,8 @@ class numeric_limits<c10::Float8> {
   static constexpr bool is_modulo = false;
   static constexpr int digits = 3;//3
   static constexpr int digits10 = 1;//1
-  static constexpr int max_digits10 = 5;//5
-  static constexpr int radix = 2;//2
+  static constexpr int max_digits10 = 5;
+  static constexpr int radix = 2;
   static constexpr int min_exponent = -13;
   static constexpr int min_exponent10 = -4;
   static constexpr int max_exponent = 16;

@@ -191,7 +191,7 @@ inline uint32_t fp8_ieee_to_fp32_bits(uint8_t h) {
 }
 
 /*
- * Convert a 16-bit floating-point number in IEEE FP8 format, in bit
+ * Convert a 8-bit floating-point number in IEEE FP8 format, in bit
  * representation, to a 32-bit floating-point number in IEEE single-precision
  * format.
  *
@@ -340,14 +340,11 @@ inline float fp8_ieee_to_fp32_value(uint8_t h) {
  * between integer and floating-point variables.
  */
 inline uint8_t fp8_ieee_from_fp32_value(float f) {
-  // const float scale_to_inf = 0x1.0p+112f;
-  // const float scale_to_zero = 0x1.0p-110f;
-  constexpr uint32_t scale_to_inf_bits = (uint32_t)2 << 23;
-  constexpr uint32_t scale_to_zero_bits = (uint32_t)7 << 23;
+  constexpr uint32_t scale_to_inf_bits = (uint32_t)127 << 23;
+  constexpr uint32_t scale_to_zero_bits = (uint32_t)15 << 23;
   float scale_to_inf_val, scale_to_zero_val;
   std::memcpy(&scale_to_inf_val, &scale_to_inf_bits, sizeof(scale_to_inf_val));
-  std::memcpy(
-      &scale_to_zero_val, &scale_to_zero_bits, sizeof(scale_to_zero_val));
+  std::memcpy(&scale_to_zero_val, &scale_to_zero_bits, sizeof(scale_to_zero_val));
   const float scale_to_inf = scale_to_inf_val;
   const float scale_to_zero = scale_to_zero_val;
 
@@ -360,19 +357,19 @@ inline uint8_t fp8_ieee_from_fp32_value(float f) {
   const uint32_t w = fp32_to_bits(f);
   const uint32_t shl1_w = w + w;
   const uint32_t sign = w & UINT32_C(0x80000000);
-  uint32_t bias = shl1_w & UINT32_C(0xFF000000);
-  if (bias < UINT32_C(0x71000000)) {
-    bias = UINT32_C(0x71000000);
+  uint32_t bias = shl1_w & UINT32_C(0xFE000000);
+  if (bias < UINT32_C(0x5E000000)) {
+    bias = UINT32_C(0x5E000000);
   }
 
-  base = fp32_from_bits((bias >> 1) + UINT32_C(0x07800000)) + base;
+  base = fp32_from_bits((bias >> 1) + UINT32_C(0x38000000)) + base;
   const uint32_t bits = fp32_to_bits(base);
-  const uint32_t exp_bits = (bits >> 13) & UINT32_C(0x00007C00);
-  const uint32_t mantissa_bits = bits & UINT32_C(0x00000FFF);
+  const uint32_t exp_bits = (bits >> 10) & UINT32_C(0x0000001F);
+  const uint32_t mantissa_bits = bits & UINT32_C(0x000003FF);
   const uint32_t nonsign = exp_bits + mantissa_bits;
-  return static_cast<uint8_t>(
+  return static_cast<unsigned char>(
       (sign >> 24) |
-      (shl1_w > UINT32_C(0xFF000000) ? UINT8_C(0x7E) : nonsign));
+      (shl1_w > UINT32_C(0xFE000000) ?  UINT8_C(0x7F) : nonsign));
 }
 
 } // namespace detail

@@ -224,7 +224,7 @@ class TestTorchDeviceType(TestCase):
 
     @skipIfTorchDynamo("https://github.com/pytorch/torchdynamo/issues/1991")
     @onlyNativeDeviceTypes
-    @dtypes(*all_types_and_complex_and(torch.half, torch.bool, torch.bfloat16))
+    @dtypes(*all_types_and_complex_and(torch.half, torch.float8, torch.bool, torch.bfloat16))
     def test_tensor_storage_type(self, device, dtype):
         a = make_tensor((10,), dtype=dtype, device=device, low=-9, high=9)
 
@@ -234,7 +234,7 @@ class TestTorchDeviceType(TestCase):
         self.assertEqual(a.storage_type(), expected_storage_type)
 
     @onlyNativeDeviceTypes
-    @dtypes(*all_types_and_complex_and(torch.half, torch.bool, torch.bfloat16))
+    @dtypes(*all_types_and_complex_and(torch.half, torch.float8, torch.bool, torch.bfloat16))
     def test_tensor_from_storage(self, device, dtype):
         a = make_tensor((4, 5, 3), dtype=dtype, device=device, low=-9, high=9)
         a_s = a.storage()
@@ -251,7 +251,7 @@ class TestTorchDeviceType(TestCase):
                 torch.tensor(error_storage, device=device, dtype=dtype)
 
     @onlyNativeDeviceTypes
-    @dtypes(*all_types_and_complex_and(torch.half, torch.bool, torch.bfloat16))
+    @dtypes(*all_types_and_complex_and(torch.half, torch.float8, torch.bool, torch.bfloat16))
     def test_set_storage(self, device, dtype):
         a = make_tensor((4, 5, 3), dtype=dtype, device=device, low=-9, high=9)
         a_s = a.storage()
@@ -260,7 +260,7 @@ class TestTorchDeviceType(TestCase):
         c = torch.tensor([], device=device, dtype=dtype).set_(a_s.untyped()).reshape(a.size())
         self.assertEqual(a, c)
 
-        for error_dtype in all_types_and_complex_and(torch.half, torch.bool, torch.bfloat16):
+        for error_dtype in all_types_and_complex_and(torch.half,  torch.float8, torch.bool, torch.bfloat16):
             if error_dtype == dtype:
                 continue
             with self.assertRaisesRegex(RuntimeError, r'Expected a Storage of type'):
@@ -289,7 +289,7 @@ class TestTorchDeviceType(TestCase):
             self._check_storage_meta(s.untyped(), s_check.untyped())
 
     @onlyNativeDeviceTypes
-    @dtypes(*all_types_and_complex_and(torch.half, torch.bool, torch.bfloat16))
+    @dtypes(*all_types_and_complex_and(torch.half,  torch.float8, torch.bool, torch.bfloat16))
     def test_typed_storage_meta(self, device, dtype):
         args_list = [
             [],
@@ -316,7 +316,7 @@ class TestTorchDeviceType(TestCase):
             self._check_storage_meta(s, s_check)
 
     @onlyNativeDeviceTypes
-    @dtypes(*all_types_and_complex_and(torch.half, torch.bool, torch.bfloat16))
+    @dtypes(*all_types_and_complex_and(torch.half,  torch.float8,torch.bool, torch.bfloat16))
     def test_storage_meta_from_tensor(self, device, dtype):
         t_check = make_tensor((4, 5, 3), dtype=dtype, device=device, low=-9, high=9)
         t = t_check.to('meta')
@@ -326,7 +326,7 @@ class TestTorchDeviceType(TestCase):
         self._check_storage_meta(s, s_check)
 
     @onlyCPU
-    @dtypes(*all_types_and_complex_and(torch.half, torch.bool, torch.bfloat16))
+    @dtypes(*all_types_and_complex_and(torch.half,  torch.float8,torch.bool, torch.bfloat16))
     def test_storage_meta_errors(self, device, dtype):
         s0 = torch.TypedStorage([1, 2, 3, 4], device='meta', dtype=dtype)
 

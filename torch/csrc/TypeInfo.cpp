@@ -113,8 +113,8 @@ static PyObject* THPDTypeInfo_bits(THPDTypeInfo* self, void*) {
 }
 
 static PyObject* THPFInfo_eps(THPFInfo* self, void*) {
-  return AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(
-      at::kHalf, at::ScalarType::BFloat16, self->type, "epsilon", [] {
+  return AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(
+      at::kHalf, at::kFloat8, at::ScalarType::BFloat16, self->type, "epsilon", [] {
         return PyFloat_FromDouble(
             std::numeric_limits<
                 at::scalar_value_type<scalar_t>::type>::epsilon());
@@ -122,16 +122,16 @@ static PyObject* THPFInfo_eps(THPFInfo* self, void*) {
 }
 
 static PyObject* THPFInfo_max(THPFInfo* self, void*) {
-  return AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(
-      at::kHalf, at::ScalarType::BFloat16, self->type, "max", [] {
+  return AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(
+      at::kHalf, at::kFloat8, at::ScalarType::BFloat16, self->type, "max", [] {
         return PyFloat_FromDouble(
             std::numeric_limits<at::scalar_value_type<scalar_t>::type>::max());
       });
 }
 
 static PyObject* THPFInfo_min(THPFInfo* self, void*) {
-  return AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(
-      at::kHalf, at::ScalarType::BFloat16, self->type, "lowest", [] {
+  return AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(
+      at::kHalf, at::kFloat8, at::ScalarType::BFloat16, self->type, "lowest", [] {
         return PyFloat_FromDouble(
             std::numeric_limits<
                 at::scalar_value_type<scalar_t>::type>::lowest());
@@ -172,8 +172,8 @@ static PyObject* THPIInfo_dtype(THPIInfo* self, void*) {
 }
 
 static PyObject* THPFInfo_smallest_normal(THPFInfo* self, void*) {
-  return AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(
-      at::kHalf, at::ScalarType::BFloat16, self->type, "min", [] {
+  return AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(
+      at::kHalf, at::kFloat8, at::ScalarType::BFloat16, self->type, "min", [] {
         return PyFloat_FromDouble(
             std::numeric_limits<at::scalar_value_type<scalar_t>::type>::min());
       });
@@ -185,8 +185,8 @@ static PyObject* THPFInfo_tiny(THPFInfo* self, void*) {
 }
 
 static PyObject* THPFInfo_resolution(THPFInfo* self, void*) {
-  return AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(
-      at::kHalf, at::ScalarType::BFloat16, self->type, "digits10", [] {
+  return AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(
+      at::kHalf, at::kFloat8, at::ScalarType::BFloat16, self->type, "digits10", [] {
         return PyFloat_FromDouble(std::pow(
             10,
             -std::numeric_limits<
@@ -198,8 +198,8 @@ static PyObject* THPFInfo_dtype(THPFInfo* self, void*) {
   std::string primary_name, legacy_name;
   std::tie(primary_name, legacy_name) = torch::utils::getDtypeNames(self->type);
   // NOLINTNEXTLINE(clang-diagnostic-unused-local-typedef)
-  return AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND2(
-      at::kHalf, at::ScalarType::BFloat16, self->type, "dtype", [primary_name] {
+  return AT_DISPATCH_FLOATING_AND_COMPLEX_TYPES_AND3(
+      at::kHalf, at::kFloat8, at::ScalarType::BFloat16, self->type, "dtype", [primary_name] {
         return PyUnicode_FromString((char*)primary_name.data());
       });
 }
