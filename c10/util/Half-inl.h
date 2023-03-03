@@ -81,6 +81,7 @@ inline __device__ Half __ldg(const Half* ptr) {
 /// Arithmetic
 
 inline C10_HOST_DEVICE Half operator+(const Half& a, const Half& b) {
+printf("I am in the float8-inl + \n");
   return static_cast<float>(a) + static_cast<float>(b);
 }
 

@@ -26,6 +26,7 @@
 #include <complex>
 #include <cstdint>
 #include <cstring>
+#include <cstdio>
 #include <iosfwd>
 #include <limits>
 #include <sstream>
@@ -264,6 +265,7 @@ inline float fp8_ieee_to_fp32_value(uint8_t h) {
    * exponent == 0). However, they also do not operate on denormal inputs, and
    * do not produce denormal results.
    */
+   printf("I am here in float8.h\n");
   constexpr uint32_t exp_offset = UINT32_C(0xE0) << 23;
   // const float exp_scale = 0x1.0p-112f;
   constexpr uint32_t scale_bits = (uint32_t)15 << 23;
@@ -327,8 +329,9 @@ inline float fp8_ieee_to_fp32_value(uint8_t h) {
   const uint32_t result = sign |
       (two_w < denormalized_cutoff ? fp32_to_bits(denormalized_value)
                                    : fp32_to_bits(normalized_value));
+  
   return fp32_from_bits(result);
-}
+} 
 
 /*
  * Convert a 32-bit floating-point number in IEEE single-precision format to a
@@ -340,7 +343,8 @@ inline float fp8_ieee_to_fp32_value(uint8_t h) {
  * between integer and floating-point variables.
  */
 inline uint8_t fp8_ieee_from_fp32_value(float f) {
-  constexpr uint32_t scale_to_inf_bits = (uint32_t)127 << 23;
+printf("I am here in the third funciton %f \n", f);
+ /* constexpr uint32_t scale_to_inf_bits = (uint32_t)127 << 23;
   constexpr uint32_t scale_to_zero_bits = (uint32_t)15 << 23;
   float scale_to_inf_val, scale_to_zero_val;
   std::memcpy(&scale_to_inf_val, &scale_to_inf_bits, sizeof(scale_to_inf_val));
@@ -369,7 +373,42 @@ inline uint8_t fp8_ieee_from_fp32_value(float f) {
   const uint32_t nonsign = exp_bits + mantissa_bits;
   return static_cast<unsigned char>(
       (sign >> 24) |
-      (shl1_w > UINT32_C(0xFE000000) ?  UINT8_C(0x7F) : nonsign));
+      (shl1_w > UINT32_C(0xFE000000) ?  UINT8_C(0x7F) : nonsign));*/
+      
+  // const float scale_to_inf = 0x1.0p+112f;
+  // const float scale_to_zero = 0x1.0p-110f;
+  constexpr uint32_t scale_to_inf_bits = (uint32_t)239 << 23;
+  constexpr uint32_t scale_to_zero_bits = (uint32_t)17 << 23;
+  float scale_to_inf_val, scale_to_zero_val;
+  std::memcpy(&scale_to_inf_val, &scale_to_inf_bits, sizeof(scale_to_inf_val));
+  std::memcpy(
+      &scale_to_zero_val, &scale_to_zero_bits, sizeof(scale_to_zero_val));
+  const float scale_to_inf = scale_to_inf_val;
+  const float scale_to_zero = scale_to_zero_val;
+
+#if defined(_MSC_VER) && _MSC_VER == 1916
+  float base = ((signbit(f) != 0 ? -f : f) * scale_to_inf) * scale_to_zero;
+#else
+  float base = (fabsf(f) * scale_to_inf) * scale_to_zero;
+#endif
+  printf(" scale_to_inf %f, scale_to_zero %f, and base %f \n  ", scale_to_inf,scale_to_zero,base); 
+
+  const uint32_t w = fp32_to_bits(f);
+  const uint32_t shl1_w = w + w;
+  const uint32_t sign = w & UINT32_C(0x80000000);
+  uint32_t bias = shl1_w & UINT32_C(0xFF000000);
+  if (bias < UINT32_C(0x71000000)) {
+    bias = UINT32_C(0x71000000);
+  }
+
+  base = fp32_from_bits((bias >> 1) + UINT32_C(0x07800000)) + base;
+  const uint32_t bits = fp32_to_bits(base);
+  const uint32_t exp_bits = (bits >> 21) & UINT32_C(0x0000007C);
+  const uint32_t mantissa_bits = (bits >> 8) & UINT32_C(0x0000000F);
+  const uint32_t nonsign = exp_bits + mantissa_bits;
+  return static_cast<uint8_t>(
+      (sign >> 24) |
+      (shl1_w > UINT32_C(0xFF000000) ? UINT8_C(0x7E) : nonsign));
 }
 
 } // namespace detail
