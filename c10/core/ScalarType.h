@@ -43,10 +43,11 @@ namespace c10 {
   _(c10::quint8, QUInt8) /* 13 */                        \
   _(c10::qint32, QInt32) /* 14 */                        \
   _(at::BFloat16, BFloat16) /* 15 */                     \
-  _(c10::quint4x2, QUInt4x2) /* 16 */                    \
-  _(c10::quint2x4, QUInt2x4) /* 17 */                    \
-  _(at::Float8, Float8) /* 18 */                          \
-  _(c10::complex<c10::Float8>, ComplexFloat8) /* 19 */        
+  _(at::Float8, Float8) /* 16 */                          \
+  _(c10::complex<c10::Float8>, ComplexFloat8) /* 17 */    \
+  _(c10::quint4x2, QUInt4x2) /* 18 */                    \
+  _(c10::quint2x4, QUInt2x4) /* 19 */                    \
+       
 
 
 // If you want to support ComplexHalf for real, add ComplexHalf
@@ -506,6 +507,7 @@ static inline ScalarType promoteTypes(ScalarType a, ScalarType b) {
       /* e5 */ {e5, e5, e5, e5, e5, f4, f4, f8, c4, c4, c8, e5, ud, ud, ud, f4, e5, c5},
       /* c5 */ {c5, c5, c5, c5, c5, c4, c4, c8, c4, c4, c8, c5, ud, ud, ud, c4, c5, c5},
   };
+  
   return _promoteTypesLookup[static_cast<int>(a)][static_cast<int>(b)];
 }
 

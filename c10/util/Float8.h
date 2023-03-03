@@ -265,7 +265,7 @@ inline float fp8_ieee_to_fp32_value(uint8_t h) {
    * exponent == 0). However, they also do not operate on denormal inputs, and
    * do not produce denormal results.
    */
-   printf("I am here in float8.h\n");
+
   constexpr uint32_t exp_offset = UINT32_C(0xE0) << 23;
   // const float exp_scale = 0x1.0p-112f;
   constexpr uint32_t scale_bits = (uint32_t)15 << 23;
@@ -343,7 +343,7 @@ inline float fp8_ieee_to_fp32_value(uint8_t h) {
  * between integer and floating-point variables.
  */
 inline uint8_t fp8_ieee_from_fp32_value(float f) {
-printf("I am here in the third funciton %f \n", f);
+
  /* constexpr uint32_t scale_to_inf_bits = (uint32_t)127 << 23;
   constexpr uint32_t scale_to_zero_bits = (uint32_t)15 << 23;
   float scale_to_inf_val, scale_to_zero_val;
@@ -391,7 +391,7 @@ printf("I am here in the third funciton %f \n", f);
 #else
   float base = (fabsf(f) * scale_to_inf) * scale_to_zero;
 #endif
-  printf(" scale_to_inf %f, scale_to_zero %f, and base %f \n  ", scale_to_inf,scale_to_zero,base); 
+
 
   const uint32_t w = fp32_to_bits(f);
   const uint32_t shl1_w = w + w;
