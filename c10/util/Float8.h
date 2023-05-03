@@ -102,6 +102,8 @@ namespace detail {
  *
  * @note The implementation doesn't use any floating-point operations.
  */
+ 
+ 
 inline uint32_t fp8_ieee_to_fp32_bits(uint8_t h) {
   /*
    * Extend the 8-bit floating-point number to 32 bits and shift to the
@@ -342,6 +344,19 @@ inline float fp8_ieee_to_fp32_value(uint8_t h) {
  * mode and no operations on denormals) floating-point operations and bitcasts
  * between integer and floating-point variables.
  */
+ inline int find_digit(float number) {
+ 
+    int power_of_10 = 1;
+    while (number * power_of_10 != (int)(number * power_of_10)) {
+        power_of_10 *= 10;
+    }
+    int integer_number = (int)(number * power_of_10);
+    
+     int tens_digit = (integer_number / 10) % 10; // extract the digit before the last one
+ 
+    return tens_digit;
+}
+ 
 inline uint8_t fp8_ieee_from_fp32_value(float f) {
 
  /* constexpr uint32_t scale_to_inf_bits = (uint32_t)127 << 23;
@@ -404,7 +419,34 @@ inline uint8_t fp8_ieee_from_fp32_value(float f) {
   base = fp32_from_bits((bias >> 1) + UINT32_C(0x07800000)) + base;
   const uint32_t bits = fp32_to_bits(base);
   const uint32_t exp_bits = (bits >> 21) & UINT32_C(0x0000007C);
-  const uint32_t mantissa_bits = (bits >> 8) & UINT32_C(0x0000000F);
+  
+  /*
+  Rounding 
+  */
+   uint32_t trunc =UINT32_C(0x00000000) ;
+  if ((bits & UINT32_C(0x000000FF)) > UINT32_C(0x00000081)){ // mantisa is greater than the half
+    trunc = UINT32_C(0x00000001);
+    printf("I am here in the 1");
+  }
+  else if ((bits & UINT32_C(0x000000FF)) < UINT32_C(0x00000080)){ // mantisa is less than the half
+    trunc = UINT32_C(0x00000000);
+    printf("I am here in the 2");
+  }
+  else if ((bits & UINT32_C(0x000000FF)) == UINT32_C(0x00000080)){ // mantisa is equal to the half
+    
+   if (static_cast<int>(find_digit(f)) % 2 == 0) { //f (static_cast<int>(x) % 2 == 0) { /* x is "even" */ }
+     trunc = UINT32_C(0x00000000);
+     printf("I am here in the 3");
+   }
+   else {
+     trunc = UINT32_C(0x00000001);
+     printf("I am here in the 34");
+   }
+  }
+  /*
+  End of Rounding
+  */
+  const uint32_t mantissa_bits = ((bits >> 8) & UINT32_C(0x0000000F)) + trunc; //+ ((bits >> 7) & UINT32_C(0x00000001))   ; 
   const uint32_t nonsign = exp_bits + mantissa_bits;
   return static_cast<uint8_t>(
       (sign >> 24) |
