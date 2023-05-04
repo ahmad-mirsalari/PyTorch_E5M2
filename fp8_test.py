@@ -1,13 +1,12 @@
 import torch
 
-
-
-
 # print float8_E5M2 information
 print(torch.finfo(torch.float8))
 
-#define two fp8 tensors
-x = torch.tensor(-23.5, dtype=torch.float8)
+# define a fp8 tensor
+x = torch.tensor(1.0263, dtype=torch.float8)
+
+
 print(x)
 '''y = torch.tensor(0.156, dtype=torch.float8)
 
